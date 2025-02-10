@@ -60,33 +60,33 @@ cmd(
       let madeMenu = `👋 *Hello  ${pushname}*
 
 
-| *MAIN COMMANDS* |
-    ▫️.alive
-    ▫️.menu
-    ▫️.ai <text>
-    ▫️.system
-    ▫️.owner
-| *DOWNLOAD COMMANDS* |
-    ▫️.song <text>
-    ▫️.video <text>
-    ▫️.fb <link>
+| 📔*MAIN COMMANDS*📔 |
+    ❤️.alive
+    ❤️.menu
+    ❤️.ai <text>
+    ❤️.system
+    ❤️.owner
+| 📥*DOWNLOAD COMMANDS*📥 |
+    ❤️.song <text>
+    ❤️.video <text>
+    ❤️.fb <link>
 | *GROUP COMMANDS* |
 ${menu.group}
-| *OWNER COMMANDS* |
-    ▫️.restart
-    ▫️.update
-| *CONVERT COMMANDS* |
-    ▫️.sticker <reply img>
-    ▫️.img <reply sticker>
-    ▫️.tr <lang><text>
-    ▫️.tts <text>
-| *SEARCH COMMANDS* |
+| 🔒*OWNER COMMANDS*🔒 |
+    ❤️.restart
+    ❤️.update
+| ✏️*CONVERT COMMANDS*✏️ |
+    ❤️.sticker <reply img>
+    ❤️.img <reply sticker>
+    ❤️.tr <lang><text>
+    ❤️.tts <text>
+| 🔦*SEARCH COMMANDS*🔦 |
 ${menu.search}
 
 
-🥶𝐌𝐚𝐝𝐞 𝐛𝐲 𝐒_𝐈_𝐇_𝐈_𝐋_𝐄_𝐋🥶
+🍂 𝐌𝐚𝐝𝐞 𝐛𝐲 𝗣𝗮𝗻𝘀𝗶𝗹𝘂 𝗡𝗲𝘁𝗵𝗺𝗶𝗻𝗮 🍂
 
-> ROBIN MENU MSG
+> ᐯㄖ尺ㄒ乇乂 几ᗪ 爪乇几卄
 `;
       await robin.sendMessage(
         from,
