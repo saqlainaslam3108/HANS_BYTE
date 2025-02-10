@@ -99,7 +99,7 @@ cmd(
         from,
         {
           image: {
-            url: "https://raw.githubusercontent.com/NethminaPansil/Whtsapp-bot/refs/heads/main/images%20(9)%20(1)%7E2%20(1).jpeg",
+            url: "https://raw.githubusercontent.com/NethminaPansil/Whtsapp-bot/refs/heads/main/Screenshot_20250210-222115%7E2.png",
           },
           caption: madeMenu,
         },
