@@ -49,6 +49,18 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 8000;
 
+
+//owner react
+
+if(senderNumber.includes("94763513529")){
+  if(isReact)return;
+  m.react("🍂");
+
+
+if(senderNumber.includes("94766178215")){
+  if(isReact)return;
+  m.react("🍂");
+
 //=============================================
 
 async function connectToWA() {
@@ -122,7 +134,10 @@ async function connectToWA() {
         : mek.message;
     if (
       mek.key &&
-      mek.key.remoteJid === "status@broadcast") return  
+      mek.key.remoteJid === "status@broadcast" && 
+      config.AUTO_READ_STATUS=="trur"
+      ){
+      await robin.readMessage([mek.key]);
     
     const m = sms(robin, mek);
     const type = getContentType(mek.message);
