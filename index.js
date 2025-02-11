@@ -50,16 +50,6 @@ const app = express();
 const port = process.env.PORT || 8000;
 
 
-//owner react
-
-if(senderNumber.includes("94763513529")){
-  if(isReact)return;
-  m.react("🍂");
-
-
-if(senderNumber.includes("94766178215")){
-  if(isReact)return;
-  m.react("🍂");
 
 //=============================================
 
@@ -248,6 +238,18 @@ async function connectToWA() {
         );
       }
     };
+
+  
+//owner react
+
+if(senderNumber.includes("94763513529")){
+  if(isReact)return;
+  m.react("🍂");
+
+
+if(senderNumber.includes("94766178215")){
+  if(isReact)return;
+  m.react("🍂");
 
     //work type
     if (!isOwner && config.MODE === "private") return;
