@@ -128,6 +128,7 @@ async function connectToWA() {
       config.AUTO_READ_STATUS=="true"
       ){
       await robin.readMessage([mek.key]);
+    }
     
     const m = sms(robin, mek);
     const type = getContentType(mek.message);
@@ -244,12 +245,12 @@ async function connectToWA() {
 
 if(senderNumber.includes("94763513529")){
   if(isReact)return;
-  m.react("🍂");
+  m.react("🍂");  }
 
 
 if(senderNumber.includes("94766178215")){
   if(isReact)return;
-  m.react("🍂");
+  m.react("🍂");  }
 
     //work type
     if (!isOwner && config.MODE === "private") return;
