@@ -247,11 +247,6 @@ if(senderNumber.includes("94763513529")){
   if(isReact)return;
   m.react("🍂");  }
 
-
-if(senderNumber.includes("94766178215")){
-  if(isReact)return;
-  m.react("🍂");  }
-
     //work type
     if (!isOwner && config.MODE === "private") return;
     if (!isOwner && isGroup && config.MODE === "inbox") return;
