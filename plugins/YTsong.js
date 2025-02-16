@@ -40,7 +40,7 @@ cmd(
     }
   ) => {
     try {
-      if (!q) return reply("*නමක් හරි ලින්ක් එකක් හරි දෙන්න* 🌚❤️");
+      if (!q) return reply("*Give me a Name or URL* 🌚❤️");
 
       // Search for the video
       const search = await yts(q);
@@ -49,7 +49,7 @@ cmd(
 
       // Song metadata description
       let desc = `
-*❤️ROBIN SONG DOWNLOADER❤️*
+*❤️VORTEX SONG DOWNLOADER❤️*
 
 👻 *title* : ${data.title}
 👻 *description* : ${data.description}
@@ -58,7 +58,7 @@ cmd(
 👻 *views* : ${data.views}
 👻 *url* : ${data.url}
 
-𝐌𝐚𝐝𝐞 𝐛𝐲 𝐒_𝐈_𝐇_𝐈_𝐋_𝐄_𝐋
+𝐌𝐚𝐝𝐞 𝐛𝐲 PANSILU
 `;
 
       // Send metadata thumbnail message
@@ -100,7 +100,7 @@ cmd(
           document: { url: songData.download.url },
           mimetype: "audio/mpeg",
           fileName: `${data.title}.mp3`,
-          caption: "𝐌𝐚𝐝𝐞 𝐛𝐲 𝐒_𝐈_𝐇_𝐈_𝐋_𝐄_𝐋",
+          caption: "𝐌𝐚𝐝𝐞 𝐛𝐲 PANSILU",
         },
         { quoted: mek }
       );
