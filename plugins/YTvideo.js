@@ -98,7 +98,7 @@ cmd(
         from,
         {
           document: { url: songData.download.url },
-          mimetype: "audio/mpeg",
+          mimetype: "video/mp4",
           fileName: `${data.title}.mp4`,
           caption: "𝐌𝐚𝐝𝐞 𝐛𝐲 PANSILU",
         },
