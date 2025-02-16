@@ -16,7 +16,7 @@ cmd({
     const url = encodeURIComponent(q);
     
     // Fetch audio details from the API
-    const response = await fetch(`https://dark-shan-yt.koyeb.app/download/ytmp3?url=${url}`);
+    const response = await fetch(`https://manul-official-api-site-2025-bc8a57492a5f.herokuapp.com/ytmp3-fix?url=${url}`);
     const data = await response.json();
 
     // Check if the data response is valid
