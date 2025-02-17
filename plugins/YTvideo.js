@@ -80,7 +80,7 @@ cmd(
         from,
         {
           video: video.buffer,
-          caption: 🎥 *${video.title}*\n\n𝐌𝐚𝐝𝐞 𝐛𝐲 ROBIN MAX,
+          caption: 🎥 *${video.title}*\n\n𝐌𝐚𝐝𝐞 𝐛𝐲 PANSILU,
         },
         { quoted: mek }
       );
