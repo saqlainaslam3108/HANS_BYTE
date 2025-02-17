@@ -13,4 +13,8 @@ module.exports = {
   ALIVE_MSG:process.env.ALIVE_MSG || "Hello , I am alive now!!\n\n Join my Support group using this Link 📥 \n\n https://chat.whatsapp.com/EXPFUXpHxFR5ur03emaNx0 \n\n 💝 𝐌𝐚𝐝𝐞 𝐛𝐲 PANSILU 💝 \n\n 🔒 ᐯㄖ尺ㄒ乇乂 爪ᗪ ㄒ乇卂爪 🔒 ",
   AUTO_READ_STATUS:process.env.AUTO_READ_STATUS|| "true",
   MODE:process.env.MODE || "public",
+  AUTO_VOICE:process.env.AUTO_VOICE|| "true",
+  AUTO_STICKER:process.env.AUTO_STICKER|| "true",
+  AUTO_REPLY:process.env.AUTO_REPLY|| "true,
+  
 };
