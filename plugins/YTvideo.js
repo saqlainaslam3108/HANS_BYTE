@@ -34,7 +34,7 @@ cmd(
 👻 *Channel* : ${data.author.name}
 👻 *Link* : ${data.url}
 
-𝐌𝐚𝐝𝐞 𝐛𝐲 ROBIN MAX
+𝐌𝐚𝐝𝐞 𝐛𝐲 PANSILU
 ;
 
       // Send metadata and thumbnail message
