@@ -65,13 +65,13 @@ cmd(
 👻 *Title*: ${title || "Unknown"}
 👻 *Quality*: ${hd ? "HD Available" : "SD Only"}
 
-𝐌𝐚𝐝𝐞 𝐛𝐲 𝐒_𝐈_𝐇_𝐈_𝐋_𝐄_𝐋
+𝐌𝐚𝐝𝐞 𝐛𝐲 ＰＡＮＳＩＬＵ
         `;
       await robin.sendMessage(
         from,
         {
           image: {
-            url: "https://raw.githubusercontent.com/Dark-Robin/Bot-Helper/refs/heads/main/autoimage/Bot%20fb-1.jpg",
+            url: "https://raw.githubusercontent.com/NethminaPansil/Whtsapp-bot/refs/heads/main/images%20(10).jpeg",
           },
           caption: desc,
         },
