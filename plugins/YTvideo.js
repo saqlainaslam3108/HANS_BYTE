@@ -25,8 +25,8 @@ cmd(
       const url = data.url;
 
       // Video metadata description
-      let desc = 🎥 *VORTEX VIDEO DOWNLOADER* 🎥
-      
+      let desc = `🎥 *VORTEX VIDEO DOWNLOADER* 🎥
+
 👻 *Title* : ${data.title}
 👻 *Duration* : ${data.timestamp}
 👻 *Views* : ${data.views}
@@ -35,7 +35,7 @@ cmd(
 👻 *Link* : ${data.url}
 
 𝐌𝐚𝐝𝐞 𝐛𝐲 PANSILU
-;
+`;
 
       // Send metadata and thumbnail message
       await robin.sendMessage(
