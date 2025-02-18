@@ -34,7 +34,7 @@ cmd(
 👻 *Channel* : ${data.author.name}
 👻 *Link* : ${data.url}
 
-𝐌𝐚𝐝𝐞 𝐛𝐲 PANSILU`
+𝐌𝐚𝐝𝐞 𝐛𝐲 ＰＡＮＳＩＬＵ`
 ;
 
       // Send metadata and thumbnail message
@@ -80,7 +80,7 @@ cmd(
         from,
         {
           video: video.buffer,
-          caption:` 🎥 *${video.title}*\n\n𝐌𝐚𝐝𝐞 𝐛𝐲 PANSILU,`
+          caption:` 🎥 *${video.title}*,`
         },
         { quoted: mek }
       );
