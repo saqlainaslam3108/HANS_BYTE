@@ -14,3 +14,4 @@ case 'txt2img': {
     await m.reply('error')
   }
 }
+break
