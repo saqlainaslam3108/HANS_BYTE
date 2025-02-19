@@ -65,32 +65,35 @@ cmd(
 ╚════════════════╝  
 
 🎯 *MAIN COMMANDS*  
-  ❤️ .alive  
-  ❤️ .menu  
-  ❤️ .ai <text>  
-  ❤️ .system  
-  ❤️ .owner  
+  👉 .alive  
+  👉 .menu   
+  👉 .system  
+  👉 .owner  
 
 📥 *DOWNLOAD COMMANDS*  
-  ❤️ .song <text>  
-  ❤️ .video <text>  
-  ❤️ .fb <link>  
+  👉 .song <text>  
+  👉 .video <text>  
+  👉 .fb <link>  
 
 👥 *GROUP COMMANDS*  
-  ${menu.group}  
+  👉 .Mute
+  👉 .ban
+  👉 .tagall
 
 🔒 *OWNER COMMANDS*  
-  ❤️ .restart  
-  ❤️ .update  
+  👉 .restart  
+  👉 .update  
 
 ✏️ *CONVERT COMMANDS*  
-  ❤️ .sticker <reply img>  
-  ❤️ .img <reply sticker>  
-  ❤️ .tr <lang> <text>  
-  ❤️ .tts <text>  
+  👉 .sticker <reply img>  
+  👉.img <reply sticker>  
+  👉 .tr <lang> <text>  
+  👉 .tts <text>  
 
-🔍 *SEARCH COMMANDS*  
-  ${menu.search}  
+💤 *AI COMMANDS*  
+  👉 .ai <text> 
+  👉 .gpt <text>
+  👉 .gen <text>
 
 🍂 *𝐌𝐚𝐝𝐞 𝐛𝐲 𝗣𝗮𝗻𝘀𝗶𝗹𝘂 𝗡𝗲𝘁𝗵𝗺𝗶𝗻𝗮* 🍂  
 > ᐯㄖ尺ㄒ乇乂 几ᗪ 爪乇几卄
