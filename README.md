@@ -1,6 +1,6 @@
 # WhatsApp Bot
 
-![WhatsApp Bot]([images/bot-image.png](https://raw.githubusercontent.com/NethminaPansil/Whtsapp-bot/refs/heads/main/tumblr_1d7104aa11efcf7ebbaab88a184a7279_25602a04_1280.jpg))
+![WhatsApp Bot](https://raw.githubusercontent.com/NethminaPansil/Whtsapp-bot/refs/heads/main/tumblr_1d7104aa11efcf7ebbaab88a184a7279_25602a04_1280.jpg)
 
 A simple and efficient WhatsApp bot powered by Node.js. This bot is designed to automate and manage conversations, allowing seamless communication within WhatsApp.
 
