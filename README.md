@@ -15,7 +15,7 @@ A simple and efficient WhatsApp bot powered by Node.js. This bot is designed to 
 
 Before running the bot, ensure that you have the following installed:
 
-- Node.js (version >= 14.x.x)
+- Node.js (version >= 20)
 - NPM (Node Package Manager)
 - WhatsApp Web (connected via your phone)
 - GitHub repository for easy updates
@@ -64,5 +64,7 @@ For questions or feedback, feel free to contact me:
 Name: Pansilu Nethmina
 
 Email: nethminapansilu32@gmail.com
+
+Whatsapp : +94763513529
 
 
