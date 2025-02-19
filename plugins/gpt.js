@@ -26,12 +26,15 @@ cmd(
       // API request to fetch AI response
       const response = await axios.get(apiUrl);
 
+      // Debug the entire response to see the data structure
+      console.log("API Response:", response.data);
+
       // Check if the response contains AI reply
       if (response.data && response.data.reply) {
         const aiReply = response.data.reply;
         await reply(aiReply);
       } else {
-        return reply("❌ API did not return a valid response.");
+        return reply("❌ API response format is unexpected or missing reply.");
       }
 
     } catch (error) {
