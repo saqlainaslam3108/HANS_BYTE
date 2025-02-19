@@ -1,4 +1,3 @@
-const { cmd, commands } = require("../command");
 const axios = require("axios");
 
 cmd({
@@ -9,7 +8,7 @@ cmd({
   category: "ai",
   use: ".gen <Your Question>",
   filename: __filename
-}, async (conn, mek, msg, { reply, args, pushname }) => {
+}, async (conn, mek, msg, { reply, args }) => {
   try {
     const text = args.join(" ");
     if (!text) {
@@ -24,14 +23,15 @@ cmd({
 
     // API request
     const response = await axios.get(apiUrl);
+    console.log(response.data); // 👈 Check API response
 
-    // Check if API response is valid
-    if (!response.data || !response.data.reply) {
-      return reply("❌ Error: No response from AI.");
+    // Check if API response contains the correct data
+    if (response.data && (response.data.reply || response.data.result)) {
+      const aiReply = response.data.reply || response.data.result;
+      await reply(aiReply);
+    } else {
+      return reply("❌ API did not return a valid response.");
     }
-
-    const aiResponse = response.data.reply;
-    await reply(aiResponse);
 
   } catch (error) {
     console.error("Error:", error.response?.data || error.message);
