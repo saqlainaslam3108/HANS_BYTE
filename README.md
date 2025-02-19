@@ -1,5 +1,3 @@
-මෙන්න README.md ගොනුවක් code block එකක් තුල:
-
 # WhatsApp Bot
 
 A simple and efficient WhatsApp bot powered by Node.js. This bot is designed to automate and manage conversations, allowing seamless communication within WhatsApp.
