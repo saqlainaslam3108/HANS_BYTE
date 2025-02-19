@@ -1,4 +1,3 @@
-// Importing the cmd function properly
 const { cmd } = require("../command");
 const axios = require("axios");
 
@@ -26,8 +25,9 @@ cmd(
 
       // API request
       const response = await axios.get(apiUrl);
-      console.log(response.data); // Check API response
+      console.log("API Response:", response.data); // 👈 Print the full response
 
+      // Check if the response contains the correct data
       if (response.data && (response.data.reply || response.data.result)) {
         const aiReply = response.data.reply || response.data.result;
         await reply(aiReply);
