@@ -74,6 +74,8 @@ cmd(
   👉 .song <text>  
   👉 .video <text>  
   👉 .fb <link>  
+  👉 .rtiktok 
+  👉 .sinhala <text>
 
 👥 *GROUP COMMANDS*  
   👉 .Mute
