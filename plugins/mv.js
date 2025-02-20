@@ -10,6 +10,8 @@ const api_key = `Manul-Ofc-Sl-Sub-Key-9`;
 
 //===== Api-Key එක මට Message එකක් දාල ඉල්ලගන්න, +94 74 227 4855 සල්ලි ගන්න නෙවේ, කීයක් Use කරනවද දැනගන්න...❤️=====
 
+//============================================
+
 cmd({
     pattern: "sinhala",
     alias: ["slsub", "sinhalasub"],
@@ -59,30 +61,25 @@ cmd({
             
             try {
                 const movieDetails = response.data;
-                let downloadLinks = movieDetails.downloadLinks || [];
-                // Filter only 720p (HD) links
-                downloadLinks = downloadLinks.filter(link => {
-                    const quality = link.quality.toLowerCase();
-                    return quality.includes('720p') || quality.includes('hd');
-                });
-                
+                const downloadLinks = movieDetails.downloadLinks || [];
+
                 if (downloadLinks.length === 0) {
-                    return await reply('No 720p download links found for this movie.');
+                    return await reply('No download links found.');
                 }
 
-                let downloadMessage = `🎥 *${movieDetails.title}*\n\n*Available 720p Download Links:*\n`;
+                let downloadMessage = `🎥 *${movieDetails.title}*\n\n*Available Download Links:*\n`;
                 downloadLinks.forEach((link, index) => {
                     downloadMessage += `*${index + 1}.* ${link.quality} - ${link.size}\n🔗 Link: ${link.link}\n\n`;
                 });
 
                 const pixelDrainMsg = await conn.sendMessage(m.chat, {
                     image: { url: selectedMovie.thumbnail },
-                    caption: `${downloadMessage}\nReply with the number of your desired download link.`
+                    caption: `${downloadMessage}`
                 }, { quoted: replyMek });
 
                 const pixelDrainMessageID = pixelDrainMsg.key.id;
 
-                // Event listener for the user to choose download quality (filtered to 720p)
+                // Event listener for the user to choose download quality
                 const handleDownloadReply = async (pdReply, qualityNumber) => {
                     const selectedLink = downloadLinks[qualityNumber - 1];
                     const file = selectedLink.link;
