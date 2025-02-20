@@ -1,13 +1,11 @@
 const { cmd } = require("../command");
 
-let menuSessions = {}; // User sessions store (to track replies)
-
 cmd(
   {
     pattern: "menu",
     alise: ["getmenu"],
     react: "📔",
-    desc: "get cmd list",
+    desc: "Get command list",
     category: "main",
     filename: __filename,
   },
@@ -29,30 +27,32 @@ cmd(
 📝 Reply with a number (1-6) to get the respective command list.
 🔄 Reply *0* to return to this menu.`;
 
-      await robin.sendMessage(from, { text: mainMenu }, { quoted: mek });
+      // Send main menu
+      await reply(mainMenu);
 
-      // Store user session
-      menuSessions[from] = true;
+      // Enable reply listener
+      global.menuSessions = global.menuSessions || {};
+      global.menuSessions[from] = true;
 
     } catch (e) {
       console.log(e);
-      reply(`${e}`);
+      reply(`❌ Error: ${e}`);
     }
   }
 );
 
-// Listen for all messages (to check for replies)
+// **Reply Listener for Pagination**
 cmd(
   {
-    pattern: ".*", // Match all messages
-    dontAddCommandList: true, // Hide from command list
+    pattern: ".*",
+    dontAddCommandList: true,
   },
-  async (robin, mek, m, { from, reply }) => {
-    if (!menuSessions[from]) return; // If user didn't open menu, ignore
+  async (robin, mek, m, { from, body, reply }) => {
+    if (!global.menuSessions[from]) return;
 
-    let userInput = m.body.trim();
-
+    let userInput = body.trim();
     let menuResponse = "";
+
     switch (userInput) {
       case "1":
         menuResponse = `🎯 *MAIN COMMANDS*  
@@ -111,14 +111,14 @@ cmd(
 
 📝 Reply with a number (1-6) to get the respective command list.
 🔄 Reply *0* to return to this menu.`;
+
+        // Clear session
+        delete global.menuSessions[from];
         break;
       default:
         menuResponse = "❌ Invalid option! Please reply with a number (1-6) or *0* to return.";
     }
 
-    await robin.sendMessage(from, { text: menuResponse }, { quoted: mek });
-
-    // If user enters 0, clear session
-    if (userInput === "0") delete menuSessions[from];
+    await reply(menuResponse);
   }
 );
