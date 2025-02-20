@@ -1,10 +1,14 @@
+/*
+Please Give Credit 🙂❤️
+⚖️ Powered By - : VORTEX MD | Pansilu Nethmina 💚
+*/
 
 const { cmd, commands } = require('../command');
 const { fetchJson } = require('../lib/functions');
-const domain = `https://manul-official-api-site-2025-bc8a57492a5f.herokuapp.com`;
+const domain = `https://mr-manul-ofc-apis.vercel.app`;
 const api_key = `Manul-Ofc-Sl-Sub-Key-9`;
 
-//============================================
+//===== Api-Key එක මට Message එකක් දාල ඉල්ලගන්න, +94 74 227 4855 සල්ලි ගන්න නෙවේ, කීයක් Use කරනවද දැනගන්න...❤️=====
 
 cmd({
     pattern: "sinhala",
@@ -38,13 +42,11 @@ cmd({
             const link = result.link || 'No link available';
             const thumbnail = result.thumbnail || 'https://via.placeholder.com/150'; // Fallback if thumbnail is missing
             resultsMessage += `*${index + 1}.* ${title}\n🔗 Link: ${link}\n`;
-
-            // You can also display the thumbnail in the results if needed
             resultsMessage += `📸 Thumbnail: ${thumbnail}\n\n`;
         });
 
         const sentMsg = await conn.sendMessage(m.chat, {
-            image: { url: searchResults[0].thumbnail }, // Show the thumbnail of the first result
+            image: { url: searchResults[0].thumbnail },
             caption: `${resultsMessage}`
         }, { quoted: mek });
 
@@ -57,25 +59,30 @@ cmd({
             
             try {
                 const movieDetails = response.data;
-                const downloadLinks = movieDetails.downloadLinks || [];
-
+                let downloadLinks = movieDetails.downloadLinks || [];
+                // Filter only 720p (HD) links
+                downloadLinks = downloadLinks.filter(link => {
+                    const quality = link.quality.toLowerCase();
+                    return quality.includes('720p') || quality.includes('hd');
+                });
+                
                 if (downloadLinks.length === 0) {
-                    return await reply('No download links found.');
+                    return await reply('No 720p download links found for this movie.');
                 }
 
-                let downloadMessage = `🎥 *${movieDetails.title}*\n\n*Available Download Links:*\n`;
+                let downloadMessage = `🎥 *${movieDetails.title}*\n\n*Available 720p Download Links:*\n`;
                 downloadLinks.forEach((link, index) => {
                     downloadMessage += `*${index + 1}.* ${link.quality} - ${link.size}\n🔗 Link: ${link.link}\n\n`;
                 });
 
                 const pixelDrainMsg = await conn.sendMessage(m.chat, {
-                    image: { url: selectedMovie.thumbnail }, // Show the selected movie's thumbnail
-                    caption: `${downloadMessage}`
+                    image: { url: selectedMovie.thumbnail },
+                    caption: `${downloadMessage}\nReply with the number of your desired download link.`
                 }, { quoted: replyMek });
 
                 const pixelDrainMessageID = pixelDrainMsg.key.id;
 
-                // Event listener for the user to choose download quality
+                // Event listener for the user to choose download quality (filtered to 720p)
                 const handleDownloadReply = async (pdReply, qualityNumber) => {
                     const selectedLink = downloadLinks[qualityNumber - 1];
                     const file = selectedLink.link;
@@ -90,13 +97,11 @@ cmd({
                     await conn.sendMessage(from, { react: { text: '⬆', key: mek.key } });
 
                     await conn.sendMessage(from, {
-                                document: {
-                                    url: directDownloadUrl
-                                },
-                                mimetype: 'video/mp4',
-                                fileName: `${movieDetails.title} - ${selectedLink.quality}.mp4`,
-                                caption: `${movieDetails.title}\nQuality: ${selectedLink.quality}\n\n> *⚖️𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐘𝐝 𝐵𝐲 - : ©𝐌𝐑 𝐌𝐀𝐍𝐔𝐋 𝐎𝐅𝐂 💚*`
-                            }, { quoted: pdReply });
+                        document: { url: directDownloadUrl },
+                        mimetype: 'video/mp4',
+                        fileName: `${movieDetails.title} - ${selectedLink.quality}.mp4`,
+                        caption: `${movieDetails.title}\nQuality: ${selectedLink.quality}\n\n> ⚖️ Powered By - : VORTEX MD | Pansilu Nethmina 💚`
+                    }, { quoted: pdReply });
 
                     await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
                 };
@@ -146,3 +151,5 @@ cmd({
         await reply('Sorry, something went wrong. Please try again later.');
     }
 });
+
+//============= VORTEX MD | Pansilu Nethmina 💚 ==========
