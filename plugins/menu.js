@@ -1,5 +1,7 @@
 const { cmd } = require("../command");
 
+global.menuSessions = {}; // Store active menu sessions
+
 cmd(
   {
     pattern: "menu",
@@ -11,9 +13,11 @@ cmd(
   },
   async (robin, mek, m, { from, pushname, reply }) => {
     try {
-      console.log(`✅ MENU COMMAND TRIGGERED FROM: ${from}`);
-
       let mainMenu = `👋 *Hello ${pushname}*
+
+╔════════════════╗  
+  🍁 *VORTEX MD MENU* 🍁  
+╚════════════════╝  
 
 1️⃣ Main Commands  
 2️⃣ Download Commands  
@@ -25,13 +29,11 @@ cmd(
 📝 Reply with a number (1-6) to get the respective command list.
 🔄 Reply *0* to return to this menu.`;
 
+      // Send main menu
       await reply(mainMenu);
 
-      // Enable reply listener
-      global.menuSessions = global.menuSessions || {};
+      // Activate menu session
       global.menuSessions[from] = true;
-
-      console.log(`✅ Menu Session Started for: ${from}`);
     } catch (e) {
       console.log(`❌ ERROR in MENU COMMAND: ${e}`);
       reply(`❌ Error: ${e}`);
@@ -39,62 +41,60 @@ cmd(
   }
 );
 
-// **Reply Listener for Pagination**
+// **Reply Listener for Menu Selection**
 cmd(
   {
     pattern: ".*",
     dontAddCommandList: true,
   },
   async (robin, mek, m, { from, body, reply }) => {
-    if (!global.menuSessions[from]) return;
+    if (!global.menuSessions[from]) return; // If no active session, ignore
 
     let userInput = body.trim();
-    console.log(`📥 Received reply: '${userInput}' from: ${from}`);
-
     let menuResponse = "";
 
     switch (userInput) {
       case "1":
         menuResponse = `🎯 *MAIN COMMANDS*  
-  ❤️ .alive  
-  ❤️ .menu  
-  ❤️ .ai <text>  
-  ❤️ .system  
-  ❤️ .owner  
+❤️ .alive  
+❤️ .menu  
+❤️ .ai <text>  
+❤️ .system  
+❤️ .owner  
 🔄 Reply *0* to return to Main Menu.`;
         break;
       case "2":
         menuResponse = `📥 *DOWNLOAD COMMANDS*  
-  ❤️ .song <text>  
-  ❤️ .video <text>  
-  ❤️ .fb <link>  
+❤️ .song <text>  
+❤️ .video <text>  
+❤️ .fb <link>  
 🔄 Reply *0* to return to Main Menu.`;
         break;
       case "3":
         menuResponse = `👥 *GROUP COMMANDS*  
-  ❤️ .tagall  
-  ❤️ .mute  
-  ❤️ .ban  
+❤️ .tagall  
+❤️ .mute  
+❤️ .ban  
 🔄 Reply *0* to return to Main Menu.`;
         break;
       case "4":
         menuResponse = `🔒 *OWNER COMMANDS*  
-  ❤️ .restart  
-  ❤️ .update  
+❤️ .restart  
+❤️ .update  
 🔄 Reply *0* to return to Main Menu.`;
         break;
       case "5":
         menuResponse = `✏️ *CONVERT COMMANDS*  
-  ❤️ .sticker <reply img>  
-  ❤️ .img <reply sticker>  
-  ❤️ .tr <lang> <text>  
-  ❤️ .tts <text>  
+❤️ .sticker <reply img>  
+❤️ .img <reply sticker>  
+❤️ .tr <lang> <text>  
+❤️ .tts <text>  
 🔄 Reply *0* to return to Main Menu.`;
         break;
       case "6":
         menuResponse = `🔍 *SEARCH COMMANDS*  
-  ❤️ .search <query>  
-  ❤️ .ytsearch <query>  
+❤️ .search <query>  
+❤️ .ytsearch <query>  
 🔄 Reply *0* to return to Main Menu.`;
         break;
       case "0":
@@ -110,8 +110,7 @@ cmd(
 📝 Reply with a number (1-6) to get the respective command list.
 🔄 Reply *0* to return to this menu.`;
 
-        console.log(`♻️ Resetting Menu Session for: ${from}`);
-        delete global.menuSessions[from];
+        delete global.menuSessions[from]; // Clear session
         break;
       default:
         menuResponse = "❌ Invalid option! Please reply with a number (1-6) or *0* to return.";
