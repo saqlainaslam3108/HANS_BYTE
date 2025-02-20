@@ -25,12 +25,16 @@ cmd({
         if (!isMe && !isOwner)
             return await reply('*Only Bot Number Can Use This Command!!!*');
 
-        // Fetch search results from API (Assuming the endpoint exists)
-        const searchRes = await fetchJson(`${domain}/api/hentai-search?query=${q}&apikey=${api_key}`);
-        const hentaiData = searchRes.data.data; // Expecting data.data to be an array
+        // Fetch search results from API
+        const searchUrl = `${domain}/api/hentai-search?query=${encodeURIComponent(q)}&apikey=${api_key}`;
+        const searchRes = await fetchJson(searchUrl);
+        if (!searchRes || !searchRes.data || !Array.isArray(searchRes.data.data)) {
+            return await reply('API response structure is unexpected. Please try again later.');
+        }
+        const hentaiData = searchRes.data.data;
 
         // Check if valid results were returned
-        if (!Array.isArray(hentaiData) || hentaiData.length === 0) {
+        if (hentaiData.length === 0) {
             return await reply(`No results found for: ${q}`);
         }
 
@@ -51,6 +55,7 @@ cmd({
         });
         resultsMessage += `\n_Select a hentai by tapping the button below._`;
 
+        // Send message with image, caption, and buttons
         const sentMsg = await conn.sendMessage(m.chat, {
             image: { url: searchResults[0].thumbnail || 'https://via.placeholder.com/150' },
             caption: resultsMessage,
@@ -73,14 +78,17 @@ cmd({
                 }
                 // Proceed with the selected hentai item
                 const selectedItem = searchResults[selectedIndex];
-                const infoRes = await fetchJson(`${domain}/api/hentai-info?url=${encodeURIComponent(selectedItem.link)}&apikey=${api_key}`);
-
+                const infoUrl = `${domain}/api/hentai-info?url=${encodeURIComponent(selectedItem.link)}&apikey=${api_key}`;
+                const infoRes = await fetchJson(infoUrl);
+                if (!infoRes || !infoRes.data) {
+                    return await reply('Failed to fetch hentai details. Please try again later.');
+                }
                 const hentaiDetails = infoRes.data;
+
+                // Retrieve and filter download links for HD quality
                 let downloadLinks = hentaiDetails.downloadLinks || [];
-                // Filter only HD links (quality text contains "hd" case-insensitive)
                 downloadLinks = downloadLinks.filter(link => {
-                    const quality = link.quality.toLowerCase();
-                    return quality.includes('hd');
+                    return link.quality && link.quality.toLowerCase().includes('hd');
                 });
 
                 if (downloadLinks.length === 0) {
@@ -98,76 +106,4 @@ cmd({
                         type: 1
                     });
                 });
-                downloadMessage += `\n_Tap the button for your desired download link._`;
-
-                await conn.sendMessage(m.chat, {
-                    image: { url: selectedItem.thumbnail || 'https://via.placeholder.com/150' },
-                    caption: downloadMessage,
-                    buttons: dlButtons,
-                    footer: 'Powered By - VORTEX MD | Pansilu Nethmina'
-                }, { quoted: msg });
-            } catch (err) {
-                console.error('Error in hentai button selection:', err);
-            }
-        });
-
-        // Listen for button response for download link selection
-        conn.ev.on('messages.upsert', async (update) => {
-            try {
-                const msg = update.messages[0];
-                if (!msg.message || !msg.message.buttonsResponseMessage) return;
-                const buttonResponse = msg.message.buttonsResponseMessage;
-                const selectedId = buttonResponse.selectedButtonId; // e.g., "hentai_dl_2_1"
-                if (!selectedId.startsWith("hentai_dl_")) return;
-
-                const parts = selectedId.split("_");
-                if (parts.length < 3) return;
-                const itemIndex = parseInt(parts[2]);
-                const linkIndex = parseInt(parts[3]);
-                if (isNaN(itemIndex) || isNaN(linkIndex)) return;
-
-                // Retrieve the hentai item using the original search results
-                const infoRes = await fetchJson(`${domain}/api/hentai-info?url=${encodeURIComponent(searchResults[itemIndex].link)}&apikey=${api_key}`);
-                const hentaiDetails = infoRes.data;
-                let downloadLinks = hentaiDetails.downloadLinks || [];
-                downloadLinks = downloadLinks.filter(link => link.quality.toLowerCase().includes('hd'));
-
-                if (linkIndex < 0 || linkIndex >= downloadLinks.length) {
-                    return await reply('Invalid selection. Please try again.');
-                }
-
-                const selectedLink = downloadLinks[linkIndex];
-                const file = selectedLink.link;
-                const fileRes = await fetchJson(`${domain}/api/hentai-direct-link?url=${encodeURIComponent(file)}&apikey=${api_key}`);
-                const downloadLink = fileRes.data.downloadLink;
-                const fileId = downloadLink.split('/').pop();
-
-                // Send reactions to indicate process start
-                await conn.sendMessage(from, { react: { text: '⬇️', key: mek.key } });
-
-                const directDownloadUrl = `https://pixeldrain.com/api/file/${fileId}`;
-
-                await conn.sendMessage(from, { react: { text: '⬆', key: mek.key } });
-
-                // Send the final document message with the direct download link
-                await conn.sendMessage(from, {
-                    document: { url: directDownloadUrl },
-                    mimetype: 'video/mp4',
-                    fileName: `${hentaiDetails.title} - ${selectedLink.quality}.mp4`,
-                    caption: `${hentaiDetails.title}\nQuality: ${selectedLink.quality}\n\n> ⚖️ Powered By - VORTEX MD | Pansilu Nethmina 💚`
-                }, { quoted: msg });
-
-                await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
-            } catch (err) {
-                console.error('Error in hentai download button selection:', err);
-                await reply('Sorry, something went wrong during the download process.');
-            }
-        });
-
-    } catch (error) {
-        console.error('Error in hentai command:', error);
-        await reply('Sorry, something went wrong. Please try again later.');
-    }
-});
-
-//============= VORTEX MD | Pansilu Nethmina 💚 ==========
+                downloadMessage += `\
