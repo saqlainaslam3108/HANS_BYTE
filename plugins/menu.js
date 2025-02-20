@@ -1,5 +1,4 @@
-const { cmd, commands } = require("../command");
-const config = require("../config");
+const { cmd } = require("../command");
 
 cmd(
   {
@@ -12,11 +11,9 @@ cmd(
   },
   async (robin, mek, m, { from, pushname, reply }) => {
     try {
-      let mainMenu = `👋 *Hello ${pushname}*
+      console.log(`✅ MENU COMMAND TRIGGERED FROM: ${from}`);
 
-╔════════════════╗  
-  🍁 *VORTEX MD* 🍁  
-╚════════════════╝
+      let mainMenu = `👋 *Hello ${pushname}*
 
 1️⃣ Main Commands  
 2️⃣ Download Commands  
@@ -28,15 +25,15 @@ cmd(
 📝 Reply with a number (1-6) to get the respective command list.
 🔄 Reply *0* to return to this menu.`;
 
-      // Send main menu
       await reply(mainMenu);
 
       // Enable reply listener
       global.menuSessions = global.menuSessions || {};
       global.menuSessions[from] = true;
 
+      console.log(`✅ Menu Session Started for: ${from}`);
     } catch (e) {
-      console.log(e);
+      console.log(`❌ ERROR in MENU COMMAND: ${e}`);
       reply(`❌ Error: ${e}`);
     }
   }
@@ -52,6 +49,8 @@ cmd(
     if (!global.menuSessions[from]) return;
 
     let userInput = body.trim();
+    console.log(`📥 Received reply: '${userInput}' from: ${from}`);
+
     let menuResponse = "";
 
     switch (userInput) {
@@ -111,7 +110,7 @@ cmd(
 📝 Reply with a number (1-6) to get the respective command list.
 🔄 Reply *0* to return to this menu.`;
 
-        // Clear session
+        console.log(`♻️ Resetting Menu Session for: ${from}`);
         delete global.menuSessions[from];
         break;
       default:
