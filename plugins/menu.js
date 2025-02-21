@@ -1,7 +1,8 @@
 const { cmd } = require("../command");
 
-global.menuSessions = {}; // Store active menu sessions
+global.menuSessions = global.menuSessions || {}; // Active sessions tracker
 
+// .menu command – main menu display
 cmd(
   {
     pattern: "menu",
@@ -16,7 +17,7 @@ cmd(
       let mainMenu = `👋 *Hello ${pushname}*
 
 ╔════════════════╗  
-  🍁 *VORTEX MD MENU* 🍁  
+🍁 *VORTEX MD MENU* 🍁  
 ╚════════════════╝  
 
 1️⃣ Main Commands  
@@ -32,7 +33,7 @@ cmd(
       // Send main menu
       await reply(mainMenu);
 
-      // Activate menu session
+      // Activate menu session for this user
       global.menuSessions[from] = true;
     } catch (e) {
       console.log(`❌ ERROR in MENU COMMAND: ${e}`);
@@ -41,15 +42,15 @@ cmd(
   }
 );
 
-// **Reply Listener for Menu Selection**
+// Global reply listener for menu navigation
 cmd(
   {
     pattern: ".*",
     dontAddCommandList: true,
   },
   async (robin, mek, m, { from, body, reply }) => {
-    if (!global.menuSessions[from]) return; // If no active session, ignore
-
+    // Check if user has an active menu session
+    if (!global.menuSessions[from]) return;
     let userInput = body.trim();
     let menuResponse = "";
 
@@ -98,6 +99,7 @@ cmd(
 🔄 Reply *0* to return to Main Menu.`;
         break;
       case "0":
+        // For 0, re-display the main menu without ending the session
         menuResponse = `🔄 Returning to Main Menu...  
 
 1️⃣ Main Commands  
@@ -109,13 +111,12 @@ cmd(
 
 📝 Reply with a number (1-6) to get the respective command list.
 🔄 Reply *0* to return to this menu.`;
-
-        delete global.menuSessions[from]; // Clear session
         break;
       default:
         menuResponse = "❌ Invalid option! Please reply with a number (1-6) or *0* to return.";
     }
 
     await reply(menuResponse);
+    // Session remains active so user can navigate repeatedly.
   }
 );
