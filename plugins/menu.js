@@ -1,10 +1,19 @@
-const { cmd } = require("../command");
+const { cmd, commands } = require("../command");
+const config = require("../config");
 
-global.menuSessions = global.menuSessions || {}; // Active sessions tracker
-
-// Utility: Send main menu text
-async function sendMainMenu(reply, pushname) {
-  let mainMenu = `👋 *Hello ${pushname}*
+// .menu command – Display Main Menu and start session
+cmd(
+  {
+    pattern: "menu",
+    alias: ["getmenu"],
+    react: "📔",
+    desc: "Get command list",
+    category: "main",
+    filename: __filename,
+  },
+  async (conn, mek, m, { from, pushname, reply }) => {
+    try {
+      let mainMenu = `👋 *Hello ${pushname}*
 
 ╔════════════════╗  
   🍁 *VORTEX MD MENU* 🍁  
@@ -17,65 +26,29 @@ async function sendMainMenu(reply, pushname) {
 5️⃣ Convert Commands  
 6️⃣ Search Commands  
 
-📝 Reply with a number (1-6) to get the respective command list.
-🔄 Reply *0* to return to this menu.`;
-  await reply(mainMenu);
-}
+📝 Reply with a number (1-6) to view the respective command list.
+🔄 Reply *0* to return to the Main Menu.`;
 
-// Timeout for session clearance (e.g. 5 minutes)
-function startSessionTimeout(from) {
-  // Clear any existing timeout for the user
-  if (global.menuSessions[from] && global.menuSessions[from].timeout) {
-    clearTimeout(global.menuSessions[from].timeout);
-  }
-  // Set new timeout
-  const timeout = setTimeout(() => {
-    console.log(`⌛ Session timeout for ${from}`);
-    delete global.menuSessions[from];
-  }, 5 * 60 * 1000); // 5 minutes
-
-  // Save timeout object in session
-  global.menuSessions[from].timeout = timeout;
-}
-
-// .menu command – Display main menu and start session
-cmd(
-  {
-    pattern: "menu",
-    alise: ["getmenu"],
-    react: "📔",
-    desc: "Get command list",
-    category: "main",
-    filename: __filename,
-  },
-  async (robin, mek, m, { from, pushname, reply }) => {
-    try {
-      console.log(`✅ .menu command triggered from: ${from}`);
-      // Initialize or update session for this user
-      global.menuSessions[from] = { active: true };
-      startSessionTimeout(from);
-      await sendMainMenu(reply, pushname);
+      await reply(mainMenu);
+      global.menuSessions = global.menuSessions || {};
+      global.menuSessions[from] = true; // Activate menu session for this sender
     } catch (e) {
-      console.log(`❌ ERROR in .menu command: ${e}`);
-      reply(`❌ Error: ${e}`);
+      console.error(e);
+      await reply(`❌ Error: ${e}`);
     }
   }
 );
 
-// Global reply listener for menu navigation
+// Global reply listener for menu navigation – Captures user replies with numbers 0-6
 cmd(
   {
-    pattern: ".*",
+    pattern: ".*", // Match all messages
     dontAddCommandList: true,
   },
-  async (robin, mek, m, { from, body, pushname, reply }) => {
-    // Check if this user has an active menu session
-    if (!global.menuSessions[from]) return; // No active session, ignore
+  async (conn, mek, m, { from, body, reply }) => {
+    if (!global.menuSessions || !global.menuSessions[from]) return; // No active menu session; ignore
     let userInput = body.trim();
-    console.log(`📥 Received input '${userInput}' from: ${from}`);
-
     let menuResponse = "";
-
     switch (userInput) {
       case "1":
         menuResponse = `🎯 *MAIN COMMANDS*  
@@ -121,18 +94,21 @@ cmd(
 🔄 Reply *0* to return to Main Menu.`;
         break;
       case "0":
-        // Re-display the main menu without ending the session
-        menuResponse = `🔄 Returning to Main Menu...`;
-        // Send main menu after response
-        await reply(menuResponse);
-        // Restart session timeout
-        startSessionTimeout(from);
-        return sendMainMenu(reply, pushname);
+        menuResponse = `🔄 *MAIN MENU*  
+
+1️⃣ Main Commands  
+2️⃣ Download Commands  
+3️⃣ Group Commands  
+4️⃣ Owner Commands  
+5️⃣ Convert Commands  
+6️⃣ Search Commands  
+
+📝 Reply with a number (1-6) to view the respective command list.
+🔄 Reply *0* to return to this menu.`;
+        break;
       default:
-        menuResponse = "❌ Invalid option! Please reply with a number (1-6) or *0* to return.";
+        menuResponse = "❌ Invalid option! Please reply with a number (1-6) or *0* to return to the Main Menu.";
     }
-    // Restart session timeout after processing a valid input
-    startSessionTimeout(from);
     await reply(menuResponse);
   }
 );
