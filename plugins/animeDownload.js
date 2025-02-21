@@ -1,8 +1,11 @@
+const { cmd } = require("../command");
+const { dl } = require('darksadasyt-anime');  // Import the anime download function
+
 cmd(
   {
-    pattern: "downloadanime",
+    pattern: "animeDownload",
     react: "🎥",
-    desc: "Download Anime",
+    desc: "Get Direct Download Link for Anime Episode",
     category: "download",
     filename: __filename,
   },
@@ -13,26 +16,26 @@ cmd(
     { from, quoted, body, isCmd, command, args, q, isGroup, sender, reply }
   ) => {
     try {
-      if (!q) return reply("*Please provide a valid anime episode link.* 🎥❤️");
+      if (!q) return reply("❌ Please provide a valid anime episode URL.");
 
-      // Fetch the download link details
+      // Fetch the download link details using the provided episode URL
       const results = await dl(q);
 
-      // Get the direct download link (it should be the 3rd result)
-      const directLink = results[2]; // This will be the download URL
+      // Check if results contain the direct download link
+      const directLink = results[2];  // This is the direct download URL
 
       if (!directLink) {
-        return reply("❌ Video download link not found.");
+        return reply("❌ Could not find a direct download link.");
       }
 
-      // Send the direct download link
+      // Send the direct download link to the user
       await robin.sendMessage(
         from,
-        { text: `🎬 Here's the direct download link for the anime: ${directLink}` },
+        { text: `🎬 Here's the direct download link for the episode: ${directLink}` },
         { quoted: mek }
       );
 
-      reply("🎥 Your anime download link is ready. Enjoy! 🎉");
+      reply("🎥 The direct download link is ready. Enjoy your anime!");
     } catch (e) {
       console.error(e);
       reply(`❌ Error: ${e.message}`);
