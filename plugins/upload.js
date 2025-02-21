@@ -34,18 +34,35 @@ cmd(
       else if (fileExtension === "jpg" || fileExtension === "jpeg") mimeType = "image/jpeg";
       else if (fileExtension === "png") mimeType = "image/png";
       else if (fileExtension === "pdf") mimeType = "application/pdf";
-
-      // Send the file as a document (for video and other types)
-      await robin.sendMessage(
-        from,
-        {
-          document: { url: fileUrl },
-          mimetype: mimeType,
-          fileName: fileName,
-          caption: `Here is your ${fileExtension.toUpperCase()} file!`,
-        },
-        { quoted: mek }
-      );
+      else if (fileExtension === "txt") mimeType = "text/plain";
+      else if (fileExtension === "zip" || fileExtension === "rar") mimeType = "application/zip";
+      else if (fileExtension === "mp3") mimeType = "audio/mpeg";
+      
+      // If the file is video, use document type (for better compatibility)
+      if (["mp4", "mkv", "avi", "mov"].includes(fileExtension)) {
+        await robin.sendMessage(
+          from,
+          {
+            document: { url: fileUrl },
+            mimetype: mimeType,
+            fileName: fileName,
+            caption: `Here is your ${fileExtension.toUpperCase()} video!`,
+          },
+          { quoted: mek }
+        );
+      } else {
+        // For other file types, upload them normally
+        await robin.sendMessage(
+          from,
+          {
+            document: { url: fileUrl },
+            mimetype: mimeType,
+            fileName: fileName,
+            caption: `Here is your ${fileExtension.toUpperCase()} file!`,
+          },
+          { quoted: mek }
+        );
+      }
 
       reply(`*Your ${fileExtension.toUpperCase()} file has been uploaded successfully!* 📤`);
     } catch (e) {
