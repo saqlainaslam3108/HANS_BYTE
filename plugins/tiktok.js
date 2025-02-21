@@ -2,7 +2,7 @@ const axios = require("axios");
 const { cmd } = require("../command");
 
 const domain = "https://mr-manul-ofc-apis.vercel.app";
-const api_key = "Manul-Official-Key-3467"; // ✅ API Key
+const api_key = "Manul-Official-Key-3467";
 
 cmd({
     pattern: "tiktok",
@@ -19,7 +19,7 @@ cmd({
         console.log("Fetching from API:", apiUrl); // ✅ Debugging Log
 
         const response = await axios.get(apiUrl);
-        console.log("API Response:", response.data); // ✅ Check API Response
+        console.log("API Response:", response.data); // ✅ Print API Response
 
         if (response.data && response.data.video) {
             await conn.sendMessage(m.chat, {
