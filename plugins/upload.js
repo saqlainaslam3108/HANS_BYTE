@@ -21,18 +21,13 @@ cmd(
 
       const fileUrl = q;
 
-      // Extract file name and extension from the URL
-      let fileName = path.basename(fileUrl);
+      // Extract file name and extension from the URL, before query parameters
+      let fileName = path.basename(fileUrl.split('?')[0]);
       const fileExtension = path.extname(fileName).substring(1).toLowerCase();
-
-      // Remove query parameters from the URL (e.g., after '?')
-      const cleanFileName = fileName.split('?')[0];
 
       // If it's a video, add "VORTEX MD" watermark in the file name
       if (["mp4", "mkv", "avi", "mov"].includes(fileExtension)) {
-        fileName = cleanFileName.replace(`.${fileExtension}`, ` - VORTEX MD.${fileExtension}`);
-      } else {
-        fileName = cleanFileName;
+        fileName = fileName.replace(`.${fileExtension}`, ` - VORTEX MD.${fileExtension}`);
       }
 
       // Get the file as a buffer
@@ -56,6 +51,7 @@ cmd(
         },
         { quoted: mek }
       );
+
     } catch (e) {
       console.error(e);
       reply(`❌ Error: ${e.message}`);
