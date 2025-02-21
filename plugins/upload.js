@@ -1,6 +1,7 @@
-const { cmd } = require("../command");
-const axios = require("axios");
-const path = require("path");
+const axiosRetry = require('axios-retry');
+
+// Apply retry logic to axios
+axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay });
 
 cmd(
   {
@@ -26,7 +27,10 @@ cmd(
       const fileExtension = path.extname(fileName).substring(1).toLowerCase();
 
       // Get the file as a buffer
-      const fileBuffer = await axios.get(fileUrl, { responseType: "arraybuffer" });
+      const fileBuffer = await axios.get(fileUrl, { 
+        responseType: "arraybuffer", 
+        timeout: 10000 // Timeout set to 10 seconds
+      });
 
       // Set MIME type based on file extension
       let mimeType = "application/octet-stream"; // Default MIME type for unknown files
@@ -43,12 +47,13 @@ cmd(
           document: { url: fileUrl },
           mimetype: mimeType,
           fileName: fileName,
-          caption: `Here is your ${fileName}`,  // Include actual file name
+          caption: `Here is your ${fileName} | VORTEX MD` // Added watermark here
         },
         { quoted: mek }
       );
 
-      reply(`*Your file "${fileName}" has been uploaded successfully!* 📤`);
+      // Replying back with the file upload success message (without file name)
+      reply(`*Your file has been uploaded successfully!* 📤`);
     } catch (e) {
       console.error(e);
       reply(`❌ Error: ${e.message}`);
