@@ -76,6 +76,7 @@ cmd(
   👉 .video <text>  
   👉 .fb <link>  
   👉 .upload <link>
+  👉 .sinhala <text>
 
 👥 *GROUP COMMANDS*  
   👉 .mute
