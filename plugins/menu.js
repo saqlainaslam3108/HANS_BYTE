@@ -1,114 +1,113 @@
 const { cmd, commands } = require("../command");
-const config = require("../config");
+const config = require('../config');
 
-// .menu command – Display Main Menu and start session
 cmd(
   {
     pattern: "menu",
-    alias: ["getmenu"],
+    alise: ["getmenu"],
     react: "📔",
-    desc: "Get command list",
+    desc: "get cmd list",
     category: "main",
     filename: __filename,
   },
-  async (conn, mek, m, { from, pushname, reply }) => {
+  async (
+    robin,
+    mek,
+    m,
+    {
+      from,
+      quoted,
+      body,
+      isCmd,
+      command,
+      args,
+      q,
+      isGroup,
+      sender,
+      senderNumber,
+      botNumber2,
+      botNumber,
+      pushname,
+      isMe,
+      isOwner,
+      groupMetadata,
+      groupName,
+      participants,
+      groupAdmins,
+      isBotAdmins,
+      isAdmins,
+      reply,
+    }
+  ) => {
     try {
-      let mainMenu = `👋 *Hello ${pushname}*
+      let menu = {
+        main: "",
+        download: "",
+        group: "",
+        owner: "",
+        convert: "",
+        search: "",
+      };
+
+      for (let i = 0; i < commands.length; i++) {
+        if (commands[i].pattern && !commands[i].dontAddCommandList) {
+          menu[
+            commands[i].category
+          ] += `${config.PREFIX}${commands[i].pattern}\n`;
+        }
+      }
+
+      let madeMenu = `👋 *Hello  ${pushname}*
+
 
 ╔════════════════╗  
-  🍁 *VORTEX MD MENU* 🍁  
+  🍁 *VORTEX MD* 🍁  
 ╚════════════════╝  
 
-1️⃣ Main Commands  
-2️⃣ Download Commands  
-3️⃣ Group Commands  
-4️⃣ Owner Commands  
-5️⃣ Convert Commands  
-6️⃣ Search Commands  
+🎯 *MAIN COMMANDS*  
+  ❤️ .alive  
+  ❤️ .menu  
+  ❤️ .ai <text>  
+  ❤️ .system  
+  ❤️ .owner  
 
-📝 Reply with a number (1-6) to view the respective command list.
-🔄 Reply *0* to return to the Main Menu.`;
+📥 *DOWNLOAD COMMANDS*  
+  ❤️ .song <text>  
+  ❤️ .video <text>  
+  ❤️ .fb <link>  
 
-      await reply(mainMenu);
-      global.menuSessions = global.menuSessions || {};
-      global.menuSessions[from] = true; // Activate menu session for this sender
+👥 *GROUP COMMANDS*  
+  ${menu.group}  
+
+🔒 *OWNER COMMANDS*  
+  ❤️ .restart  
+  ❤️ .update  
+
+✏️ *CONVERT COMMANDS*  
+  ❤️ .sticker <reply img>  
+  ❤️ .img <reply sticker>  
+  ❤️ .tr <lang> <text>  
+  ❤️ .tts <text>  
+
+🔍 *SEARCH COMMANDS*  
+  ${menu.search}  
+
+🍂 *𝐌𝐚𝐝𝐞 𝐛𝐲 𝗣𝗮𝗻𝘀𝗶𝗹𝘂 𝗡𝗲𝘁𝗵𝗺𝗶𝗻𝗮* 🍂  
+> ᐯㄖ尺ㄒ乇乂 几ᗪ 爪乇几卄
+`;
+      await robin.sendMessage(
+        from,
+        {
+          image: {
+            url: "https://raw.githubusercontent.com/NethminaPansil/Whtsapp-bot/refs/heads/main/Screenshot_20250210-222115%7E2.png",
+          },
+          caption: madeMenu,
+        },
+        { quoted: mek }
+      );
     } catch (e) {
-      console.error(e);
-      await reply(`❌ Error: ${e}`);
+      console.log(e);
+      reply(`${e}`);
     }
-  }
-);
-
-// Global reply listener for menu navigation – Captures user replies with numbers 0-6
-cmd(
-  {
-    pattern: ".*", // Match all messages
-    dontAddCommandList: true,
-  },
-  async (conn, mek, m, { from, body, reply }) => {
-    if (!global.menuSessions || !global.menuSessions[from]) return; // No active menu session; ignore
-    let userInput = body.trim();
-    let menuResponse = "";
-    switch (userInput) {
-      case "1":
-        menuResponse = `🎯 *MAIN COMMANDS*  
-❤️ .alive  
-❤️ .menu  
-❤️ .ai <text>  
-❤️ .system  
-❤️ .owner  
-🔄 Reply *0* to return to Main Menu.`;
-        break;
-      case "2":
-        menuResponse = `📥 *DOWNLOAD COMMANDS*  
-❤️ .song <text>  
-❤️ .video <text>  
-❤️ .fb <link>  
-🔄 Reply *0* to return to Main Menu.`;
-        break;
-      case "3":
-        menuResponse = `👥 *GROUP COMMANDS*  
-❤️ .tagall  
-❤️ .mute  
-❤️ .ban  
-🔄 Reply *0* to return to Main Menu.`;
-        break;
-      case "4":
-        menuResponse = `🔒 *OWNER COMMANDS*  
-❤️ .restart  
-❤️ .update  
-🔄 Reply *0* to return to Main Menu.`;
-        break;
-      case "5":
-        menuResponse = `✏️ *CONVERT COMMANDS*  
-❤️ .sticker <reply img>  
-❤️ .img <reply sticker>  
-❤️ .tr <lang> <text>  
-❤️ .tts <text>  
-🔄 Reply *0* to return to Main Menu.`;
-        break;
-      case "6":
-        menuResponse = `🔍 *SEARCH COMMANDS*  
-❤️ .search <query>  
-❤️ .ytsearch <query>  
-🔄 Reply *0* to return to Main Menu.`;
-        break;
-      case "0":
-        menuResponse = `🔄 *MAIN MENU*  
-
-1️⃣ Main Commands  
-2️⃣ Download Commands  
-3️⃣ Group Commands  
-4️⃣ Owner Commands  
-5️⃣ Convert Commands  
-6️⃣ Search Commands  
-
-📝 Reply with a number (1-6) to view the respective command list.
-🔄 Reply *0* to return to this menu.`;
-        break;
-      default:
-        menuResponse = "❌ Invalid option! Please reply with a number (1-6) or *0* to return to the Main Menu.";
-    }
-    await reply(menuResponse);
   }
 );
