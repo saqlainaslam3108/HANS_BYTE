@@ -1,10 +1,6 @@
 const { cmd } = require("../command");
 const axios = require("axios");
 const path = require("path");
-const axiosRetry = require('axios-retry');
-
-// Apply retry logic to axios
-axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay });
 
 cmd(
   {
@@ -23,17 +19,13 @@ cmd(
     try {
       if (!q) return reply("*Provide a direct download link to upload.* 📤");
 
-      // Extract file name from URL
+      // Extract file name and extension from URL
       const fileUrl = q;
-      const urlParams = new URLSearchParams(fileUrl.split('?')[1]); // Extract query params
-      const fileName = urlParams.get('file'); // Get file parameter value
+      const fileName = path.basename(fileUrl);
       const fileExtension = path.extname(fileName).substring(1).toLowerCase();
 
       // Get the file as a buffer
-      const fileBuffer = await axios.get(fileUrl, { 
-        responseType: "arraybuffer", 
-        timeout: 10000 // Timeout set to 10 seconds
-      });
+      const fileBuffer = await axios.get(fileUrl, { responseType: "arraybuffer" });
 
       // Set MIME type based on file extension
       let mimeType = "application/octet-stream"; // Default MIME type for unknown files
@@ -43,20 +35,23 @@ cmd(
       else if (fileExtension === "png") mimeType = "image/png";
       else if (fileExtension === "pdf") mimeType = "application/pdf";
 
+      // Watermark for video files
+      let modifiedFileName = fileName;
+      if (fileExtension === "mp4" || fileExtension === "mkv" || fileExtension === "avi") {
+        modifiedFileName = fileName.replace(`.${fileExtension}`, ` - VORTEX MD.${fileExtension}`);
+      }
+
       // Send the file as a document (for video and other types)
       await robin.sendMessage(
         from,
         {
           document: { url: fileUrl },
           mimetype: mimeType,
-          fileName: fileName,
-          caption: `Here is your ${fileName} | VORTEX MD` // Added watermark here
+          fileName: modifiedFileName,
+          caption: `Here is your ${fileExtension.toUpperCase()} file!`,
         },
         { quoted: mek }
       );
-
-      // Replying back with the file upload success message (without file name)
-      reply(`*Your file has been uploaded successfully!* 📤`);
     } catch (e) {
       console.error(e);
       reply(`❌ Error: ${e.message}`);
