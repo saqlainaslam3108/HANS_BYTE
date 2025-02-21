@@ -67,13 +67,14 @@ cmd(
       // Debugging: Print the download URL
       console.log(`Attempting to download from URL: ${downloadUrl}`);
 
-      // Manually extract the video download URL
+      // Fetch the episode download page
       const downloadPage = await axios.get(downloadUrl);
-      const regex = /"https:\/\/e[0-9].animeheaven.me\/video.mp4[^"]+"/;
-      const match = downloadPage.data.match(regex);
       
-      if (match && match[0]) {
-        const videoUrl = match[0].slice(1, -1); // Remove the surrounding quotes
+      // Extract download video URL using a more reliable method
+      const videoUrlMatch = downloadPage.data.match(/"https:\/\/e\d\.animeheaven\.me\/video\.mp4\?[^"]+"/);
+
+      if (videoUrlMatch) {
+        const videoUrl = videoUrlMatch[0].slice(1, -1); // Remove the surrounding quotes
         
         // Send the video download link
         await robin.sendMessage(
