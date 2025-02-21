@@ -64,8 +64,15 @@ cmd(
       const selectedEpisode = episodes[episodeNumber - 1];
       const downloadUrl = `https://animeheaven.me/${selectedEpisode.url}`;
 
-      // Download the episode
+      // Debugging: Print the download URL
+      console.log(`Attempting to download from URL: ${downloadUrl}`);
+
+      // Download the episode using the dl function
       const downloadLink = await dl(downloadUrl);
+
+      // Debugging: Print the fetched download links
+      console.log("Download links fetched:", downloadLink);
+
       if (downloadLink.length > 0) {
         const videoUrl = downloadLink[downloadLink.length - 1]; // Last link is the video download URL
 
