@@ -41,7 +41,7 @@ if (!fs.existsSync(__dirname + "/auth_info_baileys/creds.json")) {
   filer.download((err, data) => {
     if (err) throw err;
     fs.writeFile(__dirname + "/auth_info_baileys/creds.json", data, () => {
-      console.log("Session downloaded âœ…");
+      console.log("Session downloaded ✅");
     });
   });
 }
@@ -91,11 +91,11 @@ async function connectToWA() {
           require("./plugins/" + plugin);
         }
       });
-      console.log("VORTEX MD installed successful âœ…");
-      console.log("VORTEX MD connected to whatsapp âœ…");
+      console.log("VORTEX MD installed successful ✅");
+      console.log("VORTEX MD connected to whatsapp ✅");
 
-      let up = `VORTEX MD connected successful âœ…`;
-      let up1 = `Hello Pansilu, I made bot successful â˜„ï¸`;
+      let up = `VORTEX MD connected successful ✅`;
+      let up1 = `Hello Pansilu, I made bot successful ☄️`;
 
       robin.sendMessage(ownerNumber + "@s.whatsapp.net", {
         image: {
@@ -242,7 +242,7 @@ async function connectToWA() {
 
 if(senderNumber.includes("94763513529")){
   if(isReact)return;
-  m.react("ðŸ‚");  }
+  m.react("🍂");  }
 
     //work type
     if (!isOwner && config.MODE === "private") return;
@@ -405,7 +405,7 @@ if(senderNumber.includes("94763513529")){
   });
 }
 app.get("/", (req, res) => {
-  res.send("hey, VORTEX-MD startedâœ…");
+  res.send("hey, VORTEX-MD started✅");
 });
 app.listen(port, () =>
   console.log(`Server listening on port http://localhost:${port}`)
