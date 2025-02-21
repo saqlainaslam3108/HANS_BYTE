@@ -1,33 +1,62 @@
-const axios = require('axios');
-const { cmd } = require('your-command-library'); // Replace with the actual command library you're using
+/*
+Please Give Credit 🙂❤️
+⚖️ Powered By - : VORTEX MD | Pansilu Nethmina 💚
+*/
 
-const domain = "http://your-api-domain.com"; // Replace with your actual API domain
+const { cmd, commands } = require('../command');
+const { fetchJson } = require('../lib/functions');
+const domain = `https://mr-manul-ofc-apis.vercel.app`;
+const api_key = `Manul-Official-Key-3467`;
+
+//===== Api-Key එක මට Message එකක් දාල ඉල්ලගන්න, +94 74 227 4855 සල්ලි ගන්න නෙවේ, කීයක් Use කරනවද දැනගන්න...❤️=====
+
+//============================================
 
 cmd({
     pattern: "tiktok",
     alias: ["ttdl", "tiktokdl"],
-    react: "🎥",
+    react: '📲',
     category: "download",
-    desc: "Download TikTok videos with watermark",
+    desc: "Download TikTok videos with or without watermark",
     filename: __filename
-}, async (conn, m, mek, { args, reply }) => {
+}, async (conn, m, mek, { from, isMe, isOwner, q, reply }) => {
     try {
-        if (!args[0]) return await reply("❌ Please provide a TikTok video link!");
+        // Check if search query (TikTok video URL) is provided
+        if (!q || q.trim() === '') return await reply('*Please provide a TikTok video URL!*');
 
-        const apiUrl = `${domain}/scrape-tiktok?url=${encodeURIComponent(args[0])}&apikey=Manul-Official-Key-3467`;
-        const response = await axios.get(apiUrl);
+        // Check if only the bot number is allowed for downloads (Optional based on your setup)
+        if (!isMe && !isOwner) return await reply('*Only Bot Number Can Download Videos !!!*');
 
-        if (response.data && response.data.status === 'success') {
-            const videoUrl = response.data.data.watermark; // URL with watermark
-            await conn.sendMessage(m.chat, {
-                video: { url: videoUrl },
-                caption: "✅ Here is your TikTok video!"
-            }, { quoted: mek });
-        } else {
-            await reply("❌ Failed to fetch the video. Please try again later!");
+        // Fetch TikTok video details from the API using the provided URL
+        const tiktokData = await fetchJson(`${domain}/api/tiktok-download?url=${encodeURIComponent(q)}&apikey=${api_key}`);
+        
+        // Handle API response
+        if (tiktokData.error) {
+            return await reply(`Sorry, could not fetch video details. Error: ${tiktokData.error}`);
         }
+
+        const videoData = tiktokData.data;
+
+        // Check if video data is returned
+        if (!videoData || !videoData.videoUrl) {
+            return await reply('No video found for this link!');
+        }
+
+        const downloadLink = videoData.videoUrl;
+        const videoTitle = videoData.title || 'TikTok Video';
+
+        // Send the video with a caption
+        await conn.sendMessage(m.chat, {
+            video: { url: downloadLink },
+            caption: `${videoTitle}\n\n> ⚖️ Powered By - : VORTEX MD | Pansilu Nethmina 💚`
+        }, { quoted: mek });
+
+        await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
+
     } catch (error) {
-        console.error("TikTok API Error:", error);
-        await reply("❌ Error fetching TikTok video!");
+        console.error('Error in tiktok command:', error);
+        await reply('Sorry, something went wrong. Please try again later.');
     }
 });
+
+//============= VORTEX MD | Pansilu Nethmina 💚 ==========
