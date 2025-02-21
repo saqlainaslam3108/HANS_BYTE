@@ -39,7 +39,7 @@ cmd(
 
       let episodeList = "🎬 *Available Episodes* 🎬\n";
       episodes.forEach((ep, index) => {
-        episodeList += `\n${index + 1}. *Episode ${ep.episode}* - [Link](https://animeheaven.me/${ep.url})`;
+        episodeList += `\n${index + 1}. *Episode ${ep.episode}*`;
       });
 
       // Send the list of episodes
@@ -69,14 +69,18 @@ cmd(
       if (downloadLink.length > 0) {
         const videoUrl = downloadLink[downloadLink.length - 1]; // Last link is the video download URL
 
-        // Send the video download link
-        await robin.sendMessage(
-          from,
-          { video: { url: videoUrl }, caption: `🎬 *Downloading Episode ${selectedEpisode.episode}* 🎬` },
-          { quoted: mek }
-        );
-
-        reply("*Thanks for using my bot!* 🎬❤️");
+        // Check if videoUrl exists
+        if (videoUrl) {
+          // Send the video download link
+          await robin.sendMessage(
+            from,
+            { video: { url: videoUrl }, caption: `🎬 *Downloading Episode ${selectedEpisode.episode}* 🎬` },
+            { quoted: mek }
+          );
+          reply("*Thanks for using my bot!* 🎬❤️");
+        } else {
+          reply("Sorry, I couldn't fetch the download link for that episode.");
+        }
       } else {
         reply("Sorry, I couldn't find a download link for that episode.");
       }
