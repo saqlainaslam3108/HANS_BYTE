@@ -30,6 +30,8 @@ cmd({
         // Fetch TikTok video details from the API using the provided URL
         const tiktokData = await fetchJson(`${domain}/api/tiktok-download?url=${encodeURIComponent(q)}&apikey=${api_key}`);
         
+        console.log('API Response:', tiktokData); // Log the response for debugging
+        
         // Handle API response
         if (tiktokData.error) {
             return await reply(`Sorry, could not fetch video details. Error: ${tiktokData.error}`);
@@ -58,5 +60,3 @@ cmd({
         await reply('Sorry, something went wrong. Please try again later.');
     }
 });
-
-//============= VORTEX MD | Pansilu Nethmina 💚 ==========
