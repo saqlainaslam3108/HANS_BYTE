@@ -19,9 +19,10 @@ cmd(
     try {
       if (!q) return reply("*Provide a direct download link to upload.* 📤");
 
-      // Extract file name and extension from URL
+      // Extract file name from URL
       const fileUrl = q;
-      const fileName = path.basename(fileUrl.split('?')[0]);  // Get filename before any parameters
+      const urlParams = new URLSearchParams(fileUrl.split('?')[1]); // Extract query params
+      const fileName = urlParams.get('file'); // Get file parameter value
       const fileExtension = path.extname(fileName).substring(1).toLowerCase();
 
       // Get the file as a buffer
