@@ -21,15 +21,18 @@ cmd(
 
       // Search for the anime
       const searchResults = await search(q);
+      console.log("Search Results:", searchResults);  // Log the search results
       if (searchResults.length === 0) {
         return reply("No anime found for that search query.");
       }
 
       const anime = searchResults[0];
       const animeLink = anime.link;
+      console.log("Anime Link:", animeLink);  // Log the anime link
 
       // Fetch anime details and episodes
       const episodeDetails = await getep(animeLink);
+      console.log("Episode Details:", episodeDetails);  // Log the full episode details
       const episodes = episodeDetails.results;
       const animeTitle = episodeDetails.result.title;
 
@@ -63,18 +66,19 @@ cmd(
 
       const selectedEpisode = episodes[episodeNumber - 1];
       const downloadUrl = `https://animeheaven.me/${selectedEpisode.url}`;
-
-      // Debugging: Print the download URL
-      console.log(`Attempting to download from URL: ${downloadUrl}`);
+      console.log("Download URL:", downloadUrl);  // Log the download URL
 
       // Fetch the episode download page
       const downloadPage = await axios.get(downloadUrl);
+      console.log("Download Page HTML:", downloadPage.data);  // Log the HTML of the page for debugging
       
-      // Extract download video URL using a more reliable method
+      // Extract download video URL using regex
       const videoUrlMatch = downloadPage.data.match(/"https:\/\/e\d\.animeheaven\.me\/video\.mp4\?[^"]+"/);
+      console.log("Video URL Match:", videoUrlMatch);  // Log the match result
 
       if (videoUrlMatch) {
         const videoUrl = videoUrlMatch[0].slice(1, -1); // Remove the surrounding quotes
+        console.log("Video URL:", videoUrl);  // Log the final video URL
         
         // Send the video download link
         await robin.sendMessage(
