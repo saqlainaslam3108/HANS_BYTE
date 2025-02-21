@@ -1,4 +1,5 @@
 const axios = require("axios");
+const { cmd } = require("../command"); // Import cmd function
 
 const domain = "https://mr-manul-ofc-apis.vercel.app";
 
