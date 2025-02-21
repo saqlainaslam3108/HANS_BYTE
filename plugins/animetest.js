@@ -1,5 +1,5 @@
 const { cmd } = require("../command");
-const { search, getep, dl } = require('darksadasyt-anime');
+const { search, getep } = require('darksadasyt-anime');
 const axios = require("axios");
 
 cmd(
@@ -67,30 +67,25 @@ cmd(
       // Debugging: Print the download URL
       console.log(`Attempting to download from URL: ${downloadUrl}`);
 
-      // Download the episode using the dl function
-      const downloadLink = await dl(downloadUrl);
-
-      // Debugging: Print the fetched download links
-      console.log("Download links fetched:", downloadLink);
-
-      if (downloadLink.length > 0) {
-        const videoUrl = downloadLink[downloadLink.length - 1]; // Last link is the video download URL
-
-        // Check if videoUrl exists
-        if (videoUrl) {
-          // Send the video download link
-          await robin.sendMessage(
-            from,
-            { video: { url: videoUrl }, caption: `🎬 *Downloading Episode ${selectedEpisode.episode}* 🎬` },
-            { quoted: mek }
-          );
-          reply("*Thanks for using my bot!* 🎬❤️");
-        } else {
-          reply("Sorry, I couldn't fetch the download link for that episode.");
-        }
+      // Manually extract the video download URL
+      const downloadPage = await axios.get(downloadUrl);
+      const regex = /"https:\/\/e[0-9].animeheaven.me\/video.mp4[^"]+"/;
+      const match = downloadPage.data.match(regex);
+      
+      if (match && match[0]) {
+        const videoUrl = match[0].slice(1, -1); // Remove the surrounding quotes
+        
+        // Send the video download link
+        await robin.sendMessage(
+          from,
+          { video: { url: videoUrl }, caption: `🎬 *Downloading Episode ${selectedEpisode.episode}* 🎬` },
+          { quoted: mek }
+        );
+        reply("*Thanks for using my bot!* 🎬❤️");
       } else {
-        reply("Sorry, I couldn't find a download link for that episode.");
+        reply("Sorry, I couldn't fetch the download link for that episode.");
       }
+
     } catch (e) {
       console.error(e);
       reply(`❌ Error: ${e.message}`);
