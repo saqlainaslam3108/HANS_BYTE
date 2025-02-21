@@ -1,5 +1,6 @@
 const { cmd } = require("../command");
 const axios = require("axios");
+const path = require("path");
 
 cmd(
   {
@@ -18,22 +19,35 @@ cmd(
     try {
       if (!q) return reply("*Provide a direct download link to upload.* 📤");
 
-      // Direct link to download file
+      // Extract file name and extension from URL
       const fileUrl = q;
+      const fileName = path.basename(fileUrl);
+      const fileExtension = path.extname(fileName).substring(1).toLowerCase();
+
+      // Get the file as a buffer
       const fileBuffer = await axios.get(fileUrl, { responseType: "arraybuffer" });
 
-      // Send file to user
+      // Set MIME type based on file extension
+      let mimeType = "application/octet-stream"; // Default MIME type for unknown files
+      if (["mp4", "mkv", "avi", "mov"].includes(fileExtension)) mimeType = "video/mp4";
+      else if (fileExtension === "apk") mimeType = "application/vnd.android.package-archive";
+      else if (fileExtension === "jpg" || fileExtension === "jpeg") mimeType = "image/jpeg";
+      else if (fileExtension === "png") mimeType = "image/png";
+      else if (fileExtension === "pdf") mimeType = "application/pdf";
+
+      // Send the file as a document (for video and other types)
       await robin.sendMessage(
         from,
         {
           document: { url: fileUrl },
-          mimetype: "application/octet-stream",
-          caption: "Here is your file!",
+          mimetype: mimeType,
+          fileName: fileName,
+          caption: `Here is your ${fileExtension.toUpperCase()} file!`,
         },
         { quoted: mek }
       );
 
-      reply("*Your file has been uploaded successfully!* 📤");
+      reply(`*Your ${fileExtension.toUpperCase()} file has been uploaded successfully!* 📤`);
     } catch (e) {
       console.error(e);
       reply(`❌ Error: ${e.message}`);
