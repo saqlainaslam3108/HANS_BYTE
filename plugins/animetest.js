@@ -44,9 +44,14 @@ cmd(
       await robin.sendMessage(from, { text: episodeList }, { quoted: mek });
       reply("Please send the episode number you want to download.");
 
-      // Wait for user response
-      const filter = (msg) => msg.from === sender && !isCmd;
-      const response = await robin.waitForMessage(from, filter, 60000);
+      // Wait for user response with a timeout of 60 seconds
+      let response;
+      try {
+        const filter = (msg) => msg.from === sender && !isCmd;
+        response = await robin.waitForMessage(from, filter, 60000);
+      } catch (err) {
+        return reply("Timed out. Please try again and send the episode number faster.");
+      }
       const episodeNumber = parseInt(response.body, 10);
 
       if (isNaN(episodeNumber) || episodeNumber < 1 || episodeNumber > episodes.length) {
@@ -69,7 +74,7 @@ cmd(
         from,
         {
           video: { url: videoUrl },
-          caption: `🎬 *${animeTitle}* - Episode ${selectedEpisode.episode}`
+          caption: `🎬 *${animeTitle}* - Episode ${selectedEpisode.episode}`,
         },
         { quoted: mek }
       );
