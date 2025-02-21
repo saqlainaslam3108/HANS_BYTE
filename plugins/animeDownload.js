@@ -1,5 +1,5 @@
 const { cmd } = require("../command");
-const { dl } = require("darksadasyt-anime");
+const { dl, getep } = require("darksadasyt-anime");
 
 cmd(
   {
@@ -16,17 +16,27 @@ cmd(
     { from, quoted, body, isCmd, command, args, q, isGroup, sender, reply }
   ) => {
     try {
-      if (!q) return reply("*Please provide the episode link to download.* 🎬");
+      if (!q) return reply("*Please provide the anime episode link to download.* 🎬");
 
-      // Fetching the download link for the episode
-      const results = await dl(q);
+      // Fetch episode details from the provided link
+      const episodeDetails = await getep(q);
       
-      // Checking if the results contain a valid video URL
+      // Check if the episode URL has extra or repeated 'episode.php'
+      let episodeLink = episodeDetails.results[0]?.url;
+
+      if (episodeLink && episodeLink.includes("episode.php?episode.php")) {
+        // Clean up the URL by removing the duplicate 'episode.php' part
+        episodeLink = episodeLink.replace("episode.php?", "");
+      }
+
+      // Now fetch download links for the cleaned episode URL
+      const results = await dl(`https://animeheaven.me/${episodeLink}`);
+
       if (results && results.length > 0) {
-        const videoUrl = results[2];  // The third result is typically the video download URL
+        const videoUrl = results[2];  // Typically, the 3rd result contains the video download URL
 
         if (videoUrl) {
-          // Sending the video to the user
+          // Send the video to the user
           await robin.sendMessage(
             from,
             {
