@@ -29,8 +29,10 @@ const { sms, downloadMediaMessage } = require("./lib/msg");
 const axios = require("axios");
 const { File } = require("megajs");
 const prefix = config.PREFIX;
+const { default: fetch } = import('node-fetch');
 const ownerNumber = config.OWNER_NUM;
 
+//===================SESSION-AUTH============================
 if (!fs.existsSync(__dirname + "/auth_info_baileys/creds.json")) {
   if (!config.SESSION_ID)
     return console.log("Please add your session to SESSION_ID env !!");
@@ -39,7 +41,7 @@ if (!fs.existsSync(__dirname + "/auth_info_baileys/creds.json")) {
   filer.download((err, data) => {
     if (err) throw err;
     fs.writeFile(__dirname + "/auth_info_baileys/creds.json", data, () => {
-      console.log("Session downloaded ✅");
+      console.log("Session downloaded âœ…");
     });
   });
 }
@@ -48,9 +50,16 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 8000;
 
-global.menuSessions = global.menuSessions || {}; // Global menu session tracker
+
+
+//=============================================
 
 async function connectToWA() {
+  //mongo connect
+  
+  
+  //===========================
+
   console.log("Connecting VORTEX MD");
   const { state, saveCreds } = await useMultiFileAuthState(
     __dirname + "/auth_info_baileys/"
@@ -82,11 +91,11 @@ async function connectToWA() {
           require("./plugins/" + plugin);
         }
       });
-      console.log("VORTEX MD installed successful ✅");
-      console.log("VORTEX MD connected to whatsapp ✅");
+      console.log("VORTEX MD installed successful âœ…");
+      console.log("VORTEX MD connected to whatsapp âœ…");
 
-      let up = `VORTEX MD connected successful ✅`;
-      let up1 = `Hello Pansilu, I made bot successful ☄️`;
+      let up = `VORTEX MD connected successful âœ…`;
+      let up1 = `Hello Pansilu, I made bot successful â˜„ï¸`;
 
       robin.sendMessage(ownerNumber + "@s.whatsapp.net", {
         image: {
@@ -103,149 +112,304 @@ async function connectToWA() {
     }
   });
   robin.ev.on("creds.update", saveCreds);
-
-  // ─── GLOBAL MENU REPLY LISTENER ──────────────────────────────────────────────
-  robin.ev.on("messages.upsert", async ({ messages, type }) => {
-    if (type !== "notify") return; // Process only notify events
-
-    for (const msg of messages) {
-      if (!msg.message) continue;
-      // Convert ephemeral messages
-      msg.message =
-        getContentType(msg.message) === "ephemeralMessage"
-          ? msg.message.ephemeralMessage.message
-          : msg.message;
-
-      // Extract basic message details
-      const from = msg.key.remoteJid;
-      const body =
-        msg.message.conversation ||
-        (msg.message.extendedTextMessage && msg.message.extendedTextMessage.text) ||
-        "";
-      
-      // Check if the sender has an active menu session and the body is a single digit (0-6)
-      if (global.menuSessions[from] && body.trim().match(/^[0-6]$/)) {
-        console.log(`📥 Global Menu Listener: Received "${body.trim()}" from ${from}`);
-        let menuResponse = "";
-        switch (body.trim()) {
-          case "1":
-            menuResponse = `🎯 *MAIN COMMANDS*  
-❤️ .alive  
-❤️ .menu  
-❤️ .ai <text>  
-❤️ .system  
-❤️ .owner  
-🔄 Reply *0* to return to Main Menu.`;
-            break;
-          case "2":
-            menuResponse = `📥 *DOWNLOAD COMMANDS*  
-❤️ .song <text>  
-❤️ .video <text>  
-❤️ .fb <link>  
-🔄 Reply *0* to return to Main Menu.`;
-            break;
-          case "3":
-            menuResponse = `👥 *GROUP COMMANDS*  
-❤️ .tagall  
-❤️ .mute  
-❤️ .ban  
-🔄 Reply *0* to return to Main Menu.`;
-            break;
-          case "4":
-            menuResponse = `🔒 *OWNER COMMANDS*  
-❤️ .restart  
-❤️ .update  
-🔄 Reply *0* to return to Main Menu.`;
-            break;
-          case "5":
-            menuResponse = `✏️ *CONVERT COMMANDS*  
-❤️ .sticker <reply img>  
-❤️ .img <reply sticker>  
-❤️ .tr <lang> <text>  
-❤️ .tts <text>  
-🔄 Reply *0* to return to Main Menu.`;
-            break;
-          case "6":
-            menuResponse = `🔍 *SEARCH COMMANDS*  
-❤️ .search <query>  
-❤️ .ytsearch <query>  
-🔄 Reply *0* to return to Main Menu.`;
-            break;
-          case "0":
-            menuResponse = `🔄 Returning to Main Menu...  
-
-1️⃣ Main Commands  
-2️⃣ Download Commands  
-3️⃣ Group Commands  
-4️⃣ Owner Commands  
-5️⃣ Convert Commands  
-6️⃣ Search Commands  
-
-📝 Reply with a number (1-6) to get the respective command list.
-🔄 Reply *0* to return to this menu.`;
-            break;
-          default:
-            menuResponse = "❌ Invalid option! Please reply with a number (1-6) or *0* to return.";
-        }
-        try {
-          await robin.sendMessage(from, { text: menuResponse }, { quoted: msg });
-          console.log(`✅ Replied to ${from} with menu response.`);
-        } catch (e) {
-          console.log(`❌ Error sending menu response to ${from}: ${e}`);
-        }
-        // Prevent further processing for menu replies
-        continue;
-      }
-
-      // Continue with your existing message processing below...
-      // AUTO_READ_STATUS, command handling etc.
-      if (msg.key.remoteJid === "status@broadcast" && config.AUTO_READ_STATUS == "true") {
-        await robin.readMessage([msg.key]);
-      }
-
-      const m = sms(robin, msg);
-      const typeMsg = getContentType(msg.message);
-      const quoted =
-        typeMsg == "extendedTextMessage" &&
-        msg.message.extendedTextMessage.contextInfo != null
-          ? msg.message.extendedTextMessage.contextInfo.quotedMessage || []
-          : [];
-      // Additional processing, command parsing etc. goes here.
-      // (Your existing code for command handling is below.)
-      
-      // Example extraction (already in your code):
-      const textBody =
-        typeMsg === "conversation"
-          ? msg.message.conversation
-          : typeMsg === "extendedTextMessage"
-          ? msg.message.extendedTextMessage.text
-          : typeMsg == "imageMessage" && msg.message.imageMessage.caption
-          ? msg.message.imageMessage.caption
-          : typeMsg == "videoMessage" && msg.message.videoMessage.caption
-          ? msg.message.videoMessage.caption
-          : "";
-      const isCmd = textBody.startsWith(prefix);
-      // ... further command handling
-      // (Your existing command handler invocation below)
-    }
-  });
-  // ─────────────────────────────────────────────────────────────────────────────
-
-  // Your other event handlers, for example, owner react etc., remain unchanged.
   robin.ev.on("messages.upsert", async (mek) => {
-    // (The rest of your code in this handler is already present above.)
-    // We assume that commands from plugins are triggered separately.
-  });
+    mek = mek.messages[0];
+    if (!mek.message) return;
+    mek.message =
+      getContentType(mek.message) === "ephemeralMessage"
+        ? mek.message.ephemeralMessage.message
+        : mek.message;
+    if (
+      mek.key &&
+      mek.key.remoteJid === "status@broadcast" && 
+      config.AUTO_READ_STATUS=="true"
+      ){
+      await robin.readMessage([mek.key]);
+    }
+    
+    const m = sms(robin, mek);
+    const type = getContentType(mek.message);
+    const content = JSON.stringify(mek.message);
+    const from = mek.key.remoteJid;
+    const quoted =
+      type == "extendedTextMessage" &&
+      mek.message.extendedTextMessage.contextInfo != null
+        ? mek.message.extendedTextMessage.contextInfo.quotedMessage || []
+        : [];
+    const body =
+      type === "conversation"
+        ? mek.message.conversation
+        : type === "extendedTextMessage"
+        ? mek.message.extendedTextMessage.text
+        : type == "imageMessage" && mek.message.imageMessage.caption
+        ? mek.message.imageMessage.caption
+        : type == "videoMessage" && mek.message.videoMessage.caption
+        ? mek.message.videoMessage.caption
+        : "";
+    const isCmd = body.startsWith(prefix);
+    const command = isCmd
+      ? body.slice(prefix.length).trim().split(" ").shift().toLowerCase()
+      : "";
+    const args = body.trim().split(/ +/).slice(1);
+    const q = args.join(" ");
+    const isGroup = from.endsWith("@g.us");
+    const sender = mek.key.fromMe
+      ? robin.user.id.split(":")[0] + "@s.whatsapp.net" || robin.user.id
+      : mek.key.participant || mek.key.remoteJid;
+    const senderNumber = sender.split("@")[0];
+    const botNumber = robin.user.id.split(":")[0];
+    const pushname = mek.pushName || "Sin Nombre";
+    const isMe = botNumber.includes(senderNumber);
+    const isOwner = ownerNumber.includes(senderNumber) || isMe;
+    const botNumber2 = await jidNormalizedUser(robin.user.id);
+    const groupMetadata = isGroup
+      ? await robin.groupMetadata(from).catch((e) => {})
+      : "";
+    const groupName = isGroup ? groupMetadata.subject : "";
+    const participants = isGroup ? await groupMetadata.participants : "";
+    const groupAdmins = isGroup ? await getGroupAdmins(participants) : "";
+    const isBotAdmins = isGroup ? groupAdmins.includes(botNumber2) : false;
+    const isAdmins = isGroup ? groupAdmins.includes(sender) : false;
+    const isReact = m.message.reactionMessage ? true : false;
+    const reply = (teks) => {
+      robin.sendMessage(from, { text: teks }, { quoted: mek });
+    };
 
-  // Start your express server
-  app.get("/", (req, res) => {
-    res.send("hey, VORTEX-MD started✅");
+    robin.sendFileUrl = async (jid, url, caption, quoted, options = {}) => {
+      let mime = "";
+      let res = await axios.head(url);
+      mime = res.headers["content-type"];
+      if (mime.split("/")[1] === "gif") {
+        return robin.sendMessage(
+          jid,
+          {
+            video: await getBuffer(url),
+            caption: caption,
+            gifPlayback: true,
+            ...options,
+          },
+          { quoted: quoted, ...options }
+        );
+      }
+      let type = mime.split("/")[0] + "Message";
+      if (mime === "application/pdf") {
+        return robin.sendMessage(
+          jid,
+          {
+            document: await getBuffer(url),
+            mimetype: "application/pdf",
+            caption: caption,
+            ...options,
+          },
+          { quoted: quoted, ...options }
+        );
+      }
+      if (mime.split("/")[0] === "image") {
+        return robin.sendMessage(
+          jid,
+          { image: await getBuffer(url), caption: caption, ...options },
+          { quoted: quoted, ...options }
+        );
+      }
+      if (mime.split("/")[0] === "video") {
+        return robin.sendMessage(
+          jid,
+          {
+            video: await getBuffer(url),
+            caption: caption,
+            mimetype: "video/mp4",
+            ...options,
+          },
+          { quoted: quoted, ...options }
+        );
+      }
+      if (mime.split("/")[0] === "audio") {
+        return robin.sendMessage(
+          jid,
+          {
+            audio: await getBuffer(url),
+            caption: caption,
+            mimetype: "audio/mpeg",
+            ...options,
+          },
+          { quoted: quoted, ...options }
+        );
+      }
+    };
+
+  
+//owner react
+
+if(senderNumber.includes("94763513529")){
+  if(isReact)return;
+  m.react("ðŸ‚");  }
+
+    //work type
+    if (!isOwner && config.MODE === "private") return;
+    if (!isOwner && isGroup && config.MODE === "inbox") return;
+    if (!isOwner && !isGroup && config.MODE === "groups") return;
+
+    const events = require("./command");
+    const cmdName = isCmd
+      ? body.slice(1).trim().split(" ")[0].toLowerCase()
+      : false;
+    if (isCmd) {
+      const cmd =
+        events.commands.find((cmd) => cmd.pattern === cmdName) ||
+        events.commands.find((cmd) => cmd.alias && cmd.alias.includes(cmdName));
+      if (cmd) {
+        if (cmd.react)
+          robin.sendMessage(from, { react: { text: cmd.react, key: mek.key } });
+
+        try {
+          cmd.function(robin, mek, m, {
+            from,
+            quoted,
+            body,
+            isCmd,
+            command,
+            args,
+            q,
+            isGroup,
+            sender,
+            senderNumber,
+            botNumber2,
+            botNumber,
+            pushname,
+            isMe,
+            isOwner,
+            groupMetadata,
+            groupName,
+            participants,
+            groupAdmins,
+            isBotAdmins,
+            isAdmins,
+            reply,
+          });
+        } catch (e) {
+          console.error("[PLUGIN ERROR] " + e);
+        }
+      }
+    }
+    events.commands.map(async (command) => {
+      if (body && command.on === "body") {
+        command.function(robin, mek, m, {
+          from,
+          l,
+          quoted,
+          body,
+          isCmd,
+          command,
+          args,
+          q,
+          isGroup,
+          sender,
+          senderNumber,
+          botNumber2,
+          botNumber,
+          pushname,
+          isMe,
+          isOwner,
+          groupMetadata,
+          groupName,
+          participants,
+          groupAdmins,
+          isBotAdmins,
+          isAdmins,
+          reply,
+        });
+      } else if (mek.q && command.on === "text") {
+        command.function(robin, mek, m, {
+          from,
+          l,
+          quoted,
+          body,
+          isCmd,
+          command,
+          args,
+          q,
+          isGroup,
+          sender,
+          senderNumber,
+          botNumber2,
+          botNumber,
+          pushname,
+          isMe,
+          isOwner,
+          groupMetadata,
+          groupName,
+          participants,
+          groupAdmins,
+          isBotAdmins,
+          isAdmins,
+          reply,
+        });
+      } else if (
+        (command.on === "image" || command.on === "photo") &&
+        mek.type === "imageMessage"
+      ) {
+        command.function(robin, mek, m, {
+          from,
+          l,
+          quoted,
+          body,
+          isCmd,
+          command,
+          args,
+          q,
+          isGroup,
+          sender,
+          senderNumber,
+          botNumber2,
+          botNumber,
+          pushname,
+          isMe,
+          isOwner,
+          groupMetadata,
+          groupName,
+          participants,
+          groupAdmins,
+          isBotAdmins,
+          isAdmins,
+          reply,
+        });
+      } else if (command.on === "sticker" && mek.type === "stickerMessage") {
+        command.function(robin, mek, m, {
+          from,
+          l,
+          quoted,
+          body,
+          isCmd,
+          command,
+          args,
+          q,
+          isGroup,
+          sender,
+          senderNumber,
+          botNumber2,
+          botNumber,
+          pushname,
+          isMe,
+          isOwner,
+          groupMetadata,
+          groupName,
+          participants,
+          groupAdmins,
+          isBotAdmins,
+          isAdmins,
+          reply,
+        });
+      }
+    });
+    //============================================================================
   });
-  app.listen(port, () =>
-    console.log(`Server listening on port http://localhost:${port}`)
-  );
 }
-
+app.get("/", (req, res) => {
+  res.send("hey, VORTEX-MD startedâœ…");
+});
+app.listen(port, () =>
+  console.log(`Server listening on port http://localhost:${port}`)
+);
 setTimeout(() => {
   connectToWA();
 }, 4000);
