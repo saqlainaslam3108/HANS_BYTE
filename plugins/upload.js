@@ -25,6 +25,16 @@ cmd(
       let fileName = path.basename(fileUrl);
       const fileExtension = path.extname(fileName).substring(1).toLowerCase();
 
+      // Remove query parameters from the URL (e.g., after '?')
+      const cleanFileName = fileName.split('?')[0];
+
+      // If it's a video, add "VORTEX MD" watermark in the file name
+      if (["mp4", "mkv", "avi", "mov"].includes(fileExtension)) {
+        fileName = cleanFileName.replace(`.${fileExtension}`, ` - VORTEX MD.${fileExtension}`);
+      } else {
+        fileName = cleanFileName;
+      }
+
       // Get the file as a buffer
       const fileBuffer = await axios.get(fileUrl, { responseType: "arraybuffer" });
 
@@ -35,11 +45,6 @@ cmd(
       else if (fileExtension === "jpg" || fileExtension === "jpeg") mimeType = "image/jpeg";
       else if (fileExtension === "png") mimeType = "image/png";
       else if (fileExtension === "pdf") mimeType = "application/pdf";
-
-      // If it's a video, add "VORTEX MD" watermark in the file name
-      if (fileExtension === "mp4" || fileExtension === "mkv" || fileExtension === "avi") {
-        fileName = fileName.replace(`.${fileExtension}`, ` - VORTEX MD.${fileExtension}`);
-      }
 
       // Send the file as a document (for video and other types)
       await robin.sendMessage(
