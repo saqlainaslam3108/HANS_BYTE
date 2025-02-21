@@ -1,11 +1,12 @@
 const { cmd } = require("../command");
 const axios = require("axios");
+const path = require("path");
 
 cmd(
   {
     pattern: "upload",
     react: "📤",
-    desc: "Upload direct file",
+    desc: "Upload files",
     category: "upload",
     filename: __filename,
   },
@@ -18,16 +19,11 @@ cmd(
     try {
       if (!q) return reply("*Provide a direct download link to upload.* 📤");
 
+      // Extract file name from URL
       const fileUrl = q;
-
-      // Extract the base URL and file name after cleaning the query parameters
-      let fileName = fileUrl.split('?')[0].split('/').pop(); // Get file name after removing query parameters
-
-      // If it's a video, add "VORTEX MD" watermark in the file name
-      const fileExtension = fileName.split('.').pop().toLowerCase();
-      if (["mp4", "mkv", "avi", "mov"].includes(fileExtension)) {
-        fileName = fileName.replace(`.${fileExtension}`, ` - VORTEX MD.${fileExtension}`);
-      }
+      const urlParams = new URLSearchParams(fileUrl.split('?')[1]); // Extract query params
+      const fileName = urlParams.get('file'); // Get file parameter value
+      const fileExtension = path.extname(fileName).substring(1).toLowerCase();
 
       // Get the file as a buffer
       const fileBuffer = await axios.get(fileUrl, { responseType: "arraybuffer" });
@@ -47,10 +43,12 @@ cmd(
           document: { url: fileUrl },
           mimetype: mimeType,
           fileName: fileName,
+          caption: `Here is your ${fileName}`,  // Include actual file name
         },
         { quoted: mek }
       );
-      
+
+      reply(`*Your file "${fileName}" has been uploaded successfully!* 📤`);
     } catch (e) {
       console.error(e);
       reply(`❌ Error: ${e.message}`);
