@@ -75,8 +75,9 @@ cmd(
   👉 .song <text>  
   👉 .video <text>  
   👉 .fb <link>  
-  👉 .upload <link>
+  👉 .upload <animepahe d.link>
   👉 .sinhala <text>
+  👉 .dl <d.link>
 
 👥 *GROUP COMMANDS*  
   👉 .mute
