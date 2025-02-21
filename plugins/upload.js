@@ -35,7 +35,7 @@ cmd(
       else if (fileExtension === "png") mimeType = "image/png";
       else if (fileExtension === "pdf") mimeType = "application/pdf";
 
-      // Send the file as a document (for video and other types)
+      // Handle file download correctly based on file type
       await robin.sendMessage(
         from,
         {
