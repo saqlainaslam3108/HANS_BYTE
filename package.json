@@ -29,6 +29,7 @@
     "canvas": "^3.0.1",
     "youtubedl-core": "^4.11.7",
     "@vreden/youtube_scraper": "^1.2.5",
-    "wa-sticker-formatter": "^4.4.4"
+    "wa-sticker-formatter": "^4.4.4",
+    "darksadasyt-anime": "^1.0.0"
   }
 }
