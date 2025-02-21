@@ -50,7 +50,7 @@ cmd(
         },
         { quoted: mek }
       );
-
+      
     } catch (e) {
       console.error(e);
       reply(`❌ Error: ${e.message}`);
