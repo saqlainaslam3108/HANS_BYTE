@@ -21,7 +21,7 @@ cmd(
 
       // Extract file name and extension from URL
       const fileUrl = q;
-      const fileName = path.basename(fileUrl);
+      const fileName = path.basename(fileUrl.split('?')[0]);  // Get filename before any parameters
       const fileExtension = path.extname(fileName).substring(1).toLowerCase();
 
       // Get the file as a buffer
@@ -35,19 +35,19 @@ cmd(
       else if (fileExtension === "png") mimeType = "image/png";
       else if (fileExtension === "pdf") mimeType = "application/pdf";
 
-      // Handle file download correctly based on file type
+      // Send the file as a document (for video and other types)
       await robin.sendMessage(
         from,
         {
           document: { url: fileUrl },
           mimetype: mimeType,
           fileName: fileName,
-          caption: `Here is your ${fileExtension.toUpperCase()} file!`,
+          caption: `Here is your ${fileName}`,  // Include actual file name
         },
         { quoted: mek }
       );
 
-      reply(`*Your ${fileExtension.toUpperCase()} file has been uploaded successfully!* 📤`);
+      reply(`*Your file "${fileName}" has been uploaded successfully!* 📤`);
     } catch (e) {
       console.error(e);
       reply(`❌ Error: ${e.message}`);
