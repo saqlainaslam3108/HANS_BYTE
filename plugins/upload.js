@@ -1,6 +1,5 @@
 const { cmd } = require("../command");
 const axios = require("axios");
-const path = require("path");
 
 cmd(
   {
@@ -21,11 +20,11 @@ cmd(
 
       const fileUrl = q;
 
-      // Extract file name and extension from the URL, before query parameters
-      let fileName = path.basename(fileUrl.split('?')[0]);
-      const fileExtension = path.extname(fileName).substring(1).toLowerCase();
+      // Extract the base URL and file name after cleaning the query parameters
+      let fileName = fileUrl.split('?')[0].split('/').pop(); // Get file name after removing query parameters
 
       // If it's a video, add "VORTEX MD" watermark in the file name
+      const fileExtension = fileName.split('.').pop().toLowerCase();
       if (["mp4", "mkv", "avi", "mov"].includes(fileExtension)) {
         fileName = fileName.replace(`.${fileExtension}`, ` - VORTEX MD.${fileExtension}`);
       }
