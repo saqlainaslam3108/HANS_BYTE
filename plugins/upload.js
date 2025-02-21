@@ -6,7 +6,7 @@ cmd(
   {
     pattern: "upload",
     react: "📤",
-    desc: "Upload files",
+    desc: "Upload direct file",
     category: "upload",
     filename: __filename,
   },
@@ -19,9 +19,10 @@ cmd(
     try {
       if (!q) return reply("*Provide a direct download link to upload.* 📤");
 
-      // Extract file name and extension from URL
       const fileUrl = q;
-      const fileName = path.basename(fileUrl);
+
+      // Extract file name and extension from the URL
+      let fileName = path.basename(fileUrl);
       const fileExtension = path.extname(fileName).substring(1).toLowerCase();
 
       // Get the file as a buffer
@@ -35,10 +36,9 @@ cmd(
       else if (fileExtension === "png") mimeType = "image/png";
       else if (fileExtension === "pdf") mimeType = "application/pdf";
 
-      // Watermark for video files
-      let modifiedFileName = fileName;
+      // If it's a video, add "VORTEX MD" watermark in the file name
       if (fileExtension === "mp4" || fileExtension === "mkv" || fileExtension === "avi") {
-        modifiedFileName = fileName.replace(`.${fileExtension}`, ` - VORTEX MD.${fileExtension}`);
+        fileName = fileName.replace(`.${fileExtension}`, ` - VORTEX MD.${fileExtension}`);
       }
 
       // Send the file as a document (for video and other types)
@@ -47,8 +47,7 @@ cmd(
         {
           document: { url: fileUrl },
           mimetype: mimeType,
-          fileName: modifiedFileName,
-          caption: `Here is your ${fileExtension.toUpperCase()} file!`,
+          fileName: fileName,
         },
         { quoted: mek }
       );
