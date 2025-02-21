@@ -1,7 +1,8 @@
 const axios = require("axios");
-const { cmd } = require("../command"); // Import cmd function
+const { cmd } = require("../command");
 
 const domain = "https://mr-manul-ofc-apis.vercel.app";
+const api_key = "Manul-Official-Key-3467"; // ✅ API Key
 
 cmd({
     pattern: "tiktok",
@@ -14,8 +15,11 @@ cmd({
     try {
         if (!args[0]) return await reply("❌ Please provide a TikTok video link!");
 
-        const apiUrl = `${domain}/scrape-tiktok?url=${encodeURIComponent(args[0])}`;
+        const apiUrl = `${domain}/scrape-tiktok?url=${encodeURIComponent(args[0])}&apikey=${api_key}`;
+        console.log("Fetching from API:", apiUrl); // ✅ Debugging Log
+
         const response = await axios.get(apiUrl);
+        console.log("API Response:", response.data); // ✅ Check API Response
 
         if (response.data && response.data.video) {
             await conn.sendMessage(m.chat, {
