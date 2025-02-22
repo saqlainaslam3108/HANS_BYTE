@@ -48,7 +48,14 @@ cmd(
         const apiUrl = `https://p.oceansaver.in/ajax/download.php?url=${encodeURIComponent(
           url
         )}&api=dfcb6d76f2f6a9894gjkege8a4ab232222`;
+        
+        console.log(`API URL: ${apiUrl}`);  // Log the URL for debugging
+
         const response = await axios.get(apiUrl);
+        
+        // Log the full response to check the error message
+        console.log(response.data);  // Log the response from the API
+        
         if (response.data && response.data.success) {
           return response.data.formats; // List of available formats (resolutions)
         } else {
