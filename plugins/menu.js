@@ -94,6 +94,7 @@ cmd(
 
 🔍 *SEARCH COMMANDS*  
   👉 .anime <text>
+  👉 .hirunews
   
 
 🍂 *𝐌𝐚𝐝𝐞 𝐛𝐲 𝗣𝗮𝗻𝘀𝗶𝗹𝘂 𝗡𝗲𝘁𝗵𝗺𝗶𝗻𝗮* 🍂  
