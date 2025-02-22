@@ -1,13 +1,13 @@
 const { cmd } = require("../command");
-const { youtube } = require("nexo-aio-downloader");
+const { nexo } = require("nexo-aio-downloader");
 
 cmd(
   {
-    pattern: "test",
-    react: "🎥",
-    desc: "Download YouTube Video with resolution options",
-    category: "download",
-    filename: __filename,
+    pattern: "test",  // Command to trigger the download
+    react: "🎥",  // React emoji
+    desc: "Download YouTube video with resolution options",  // Command description
+    category: "download",  // Category of command
+    filename: __filename,  // Current filename (for logging)
   },
   async (
     robin,
@@ -16,8 +16,9 @@ cmd(
     { from, quoted, body, isCmd, command, args, q, isGroup, sender, reply }
   ) => {
     try {
-      if (!q) return reply("*Provide a name or a YouTube link.* 🎥❤️");
+      if (!q) return reply("*Please provide a valid YouTube link and quality option.* 🎥❤️");
 
+      // Default resolution to 5 (1080p) if not provided
       let res = parseInt(args[0]) || 5;
       if (res < 1 || res > 7) res = 5;
 
@@ -31,40 +32,37 @@ cmd(
         7: "2160p",
       };
 
-      // Get the video information
-      const videoInfo = await youtube(q, res);
+      // Download the video with the specified quality
+      const videoInfo = await nexo.youtube(q, res);
       if (!videoInfo.status) throw new Error("Video not found");
 
-      const { title, desc, channel, uploadDate, size, quality, thumb, result } = videoInfo.data;
+      const { title, desc, channel, uploadDate, size, thumb, result } = videoInfo.data;
       const formattedSize = formatBytes(size);
 
       // Video metadata description
-      let descMessage = `🎥 *VORTEX VIDEO DOWNLOADER* 🎥
-      
-👻 *Title* : ${title}
-👻 *Duration* : ${uploadDate}
-👻 *Channel* : ${channel}
-👻 *Resolution* : ${resolutions[res]}
-👻 *Size* : ${formattedSize}
-👻 *Description* : ${desc || "No Description"}
+      let descMessage = `🎥 *Video Downloader* 🎥\n
+      👻 *Title* : ${title}\n
+      👻 *Duration* : ${uploadDate}\n
+      👻 *Channel* : ${channel}\n
+      👻 *Resolution* : ${resolutions[res]}\n
+      👻 *Size* : ${formattedSize}\n
+      👻 *Description* : ${desc || "No Description"}`;
 
-𝐌𝐚𝐝𝐞 𝐛𝐲 ＰＡＮＳＩＬＵ`;
-
-      // Send metadata and thumbnail message
+      // Send video thumbnail and metadata
       await robin.sendMessage(
         from,
         { image: { url: thumb }, caption: descMessage },
         { quoted: mek }
       );
 
-      // Send the video
+      // Send the video file
       await robin.sendMessage(
         from,
         {
           document: result,
           mimetype: "video/mp4",
           fileName: `${title}.mp4`,
-          caption: `🎥 *${title}*`
+          caption: `🎥 *${title}*`,
         },
         { quoted: mek }
       );
