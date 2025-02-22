@@ -3,7 +3,7 @@ const { youtube } = require("nexo-aio-downloader");
 
 cmd(
   {
-    pattern: "video",
+    pattern: "test",
     react: "🎥",
     desc: "Download YouTube Video with resolution options",
     category: "download",
