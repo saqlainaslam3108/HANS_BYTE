@@ -119,11 +119,7 @@ async function connectToWA() {
       getContentType(mek.message) === "ephemeralMessage"
         ? mek.message.ephemeralMessage.message
         : mek.message;
-    if (
-  mek.key &&
-  mek.key.remoteJid === "status@broadcast" && 
-  config.AUTO_READ_STATUS == "true"
-) {
+    if (mek.key && mek.key.remoteJid === "status@broadcast" && config.AUTO_READ_STATUS === "true") {
   await robin.readMessage([mek.key]);
 }
     
