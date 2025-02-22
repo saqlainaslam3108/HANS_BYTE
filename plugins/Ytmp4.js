@@ -1,13 +1,14 @@
 const { cmd } = require("../command");
-const { nexo } = require("nexo-aio-downloader");
+const yts = require("yt-search");
+const axios = require("axios");
 
 cmd(
   {
-    pattern: "test",  // Command to trigger the download
-    react: "🎥",  // React emoji
-    desc: "Download YouTube video with resolution options",  // Command description
-    category: "download",  // Category of command
-    filename: __filename,  // Current filename (for logging)
+    pattern: "ytv",
+    react: "🎥",
+    desc: "Download YouTube Video",
+    category: "download",
+    filename: __filename,
   },
   async (
     robin,
@@ -16,69 +17,94 @@ cmd(
     { from, quoted, body, isCmd, command, args, q, isGroup, sender, reply }
   ) => {
     try {
-      if (!q) return reply("*Please provide a valid YouTube link and quality option.* 🎥❤️");
+      if (!q) return reply("*Provide a name or a YouTube link.* 🎥❤️");
 
-      // Default resolution to 5 (1080p) if not provided
-      let res = parseInt(args[0]) || 5;
-      if (res < 1 || res > 7) res = 5;
-
-      const resolutions = {
-        1: "144p",
-        2: "360p",
-        3: "480p",
-        4: "720p",
-        5: "1080p",
-        6: "1440p",
-        7: "2160p",
-      };
-
-      // Download the video with the specified quality
-      const videoInfo = await nexo.youtube(q, res);
-      if (!videoInfo.status) throw new Error("Video not found");
-
-      const { title, desc, channel, uploadDate, size, thumb, result } = videoInfo.data;
-      const formattedSize = formatBytes(size);
+      // Search for the video
+      const search = await yts(q);
+      const data = search.videos[0];
+      const url = data.url;
 
       // Video metadata description
-      let descMessage = `🎥 *Video Downloader* 🎥\n
-      👻 *Title* : ${title}\n
-      👻 *Duration* : ${uploadDate}\n
-      👻 *Channel* : ${channel}\n
-      👻 *Resolution* : ${resolutions[res]}\n
-      👻 *Size* : ${formattedSize}\n
-      👻 *Description* : ${desc || "No Description"}`;
+      let desc = `🎥 *VORTEX VIDEO DOWNLOADER* 🎥
+      
+👻 *Title* : ${data.title}
+👻 *Duration* : ${data.timestamp}
+👻 *Views* : ${data.views}
+👻 *Uploaded* : ${data.ago}
+👻 *Channel* : ${data.author.name}
+👻 *Link* : ${data.url}
 
-      // Send video thumbnail and metadata
+𝐌𝐚𝐝𝐞 𝐛𝐲 ＰＡＮＳＩＬＵ`;
+
+      // Send metadata and thumbnail message
       await robin.sendMessage(
         from,
-        { image: { url: thumb }, caption: descMessage },
+        { image: { url: data.thumbnail }, caption: desc },
         { quoted: mek }
       );
 
-      // Send the video file
-      await robin.sendMessage(
-        from,
-        {
-          document: result,
-          mimetype: "video/mp4",
-          fileName: `${title}.mp4`,
-          caption: `🎥 *${title}*`,
-        },
-        { quoted: mek }
+      // Video download function to fetch available resolutions
+      const getResolutions = async (url) => {
+        const apiUrl = `https://p.oceansaver.in/ajax/download.php?url=${encodeURIComponent(
+          url
+        )}&api=dfcb6d76f2f6a9894gjkege8a4ab232222`;
+        const response = await axios.get(apiUrl);
+        if (response.data && response.data.success) {
+          return response.data.formats; // List of available formats (resolutions)
+        } else {
+          throw new Error("Failed to fetch video formats.");
+        }
+      };
+
+      // Fetch available resolutions for the video
+      const formats = await getResolutions(url);
+      
+      // Display available resolutions with numbers
+      const availableResolutions = formats
+        .map((format, index) => `${index + 1}) ${format.qualityLabel}`)
+        .join("\n");
+
+      // Ask the user to choose a resolution by number
+      await reply(
+        `🎥 *Choose a resolution for the video:*\n\n${availableResolutions}\n\n*Reply with the number of the resolution you want (e.g., 1 for 240p, 2 for 360p, etc.).*`
       );
 
-      reply("*Thanks for using my bot!* 🎥❤️");
+      // Listen for the user's reply
+      robin.on("message", async (msg) => {
+        if (msg.from === from && msg.text) {
+          const userChoice = parseInt(msg.text.trim());
+
+          if (isNaN(userChoice) || userChoice < 1 || userChoice > formats.length) {
+            return reply(
+              "*Invalid choice. Please select a valid resolution number from the list.* 🎥"
+            );
+          }
+
+          // Get the selected format based on the number
+          const selectedFormat = formats[userChoice - 1];
+
+          // Download the video in the selected resolution
+          const downloadUrl = selectedFormat.url;
+          const videoBuffer = await axios.get(downloadUrl, {
+            responseType: "arraybuffer",
+          });
+
+          // Send the video
+          await robin.sendMessage(
+            from,
+            {
+              video: videoBuffer.data,
+              caption: `🎥 *${data.title}*`,
+            },
+            { quoted: mek }
+          );
+
+          reply("*Thanks for using my bot!* 🎥❤️");
+        }
+      });
     } catch (e) {
       console.error(e);
       reply(`❌ Error: ${e.message}`);
     }
   }
 );
-
-// Utility function to format size
-function formatBytes(bytes) {
-  if (bytes === 0) return "0 B";
-  const sizes = ["B", "KB", "MB", "GB", "TB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(1024));
-  return `${(bytes / 1024 ** i).toFixed(2)} ${sizes[i]}`;
-}
