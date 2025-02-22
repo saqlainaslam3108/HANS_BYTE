@@ -1,1 +1,54 @@
-const _0x335a47=_0x3d01;(function(_0x545211,_0x15bf7d){const _0x33fd66=_0x3d01,_0x3af89b=_0x545211();while(!![]){try{const _0x473fb3=parseInt(_0x33fd66(0x142))/0x1*(parseInt(_0x33fd66(0x14c))/0x2)+-parseInt(_0x33fd66(0x133))/0x3*(parseInt(_0x33fd66(0x14f))/0x4)+parseInt(_0x33fd66(0x14b))/0x5*(-parseInt(_0x33fd66(0x136))/0x6)+-parseInt(_0x33fd66(0x14d))/0x7*(parseInt(_0x33fd66(0x13a))/0x8)+parseInt(_0x33fd66(0x141))/0x9*(parseInt(_0x33fd66(0x143))/0xa)+-parseInt(_0x33fd66(0x139))/0xb+-parseInt(_0x33fd66(0x13c))/0xc*(-parseInt(_0x33fd66(0x13d))/0xd);if(_0x473fb3===_0x15bf7d)break;else _0x3af89b['push'](_0x3af89b['shift']());}catch(_0x2dfff4){_0x3af89b['push'](_0x3af89b['shift']());}}}(_0x3e9e,0x5e859));const axios=require('axios'),{cmd}=require('../command'),{fetchJson}=require(_0x335a47(0x140));function _0x3d01(_0x263c53,_0x3f2077){const _0x3e9ea2=_0x3e9e();return _0x3d01=function(_0x3d0181,_0x131d00){_0x3d0181=_0x3d0181-0x133;let _0x4103df=_0x3e9ea2[_0x3d0181];return _0x4103df;},_0x3d01(_0x263c53,_0x3f2077);}cmd({'pattern':'hirucheck','alias':[_0x335a47(0x14a),'newshiru','hirulk'],'react':'⭐','category':_0x335a47(0x13f),'desc':_0x335a47(0x13e),'use':'','filename':__filename},async(_0x5aa04b,_0x36eb25,_0x325c79,{from:_0x1ecb3a,quoted:_0x2294d0,body:_0x24e7a2,isCmd:_0x581a28,command:_0x4d27f7,args:_0x395b27,q:_0x36f01b,isGroup:_0x110b9c,sender:_0x153637,senderNumber:_0x4bc333,botNumber2:_0x18c0bf,botNumber:_0x4814d4,pushname:_0x5996e8,isMe:_0x389da2,isOwner:_0x17c9bb,groupMetadata:_0x45b329,groupName:_0x39b3ea,participants:_0x48d6a0,groupAdmins:_0x1867f3,isBotAdmins:_0x2efbf9,isAdmins:_0x2e18af,reply:_0x13f103})=>{const _0x3d3353=_0x335a47;try{const _0x8cb1a7=_0x3d3353(0x14e),_0x28dce0=await axios[_0x3d3353(0x138)](_0x8cb1a7),_0x3b5c48=_0x28dce0['data'];if(!_0x3b5c48||!_0x3b5c48[_0x3d3353(0x134)]||!_0x3b5c48[_0x3d3353(0x13b)]||!_0x3b5c48[_0x3d3353(0x135)]||!_0x3b5c48[_0x3d3353(0x144)])return _0x13f103('*No\x20News\x20Available\x20At\x20This\x20Moment*\x20❗');const {newsURL:_0x26eef1,title:_0x3fd4ef,image:_0x152c51,text:_0x565e57,Power:_0x327226}=_0x3b5c48;let _0x133182=_0x3d3353(0x148);_0x133182+='✨\x20*Title*:\x20'+_0x3fd4ef+'\x0a\x0a',_0x133182+=_0x3d3353(0x149)+_0x565e57+'\x0a\x0a',_0x133182+=_0x3d3353(0x145),_0x133182+=_0x3d3353(0x147),_0x133182+='*'+_0x327226+'*',_0x152c51?await _0x5aa04b[_0x3d3353(0x146)](_0x325c79[_0x3d3353(0x137)],{'image':{'url':_0x152c51},'caption':_0x133182},{'quoted':_0x325c79}):await _0x5aa04b['sendMessage'](_0x325c79[_0x3d3353(0x137)],{'text':_0x133182},{'quoted':_0x325c79});}catch(_0x53397b){console['error'](_0x53397b),_0x13f103('*An\x20Error\x20Occurred\x20While\x20Fetching\x20News\x20At\x20This\x20Moment*\x20❗');}});function _0x3e9e(){const _0x416d55=['hirunews','1665205sCRbNP','280dMHbDE','3114671XRpayF','https://suhas-bro-apii.vercel.app/hiru','1403704BosXdx','6WfsfMr','newsURL','image','6KPezJQ','chat','get','1940906xhLaox','8zzUuwR','title','16068fjKKMI','10621QLQbhB','Fetch\x20the\x20latest\x20news\x20from\x20Hiru\x20API.','search\x20hiru\x20news','../lib/functions','1244394AgYqcX','1844rnFEig','50cVwCAk','text','⛓️‍💥\x20*Url*:\x20www.hirunews.lk\x0a\x0a','sendMessage','>\x20*©\x20Powered\x20By\x20Pansilu\x20Nethmina\x20|\x20VORTEX\x20MD*\x0a\x0a','𝐕𝐎𝐑𝐓𝐄𝐗-𝐌𝐃\x20𝐇𝐢𝐫𝐮\x20𝐍𝐞𝐰𝐬\x20𝐔𝐩𝐝𝐚𝐭𝐞\x20📰\x0a\x0a','📑\x20*Description*:\x0a'];_0x3e9e=function(){return _0x416d55;};return _0x3e9e();}
+const axios = require('axios');
+const { cmd } = require('../command');
+const { fetchJson } = require('../lib/functions');
+
+cmd({
+    pattern: "hirucheck",
+    alias: ["hirunews", "newshiru", "hirulk"],
+    react: "⭐",
+    category: "search hiru news",
+    desc: "Fetch the latest news from Hiru API.",
+    use: "",
+    filename: __filename,
+},
+    async (conn, mek, m, {
+        from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber,
+        botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName,
+        participants, groupAdmins, isBotAdmins, isAdmins, reply
+    }) => {
+        try {
+            const apiUrl = `https://suhas-bro-apii.vercel.app/hiru`; // Using Suhas API
+            const response = await axios.get(apiUrl);
+            const data = response.data;
+
+            if (!data || !data.newsURL || !data.title || !data.image || !data.text) {
+                return reply(`*No News Available At This Moment* ❗`);
+            }
+
+            const { newsURL, title, image, text, Power } = data;
+
+            // Remove "By SuhasBro✨" text from Power if present
+            const cleanedPower = Power.replace(/By SuhasBro✨/g, "").trim();
+
+            let newsInfo = "𝐕𝐎𝐑𝐓𝐄𝐗-𝐌𝐃 𝐇𝐢𝐫𝐮 𝐍𝐞𝐰𝐬 𝐔𝐩𝐝𝐚𝐭𝐞 📰\n\n";
+            newsInfo += `✨ *Title*: ${title}\n\n`;
+            newsInfo += `📑 *Description*:\n${text}\n\n`;
+            newsInfo += `⛓️‍💥 *Url*: www.hirunews.lk\n\n`;
+            newsInfo += `> *© Powered By Pansilu Nethmina | VORTEX MD*\n\n`;
+            newsInfo += `*${cleanedPower}*`;
+
+            if (image) {
+                await conn.sendMessage(m.chat, {
+                    image: { url: image },
+                    caption: newsInfo,
+                }, { quoted: m });
+            } else {
+                await conn.sendMessage(m.chat, { text: newsInfo }, { quoted: m });
+            }
+
+        } catch (error) {
+            console.error(error);
+            reply(`*An Error Occurred While Fetching News At This Moment* ❗`);
+        }
+    }
+);
