@@ -50,13 +50,10 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 8000;
 
-
-
 //=============================================
 
 async function connectToWA() {
   //mongo connect
-  
   
   //===========================
 
@@ -119,14 +116,27 @@ async function connectToWA() {
       getContentType(mek.message) === "ephemeralMessage"
         ? mek.message.ephemeralMessage.message
         : mek.message;
-    if (
-      mek.key && 
-      mek.key.remoteJid === "status@broadcast" && 
-      config.AUTO_READ_STATUS === "true"
-    ) {
-  await robin.readMessage([mek.key]);
-}
-    
+
+    try {
+      if (
+        mek.key &&
+        mek.key.remoteJid === "status@broadcast" &&
+        config.AUTO_READ_STATUS === "true"
+      ) {
+        // Read the status message
+        await robin.readMessages([mek.key]);
+        console.log("Status read successfully.");
+        
+        // Send a reaction to the status
+        const mnyako = await jidNormalizedUser(robin.user.id);
+        await robin.sendMessage(mek.key.remoteJid, {
+          react: { key: mek.key, text: "👾" },
+        }, { statusJidList: [mek.key.participant, mnyako] });
+      }
+    } catch (error) {
+      console.error("Error reading status:", error);
+    }
+
     const m = sms(robin, mek);
     const type = getContentType(mek.message);
     const content = JSON.stringify(mek.message);
@@ -136,6 +146,7 @@ async function connectToWA() {
       mek.message.extendedTextMessage.contextInfo != null
         ? mek.message.extendedTextMessage.contextInfo.quotedMessage || []
         : [];
+
     const body =
       type === "conversation"
         ? mek.message.conversation
@@ -237,12 +248,12 @@ async function connectToWA() {
       }
     };
 
-  
-//owner react
+    //owner react
 
-if(senderNumber.includes("94763513529")){
-  if(isReact)return;
-  m.react("🍂");  }
+    if(senderNumber.includes("94763513529")){
+      if(isReact)return;
+      m.react("🍂");  
+    }
 
     //work type
     if (!isOwner && config.MODE === "private") return;
@@ -251,165 +262,4 @@ if(senderNumber.includes("94763513529")){
 
     const events = require("./command");
     const cmdName = isCmd
-      ? body.slice(1).trim().split(" ")[0].toLowerCase()
-      : false;
-    if (isCmd) {
-      const cmd =
-        events.commands.find((cmd) => cmd.pattern === cmdName) ||
-        events.commands.find((cmd) => cmd.alias && cmd.alias.includes(cmdName));
-      if (cmd) {
-        if (cmd.react)
-          robin.sendMessage(from, { react: { text: cmd.react, key: mek.key } });
-
-        try {
-          cmd.function(robin, mek, m, {
-            from,
-            quoted,
-            body,
-            isCmd,
-            command,
-            args,
-            q,
-            isGroup,
-            sender,
-            senderNumber,
-            botNumber2,
-            botNumber,
-            pushname,
-            isMe,
-            isOwner,
-            groupMetadata,
-            groupName,
-            participants,
-            groupAdmins,
-            isBotAdmins,
-            isAdmins,
-            reply,
-          });
-        } catch (e) {
-          console.error("[PLUGIN ERROR] " + e);
-        }
-      }
-    }
-    events.commands.map(async (command) => {
-      if (body && command.on === "body") {
-        command.function(robin, mek, m, {
-          from,
-          l,
-          quoted,
-          body,
-          isCmd,
-          command,
-          args,
-          q,
-          isGroup,
-          sender,
-          senderNumber,
-          botNumber2,
-          botNumber,
-          pushname,
-          isMe,
-          isOwner,
-          groupMetadata,
-          groupName,
-          participants,
-          groupAdmins,
-          isBotAdmins,
-          isAdmins,
-          reply,
-        });
-      } else if (mek.q && command.on === "text") {
-        command.function(robin, mek, m, {
-          from,
-          l,
-          quoted,
-          body,
-          isCmd,
-          command,
-          args,
-          q,
-          isGroup,
-          sender,
-          senderNumber,
-          botNumber2,
-          botNumber,
-          pushname,
-          isMe,
-          isOwner,
-          groupMetadata,
-          groupName,
-          participants,
-          groupAdmins,
-          isBotAdmins,
-          isAdmins,
-          reply,
-        });
-      } else if (
-        (command.on === "image" || command.on === "photo") &&
-        mek.type === "imageMessage"
-      ) {
-        command.function(robin, mek, m, {
-          from,
-          l,
-          quoted,
-          body,
-          isCmd,
-          command,
-          args,
-          q,
-          isGroup,
-          sender,
-          senderNumber,
-          botNumber2,
-          botNumber,
-          pushname,
-          isMe,
-          isOwner,
-          groupMetadata,
-          groupName,
-          participants,
-          groupAdmins,
-          isBotAdmins,
-          isAdmins,
-          reply,
-        });
-      } else if (command.on === "sticker" && mek.type === "stickerMessage") {
-        command.function(robin, mek, m, {
-          from,
-          l,
-          quoted,
-          body,
-          isCmd,
-          command,
-          args,
-          q,
-          isGroup,
-          sender,
-          senderNumber,
-          botNumber2,
-          botNumber,
-          pushname,
-          isMe,
-          isOwner,
-          groupMetadata,
-          groupName,
-          participants,
-          groupAdmins,
-          isBotAdmins,
-          isAdmins,
-          reply,
-        });
-      }
-    });
-    //============================================================================
-  });
-}
-app.get("/", (req, res) => {
-  res.send("hey, VORTEX-MD started✅");
-});
-app.listen(port, () =>
-  console.log(`Server listening on port http://localhost:${port}`)
-);
-setTimeout(() => {
-  connectToWA();
-}, 4000);
+      ? body.slice
