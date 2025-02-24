@@ -64,47 +64,49 @@ cmd(
   🍁 *VORTEX MD* 🍁  
 ╚════════════════╝  
 
-🎯 *MAIN COMMANDS*  
-  👉 .alive  
-  👉 .menu  
-  👉 .ai <text>  
-  👉 .system  
-  👉 .owner  
+📜 MAIN COMMANDS
+🔹 .alive
+🔹 .menu
+🔹 .ai <text>
+🔹 .system
+🔹 .owner
 
-📥 *DOWNLOAD COMMANDS*  
-  👉 .song <text>  
-  👉 .video <text>  
-  👉 .fb <link>  
-  👉 .upload <animepahe d.link>
-  👉 .sinhala <text>
-  👉 .dl <d.link>
+📥 DOWNLOAD COMMANDS
+🔹 .song <text>
+🔹 .video <text>
+🔹 .fb <link>
+🔹 .upload <animepahe link>
+🔹 .sinhala <text>
+🔹 .dl <d.link>
 
-👥 *GROUP COMMANDS*  
-  👉 .mute
-  👉 .kick
+👥 GROUP COMMANDS
+🔹 .mute
+🔹 .kick
 
-🔒 *OWNER COMMANDS*  
-  👉 .restart    
+🔒 OWNER COMMANDS
+🔹 .restart
 
-✏️ *CONVERT COMMANDS*  
-  👉 .sticker <reply img>  
-  👉 .img <reply sticker>  
-  👉 .tr <lang> <text>  
-  👉 .tts <text>  
+✏️ CONVERT COMMANDS
+🔹 .sticker <reply img>
+🔹 .img <reply sticker>
+🔹 .tr <lang> <text>
+🔹 .tts <text>
 
-🔍 *SEARCH COMMANDS*  
-  👉 .anime <text>
-  👉 .hirunews
-  
+🔍 SEARCH COMMANDS
+🔹 .anime <text>
+🔹 .hirunews
 
-🍂 *𝐌𝐚𝐝𝐞 𝐛𝐲 𝗣𝗮𝗻𝘀𝗶𝗹𝘂 𝗡𝗲𝘁𝗵𝗺𝗶𝗻𝗮* 🍂  
-> ᐯㄖ尺ㄒ乇乂 几ᗪ 爪乇几卄
+╔══════════⚔️═══════════╗  
+  *Made by Pansilu Nethmina*
+   > ᐯㄖ尺ㄒ乇乂 几ᗪ 爪乇几卄
+╚══════════⚔️═══════════╝
+
 `;
       await robin.sendMessage(
         from,
         {
           image: {
-            url: "https://raw.githubusercontent.com/NethminaPansil/Whtsapp-bot/refs/heads/main/Screenshot_20250210-222115%7E2.png",
+            url: "https://raw.githubusercontent.com/NethminaPansil/Whtsapp-bot/refs/heads/main/IMG-20250224-WA0060.jpg",
           },
           caption: madeMenu,
         },
