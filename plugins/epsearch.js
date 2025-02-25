@@ -28,35 +28,25 @@ cmd(
 
       console.log("Eporner API Response:", data);
 
-      let results = [];
-
-      // Check if data.results exists and is an array
-      if (data.results && Array.isArray(data.results)) {
-        results = data.results;
-      } 
-      // If data is an array
-      else if (Array.isArray(data)) {
-        results = data;
-      } 
-      // If data is an object, try converting its values to an array
-      else if (typeof data === "object" && data !== null) {
-        results = Object.values(data);
+      // Extract valid results from the response object
+      const results = [];
+      for (const key in data) {
+        if (Object.hasOwnProperty.call(data, key)) {
+          const item = data[key];
+          // Check if item is an object and has title property
+          if (item && typeof item === "object" && item.title) {
+            results.push(item);
+          }
+        }
       }
 
-      // Debug: Log the results array
       console.log("Parsed Results:", results);
 
       if (results.length === 0) {
-        return reply("No results found!");
-      }
-
-      // Find first result that has a title property
-      const firstResult = results.find(r => r && r.title);
-      if (!firstResult) {
         return reply("No valid results found!");
       }
 
-      // Use "videoUrl" if available, else fallback to "link"
+      const firstResult = results[0];
       let videoLink = firstResult.videoUrl || firstResult.link || "No link provided";
 
       let messageText = `*🎥 EPORNER SEARCH RESULT*\n\n`;
