@@ -411,6 +411,3 @@ console.log(Server listening on port http://localhost:${port})
 setTimeout(() => {
 connectToWA();
 }, 4000);
-
-
-
