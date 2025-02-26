@@ -1,43 +1,53 @@
 const { cmd } = require('../command');
 const { fetchJson } = require('../lib/functions');
 
-const fbApi = `https://dark-shan-yt.koyeb.app/download/facebook?url=`;
-
-/*
-⚖️ Powered By - : VORTEX MD | Pansilu Nethmina 💚
-*/
-
 cmd({
-    pattern: "fb",
-    alias: ["facebook", "fbvid"],
+    pattern: "facebook",
+    alias: ["fb", "fbvid"],
     react: '📥',
     category: "download",
-    desc: "Download Facebook videos",
+    desc: "Download Facebook videos using API",
     filename: __filename
 }, async (conn, m, mek, { from, q, reply }) => {
     try {
-        if (!q || !q.includes("facebook.com")) {
-            return await reply('*Please provide a valid Facebook video URL!*');
-        }
+        if (!q || !q.includes('facebook.com')) return await reply('*Please provide a valid Facebook video URL!*');
 
-        await reply('🔄 *Downloading video...*');
-        const videoData = await fetchJson(`${fbApi}${encodeURIComponent(q)}`);
+        const apiUrl = `https://dark-shan-yt.koyeb.app/download/facebook?url=${encodeURIComponent(q)}`;
+        const response = await fetchJson(apiUrl);
 
-        if (!videoData || !videoData.url) {
+        if (!response.status || !response.data || !response.data.results) {
             return await reply('*Failed to fetch the video. Please try again!*');
         }
 
-        const videoUrl = videoData.url;
-        const caption = `🎥 *Facebook Video Downloaded*\n\n🔗 *Source:* [Click Here](${q})\n⚖️ *Powered By - : VORTEX MD | Pansilu Nethmina 💚*`;
+        const videoData = response.data;
+        const videoLinks = videoData.results;
 
-        await conn.sendMessage(from, {
-            video: { url: videoUrl },
-            mimetype: 'video/mp4',
-            caption
+        let resultMsg = `🎬 *Facebook Video Download* 🎬\n\n📌 *Caption:* ${videoData.caption || 'No caption'}\n\n`;
+        videoLinks.forEach((video, index) => {
+            resultMsg += `🎥 *Quality:* ${video.quality}p (${video.type})\n🔗 *Download Link:* ${video.url}\n\n`;
+        });
+
+        await conn.sendMessage(m.chat, {
+            image: { url: videoData.preview },
+            caption: resultMsg
         }, { quoted: mek });
 
+        // Default send highest quality video
+        const bestQualityVideo = videoLinks[0];
+        if (bestQualityVideo) {
+            await conn.sendMessage(from, { react: { text: '⬇️', key: mek.key } });
+
+            await conn.sendMessage(from, {
+                video: { url: bestQualityVideo.url },
+                mimetype: 'video/mp4',
+                caption: `🎬 *Here is your video!*`
+            }, { quoted: mek });
+
+            await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
+        }
+
     } catch (error) {
-        console.error('Error in fb command:', error);
-        await reply('❌ *Error occurred while downloading the video. Please try again later!*');
+        console.error(error);
+        await reply('*An error occurred while fetching the video. Please try again later!*');
     }
 });
