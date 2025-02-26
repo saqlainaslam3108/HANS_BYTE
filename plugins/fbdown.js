@@ -1,111 +1,43 @@
-const { cmd, commands } = require("../command");
-const {default: getFbVideoInfo}=import("fb-downloader-scrapper");
+const { cmd } = require('../command');
+const { fetchJson } = require('../lib/functions');
 
-cmd(
-{
-pattern: "fb",
-alias: ["facebook"],
-react: "💀",
-desc: "Download Facebook Video",
-category: "download",
-filename: __filename,
-},
-async (
-robin,
-mek,
-m,
-{
-from,
-quoted,
-body,
-isCmd,
-command,
-args,
-q,
-isGroup,
-sender,
-senderNumber,
-botNumber2,
-botNumber,
-pushname,
-isMe,
-isOwner,
-groupMetadata,
-groupName,
-participants,
-groupAdmins,
-isBotAdmins,
-isAdmins,
-reply,
-}
-) => {
-try {
-if (!q) return reply("Please provide a valid Facebook video URL! 🌚❤️");
+const fbApi = `https://dark-shan-yt.koyeb.app/download/facebook?url=`;
 
-// Validate the Facebook URL format  
-  const fbRegex = /(https?:\/\/)?(www\.)?(facebook|fb)\.com\/.+/;  
-  if (!fbRegex.test(q))  
-    return reply("*Invalid Facebook URL! Please check and try again.* 🌚");  
+/*
+⚖️ Powered By - : VORTEX MD | Pansilu Nethmina 💚
+*/
 
-  // Fetch video details  
-  reply("*Downloading your video...* 🌚❤️");  
+cmd({
+    pattern: "fb",
+    alias: ["facebook", "fbvid"],
+    react: '📥',
+    category: "download",
+    desc: "Download Facebook videos",
+    filename: __filename
+}, async (conn, m, mek, { from, q, reply }) => {
+    try {
+        if (!q || !q.includes("facebook.com")) {
+            return await reply('*Please provide a valid Facebook video URL!*');
+        }
 
-  const result = await getFbVideoInfo(q);  
+        await reply('🔄 *Downloading video...*');
+        const videoData = await fetchJson(`${fbApi}${encodeURIComponent(q)}`);
 
-  if (!result || (!result.sd && !result.hd)) {  
-    return reply("*Failed to download video. Please try again later.* 🌚");  
-  }  
+        if (!videoData || !videoData.url) {
+            return await reply('*Failed to fetch the video. Please try again!*');
+        }
 
-  const { title, sd, hd } = result;  
+        const videoUrl = videoData.url;
+        const caption = `🎥 *Facebook Video Downloaded*\n\n🔗 *Source:* [Click Here](${q})\n⚖️ *Powered By - : VORTEX MD | Pansilu Nethmina 💚*`;
 
-  // Prepare and send the message with video details  
-  let desc = `
+        await conn.sendMessage(from, {
+            video: { url: videoUrl },
+            mimetype: 'video/mp4',
+            caption
+        }, { quoted: mek });
 
-❤️ VORTEX FB VIDEO DOWNLOADER ❤️
-
-👻 Title: ${title || "Unknown"}
-👻 Quality: ${hd ? "HD Available" : "SD Only"}
-
-𝐌𝐚𝐝𝐞 𝐛𝐲 ＰＡＮＳＩＬＵ
-`;
-await robin.sendMessage(
-from,
-{
-image: {
-url: "https://raw.githubusercontent.com/NethminaPansil/Whtsapp-bot/refs/heads/main/images%20(10).jpeg",
-},
-caption: desc,
-},
-{ quoted: mek }
-);
-// Send the video if available
-if (hd) {
-await robin.sendMessage(
-from,
-{ video: { url: hd }, caption: "----------HD VIDEO----------" },
-{ quoted: mek }
-);
-await robin.sendMessage(
-from,
-{ video: { url: sd }, caption: "----------SD VIDEO----------" },
-{ quoted: mek }
-);
-} else if (sd) {
-await robin.sendMessage(
-from,
-{ video: { url: sd }, caption: "----------SD VIDEO----------" },
-{ quoted: mek }
-);
-} else {
-return reply("No downloadable video found! 🌚");
-}
-
-return reply("*Thanks for using my bot* 🌚❤️");  
-} catch (e) {  
-  console.error(e);  
-  reply(`*Error:* ${e.message || e}`);  
-}
-
-}
-);
-
+    } catch (error) {
+        console.error('Error in fb command:', error);
+        await reply('❌ *Error occurred while downloading the video. Please try again later!*');
+    }
+});
