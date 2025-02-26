@@ -6,7 +6,7 @@ cmd({
     alias: ["fb", "fbvid"],
     react: '📥',
     category: "download",
-    desc: "Download Facebook videos using API",
+    desc: "Download HD Facebook videos",
     filename: __filename
 }, async (conn, m, mek, { from, q, reply }) => {
     try {
@@ -21,30 +21,25 @@ cmd({
 
         const videoData = response.data;
         const videoLinks = videoData.results;
-
-        let resultMsg = `🎬 *Facebook Video Download* 🎬\n\n📌 *Caption:* ${videoData.caption || 'No caption'}\n\n`;
-        videoLinks.forEach((video, index) => {
-            resultMsg += `🎥 *Quality:* ${video.quality}p (${video.type})\n🔗 *Download Link:* ${video.url}\n\n`;
-        });
+        
+        // Filter only HD video (720p)
+        const hdVideo = videoLinks.find(v => v.quality === 720);
+        if (!hdVideo) return await reply('*HD video not available for this link!*');
 
         await conn.sendMessage(m.chat, {
             image: { url: videoData.preview },
-            caption: resultMsg
+            caption: `🎬 *Facebook HD Video*`
         }, { quoted: mek });
 
-        // Default send highest quality video
-        const bestQualityVideo = videoLinks[0];
-        if (bestQualityVideo) {
-            await conn.sendMessage(from, { react: { text: '⬇️', key: mek.key } });
+        await conn.sendMessage(from, { react: { text: '⬇️', key: mek.key } });
 
-            await conn.sendMessage(from, {
-                video: { url: bestQualityVideo.url },
-                mimetype: 'video/mp4',
-                caption: `🎬 *Here is your video!*`
-            }, { quoted: mek });
+        await conn.sendMessage(from, {
+            video: { url: hdVideo.url },
+            mimetype: 'video/mp4',
+            caption: `🎬 *Here is your HD video!*`
+        }, { quoted: mek });
 
-            await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
-        }
+        await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
 
     } catch (error) {
         console.error(error);
