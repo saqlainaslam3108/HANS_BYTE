@@ -90,6 +90,8 @@ cmd(
 🔹 .img <reply sticker>
 🔹 .tr <lang> <text>
 🔹 .tts <text>
+🔹 .gen <text>
+🔹 .gen2 <text>
 
 🔍 SEARCH COMMANDS
 🔹 .anime <text>
@@ -104,7 +106,7 @@ cmd(
         from,
         {
           image: {
-            url: "https://raw.githubusercontent.com/NethminaPansil/Whtsapp-bot/refs/heads/main/IMG-20250224-WA0060.jpg",
+            url: "https://raw.githubusercontent.com/NethminaPansil/Whtsapp-bot/refs/heads/main/tumblr_1d7104aa11efcf7ebbaab88a184a7279_25602a04_1280%7E2.jpg",
           },
           caption: madeMenu,
         },
