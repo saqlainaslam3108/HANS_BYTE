@@ -29,7 +29,6 @@ const { sms, downloadMediaMessage } = require("./lib/msg");
 const axios = require("axios");
 const { File } = require("megajs");
 const prefix = config.PREFIX;
-const { default: fetch } = require("node-fetch");
 const ownerNumber = config.OWNER_NUM;
 
 //===================SESSION-AUTH============================
@@ -51,6 +50,9 @@ if (!fs.existsSync(__dirname + "/auth_info_baileys/creds.json")) {
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 8000;
+
+//===================FETCH MODULE FIX=====================
+const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 //=============================================
 async function connectToWA() {
@@ -110,7 +112,7 @@ async function connectToWA() {
       });
     }
   });
-  
+
   robin.ev.on("creds.update", saveCreds);
 
   // Message upsert event
