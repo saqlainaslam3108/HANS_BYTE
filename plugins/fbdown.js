@@ -1,6 +1,8 @@
 const { cmd } = require('../command');
 const { fetchJson } = require('../lib/functions');
 
+let fb_videos = {}; // Store video data globally
+
 cmd({
     pattern: "facebook",
     alias: ["fb", "fbvid"],
@@ -31,13 +33,13 @@ cmd({
         if (sdVideo) caption += `📹 *SD (360p)* → Reply *1* to download.\n`;
         if (hdVideo) caption += `🎥 *HD (720p)* → Reply *2* to download.\n`;
 
-        await conn.sendMessage(from, {
+        let sentMessage = await conn.sendMessage(from, {
             image: { url: videoData.preview },
             caption
         }, { quoted: mek });
 
-        conn.fb_videos = conn.fb_videos || {};
-        conn.fb_videos[m.key.id] = { hd: hdVideo?.url, sd: sdVideo?.url, from, mek };
+        // Store the message ID and video URLs for later use
+        fb_videos[sentMessage.key.id] = { hd: hdVideo?.url, sd: sdVideo?.url, from, mek };
 
     } catch (error) {
         console.error(error);
@@ -48,26 +50,31 @@ cmd({
 cmd({
     on: "text"
 }, async (conn, m, mek) => {
-    if (!conn.fb_videos || !conn.fb_videos[m.quoted?.key?.id]) return;
-    
-    const videoData = conn.fb_videos[m.quoted.key.id];
-    const { hd, sd, from, mek: originalMek } = videoData;
+    try {
+        if (!m.quoted || !fb_videos[m.quoted.key.id]) return;
 
-    let selectedVideo;
-    if (m.body.trim() === "1" && sd) selectedVideo = { url: sd, quality: "SD" };
-    if (m.body.trim() === "2" && hd) selectedVideo = { url: hd, quality: "HD" };
+        const videoData = fb_videos[m.quoted.key.id];
+        const { hd, sd, from, mek: originalMek } = videoData;
 
-    if (!selectedVideo) return await conn.sendMessage(from, { text: "*Invalid option! Reply with 1 for SD or 2 for HD.*" }, { quoted: mek });
+        let selectedVideo;
+        if (m.body.trim() === "1" && sd) selectedVideo = { url: sd, quality: "SD" };
+        if (m.body.trim() === "2" && hd) selectedVideo = { url: hd, quality: "HD" };
 
-    await conn.sendMessage(from, { react: { text: '⬇️', key: mek.key } });
+        if (!selectedVideo) return await conn.sendMessage(from, { text: "*Invalid option! Reply with 1 for SD or 2 for HD.*" }, { quoted: mek });
 
-    await conn.sendMessage(from, {
-        video: { url: selectedVideo.url },
-        mimetype: 'video/mp4',
-        caption: `🎬 *Here is your ${selectedVideo.quality} video!*`
-    }, { quoted: originalMek });
+        await conn.sendMessage(from, { react: { text: '⬇️', key: mek.key } });
 
-    await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
+        await conn.sendMessage(from, {
+            video: { url: selectedVideo.url },
+            mimetype: 'video/mp4',
+            caption: `🎬 *Here is your ${selectedVideo.quality} video!*`
+        }, { quoted: originalMek });
 
-    delete conn.fb_videos[m.quoted.key.id]; // Clear data after sending
+        await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
+
+        delete fb_videos[m.quoted.key.id]; // Clear data after sending
+
+    } catch (error) {
+        console.error(error);
+    }
 });
