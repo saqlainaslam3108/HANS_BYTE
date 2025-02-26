@@ -29,6 +29,7 @@ const { sms, downloadMediaMessage } = require("./lib/msg");
 const axios = require("axios");
 const { File } = require("megajs");
 const prefix = config.PREFIX;
+const { default: fetch } = require("node-fetch");
 const ownerNumber = config.OWNER_NUM;
 
 //===================SESSION-AUTH============================
@@ -50,9 +51,6 @@ if (!fs.existsSync(__dirname + "/auth_info_baileys/creds.json")) {
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 8000;
-
-//===================FETCH MODULE FIX=====================
-const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 //=============================================
 async function connectToWA() {
@@ -119,22 +117,32 @@ async function connectToWA() {
   robin.ev.on("messages.upsert", async (mek) => {
     mek = mek.messages[0];
     if (!mek.message) return;
-    // If message is ephemeral, extract the inner message
+
+    // Log the incoming message
+    console.log("Received message:", mek);
+
+    // If it's a status update
+    if (mek.key.remoteJid === "status@broadcast") {
+      console.log("Status update received");
+    }
+
+    // If it's an ephemeral message, extract the actual message
     mek.message =
       getContentType(mek.message) === "ephemeralMessage"
         ? mek.message.ephemeralMessage.message
         : mek.message;
-        
+
     // Auto-read status if enabled in config
-if (
-  mek.key &&
-  mek.key.remoteJid === "status@broadcast" &&
-  config.AUTO_READ_STATUS === "true"
-) {
-  console.log("Auto-reading status...");
-  await robin.readMessages([{ remoteJid: mek.key.remoteJid, id: mek.key.id }]);
-}
-    
+    if (
+      mek.key &&
+      mek.key.remoteJid === "status@broadcast" &&
+      config.AUTO_READ_STATUS === "true"
+    ) {
+      console.log("Auto-reading status...");
+      await sleep(1000);  // Add a small delay (1 second)
+      await robin.readMessages([{ remoteJid: mek.key.remoteJid, id: mek.key.id }]);
+    }
+
     const m = sms(robin, mek);
     const type = getContentType(mek.message);
     const content = JSON.stringify(mek.message);
@@ -417,11 +425,6 @@ if (
 app.get("/", (req, res) => {
   res.send("hey, VORTEX-MD started✅");
 });
-app.listen(port, () =>
-  console.log(`Server listening on port http://localhost:${port}`)
-);
-
-// Start the bot after a short delay
-setTimeout(() => {
-  connectToWA();
-}, 4000);
+app.listen(port, () => {
+  console.log(`Server started on port ${port}`);
+});
