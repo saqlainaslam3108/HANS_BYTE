@@ -126,14 +126,14 @@ async function connectToWA() {
         : mek.message;
         
     // Auto-read status if enabled in config
-    if (
-      mek.key &&
-      mek.key.remoteJid === "status@broadcast" &&
-      config.AUTO_READ_STATUS === "true"
-    ) {
-      // Use readMessages instead of readMessage
-      await robin.readMessages([{ remoteJid: mek.key.remoteJid, id: mek.key.id }]);
-    }
+if (
+  mek.key &&
+  mek.key.remoteJid === "status@broadcast" &&
+  config.AUTO_READ_STATUS === "true"
+) {
+  console.log("Auto-reading status...");
+  await robin.readMessages([{ remoteJid: mek.key.remoteJid, id: mek.key.id }]);
+}
     
     const m = sms(robin, mek);
     const type = getContentType(mek.message);
