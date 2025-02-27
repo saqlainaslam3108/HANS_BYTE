@@ -15,43 +15,48 @@ cmd({
         }
 
         const apiUrl = `https://api.ryzendesu.vip/api/downloader/fbdl?url=${encodeURIComponent(q)}`;
-        console.log("API URL:", apiUrl); // Log API URL
+        console.log("API URL:", apiUrl); // Debugging log
 
         const response = await fetchJson(apiUrl);
-        console.log("API Response:", response); // Log API response
+        console.log("API Response:", response); // Debugging log
 
-        // Error handling if response is invalid
-        if (!response || !response.status || !response.result || !response.result.sd || !response.result.hd) {
-            console.error("Error: No valid video data found in response.");
-            return await reply('*Failed to fetch the video. Please try again!*');
+        // Validate API response
+        if (!response || response.status === false || !response.result) {
+            console.error("Error: API response error or missing data.");
+            return await reply('*API Error: Failed to fetch the video. Please try again later!*');
         }
 
+        // Extract video data
         const videoData = response.result;
-        const hdVideoUrl = videoData.hd || videoData.sd; // Get HD video or fallback to SD
+        const hdVideoUrl = videoData.hd || videoData.sd; // Get HD or fallback to SD
         if (!hdVideoUrl) {
-            console.error("Error: No video URL found.");
+            console.error("Error: No valid video URL found.");
             return await reply('*No video available for this link!*');
         }
 
-        const previewImage = videoData.thumbnail || 'https://example.com/fallback_image.jpg'; // Fallback image URL
+        const previewImage = videoData.thumbnail || 'https://example.com/fallback_image.jpg'; // Default thumbnail
 
+        // Send video preview
         await conn.sendMessage(m.chat, {
             image: { url: previewImage },
             caption: `🎬 *Facebook HD Video*`
         }, { quoted: mek });
 
+        // React with download icon
         await conn.sendMessage(from, { react: { text: '⬇️', key: mek.key } });
 
+        // Send video file
         await conn.sendMessage(from, {
             video: { url: hdVideoUrl },
             mimetype: 'video/mp4',
             caption: `🎬 *Here is your HD video!*`
         }, { quoted: mek });
 
+        // React with success icon
         await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
 
     } catch (error) {
-        console.error("Caught Error:", error); // Log the error
+        console.error("Caught Error:", error); // Debugging log
         await reply('*An error occurred while fetching the video. Please try again later!*');
     }
 });
