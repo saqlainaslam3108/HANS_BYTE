@@ -17,7 +17,11 @@ cmd({
         const apiUrl = `https://api.ryzendesu.vip/api/downloader/fbdl?url=${encodeURIComponent(q)}`;
         console.log("API URL:", apiUrl); // Debugging Log
 
-        const response = await fetchJson(apiUrl);
+        const response = await fetchJson(apiUrl).catch(err => {
+            console.error("Error fetching data from API:", err);
+            throw new Error('Failed to fetch data from the API');
+        });
+        
         console.log("API Response:", response); // Debugging Log
 
         // Validate API response
