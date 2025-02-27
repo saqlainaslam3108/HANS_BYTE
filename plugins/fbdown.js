@@ -1,6 +1,6 @@
 const { cmd, commands } = require("../command");
 const getFbVideoInfo = require("fb-downloader-scrapper");
-
+const { default: getFbVideoInfo } = import{"fb-downloader-scrapper");
 cmd(
   {
     pattern: "fb",
@@ -40,7 +40,7 @@ cmd(
     }
   ) => {
     try {
-      if (!q) return reply("*Please provide a valid Facebook video URL!* 🌚❤️");
+      if (!q) return reply("*Please provide a valid Facebook video URL!* ❤️");
 
       // Validate the Facebook URL format
       const fbRegex = /(https?:\/\/)?(www\.)?(facebook|fb)\.com\/.+/;
@@ -48,30 +48,30 @@ cmd(
         return reply("*Invalid Facebook URL! Please check and try again.* 🌚");
 
       // Fetch video details
-      reply("*Downloading your video...* 🌚❤️");
+      reply("*Downloading your video...* 💤");
 
       const result = await getFbVideoInfo(q);
 
       if (!result || (!result.sd && !result.hd)) {
-        return reply("*Failed to download video. Please try again later.* 🌚");
+        return reply("*Failed to download video. Please try again later.* 😥 ");
       }
 
       const { title, sd, hd } = result;
 
       // Prepare and send the message with video details
       let desc = `
-*❤️ ROBIN FB VIDEO DOWNLOADER ❤️*
+*❤️ 𝙑𝙊𝙍𝙏𝙀𝙓 FB VIDEO DOWNLOADER ❤️*
 
 👻 *Title*: ${title || "Unknown"}
 👻 *Quality*: ${hd ? "HD Available" : "SD Only"}
 
-𝐌𝐚𝐝𝐞 𝐛𝐲 𝐒_𝐈_𝐇_𝐈_𝐋_𝐄_𝐋
+𝐌𝐚𝐝𝐞 𝐛𝐲 𝙋𝙖𝙣𝙨𝙞𝙡𝙪 𝙉𝙚𝙩𝙝𝙢𝙞𝙣𝙖
         `;
       await robin.sendMessage(
         from,
         {
           image: {
-            url: "https://raw.githubusercontent.com/Dark-Robin/Bot-Helper/refs/heads/main/autoimage/Bot%20fb-1.jpg",
+            url: "https://raw.githubusercontent.com/NethminaPansil/Whtsapp-bot/refs/heads/main/images%20(10).jpeg",
           },
           caption: desc,
         },
@@ -96,10 +96,10 @@ cmd(
           { quoted: mek }
         );
       } else {
-        return reply("*No downloadable video found!* 🌚");
+        return reply("*No downloadable video found!* 😮‍💨");
       }
 
-      return reply("*Thanks for using my bot* 🌚❤️");
+      return reply("𝘿𝙊𝙉𝙀 📥 ");
     } catch (e) {
       console.error(e);
       reply(`*Error:* ${e.message || e}`);
