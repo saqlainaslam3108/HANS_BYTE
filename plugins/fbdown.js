@@ -23,7 +23,7 @@ cmd({
         const videoLinks = videoData.results;
         
         const hdVideo = videoLinks.find(v => v.quality === 720);
-        const sdVideo = videoLinks.find(v => v.quality < 720); // SD සඳහා වෙනම විකල්පයක්
+        const sdVideo = videoLinks.find(v => v.quality < 720);
 
         if (!hdVideo && !sdVideo) return await reply('*No downloadable video found for this link!*');
 
@@ -39,36 +39,46 @@ cmd({
 
         const messageID = sentMsg.key.id;
 
-        conn.ev.on('messages.upsert', async (update) => {
-            const userReply = update.messages[0];
-            if (!userReply.message) return;
-            const textReply = userReply.message.conversation || userReply.message.extendedTextMessage?.text;
-            const isReplyToBotMsg = userReply.message.extendedTextMessage && userReply.message.extendedTextMessage.contextInfo.stanzaId === messageID;
+        // Event Listener - Reply Handling
+        const handleReply = async (update) => {
+            try {
+                const userReply = update.messages[0];
+                if (!userReply.message) return;
+                const textReply = userReply.message.conversation || userReply.message.extendedTextMessage?.text;
+                const isReplyToBotMsg = userReply.message.extendedTextMessage && userReply.message.extendedTextMessage.contextInfo.stanzaId === messageID;
 
-            if (isReplyToBotMsg) {
-                let selectedVideo;
-                if (textReply.trim() === '1' && hdVideo) {
-                    selectedVideo = hdVideo;
-                } else if (textReply.trim() === '2' && sdVideo) {
-                    selectedVideo = sdVideo;
-                } else {
-                    return await reply('*Invalid choice! Please reply with 1 for HD or 2 for SD.*');
+                if (isReplyToBotMsg) {
+                    let selectedVideo;
+                    if (textReply.trim() === '1' && hdVideo) {
+                        selectedVideo = hdVideo;
+                    } else if (textReply.trim() === '2' && sdVideo) {
+                        selectedVideo = sdVideo;
+                    } else {
+                        return await reply('*Invalid choice! Please reply with 1 for HD or 2 for SD.*');
+                    }
+
+                    await conn.sendMessage(from, { react: { text: '⬇️', key: mek.key } });
+
+                    await conn.sendMessage(from, {
+                        video: { url: selectedVideo.url },
+                        mimetype: 'video/mp4',
+                        caption: `🎬 *Here is your ${selectedVideo.quality}p video!*`
+                    }, { quoted: userReply });
+
+                    await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
+
+                    // Remove Listener After Reply
+                    conn.ev.off('messages.upsert', handleReply);
                 }
-
-                await conn.sendMessage(from, { react: { text: '⬇️', key: mek.key } });
-
-                await conn.sendMessage(from, {
-                    video: { url: selectedVideo.url },
-                    mimetype: 'video/mp4',
-                    caption: `🎬 *Here is your ${selectedVideo.quality}p video!*`
-                }, { quoted: userReply });
-
-                await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
+            } catch (error) {
+                console.error("Reply Handling Error:", error);
             }
-        });
+        };
+
+        conn.ev.on('messages.upsert', handleReply);
 
     } catch (error) {
-        console.error(error);
+        console.error("Main Function Error:", error);
         await reply('*An error occurred while fetching the video. Please try again later!*');
     }
 });
