@@ -32,15 +32,18 @@ cmd({
         // Log the `results` to check what data is there
         console.log("Video Links (Results):", videoLinks);
 
-        // Filter only HD video (720p)
-        const hdVideo = videoLinks.find(v => v.quality === 720);
+        // Filter only HD video (720p) or fallback to first available video
+        const hdVideo = videoLinks.find(v => v.quality === 720) || videoLinks[0];
         if (!hdVideo) {
-            console.error("Error: No HD video found."); // Log error
-            return await reply('*HD video not available for this link!*');
+            console.error("Error: No video found."); // Log error
+            return await reply('*No video available for this link!*');
         }
 
+        // Use the preview image or fallback image if not available
+        const previewImage = videoData.preview || 'https://example.com/fallback_image.jpg'; // Replace with your fallback image URL
+
         await conn.sendMessage(m.chat, {
-            image: { url: videoData.preview },
+            image: { url: previewImage },
             caption: `🎬 *Facebook HD Video*`
         }, { quoted: mek });
 
