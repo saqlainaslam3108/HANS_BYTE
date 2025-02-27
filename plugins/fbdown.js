@@ -4,7 +4,7 @@ const path = require("path");
 
 cmd(
   {
-    pattern: "facebookvideo",
+    pattern: "fb",
     react: "🎥",
     desc: "Download Facebook video",
     category: "download",
