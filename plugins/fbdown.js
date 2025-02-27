@@ -37,48 +37,51 @@ cmd({
             caption: videoOptions
         }, { quoted: mek });
 
-        const messageID = sentMsg.key.id;
-
-        // Event Listener - Reply Handling
-        const handleReply = async (update) => {
-            try {
-                const userReply = update.messages[0];
-                if (!userReply.message) return;
-                const textReply = userReply.message.conversation || userReply.message.extendedTextMessage?.text;
-                const isReplyToBotMsg = userReply.message.extendedTextMessage && userReply.message.extendedTextMessage.contextInfo.stanzaId === messageID;
-
-                if (isReplyToBotMsg) {
-                    let selectedVideo;
-                    if (textReply.trim() === '1' && hdVideo) {
-                        selectedVideo = hdVideo;
-                    } else if (textReply.trim() === '2' && sdVideo) {
-                        selectedVideo = sdVideo;
-                    } else {
-                        return await reply('*Invalid choice! Please reply with 1 for HD or 2 for SD.*');
-                    }
-
-                    await conn.sendMessage(from, { react: { text: '⬇️', key: mek.key } });
-
-                    await conn.sendMessage(from, {
-                        video: { url: selectedVideo.url },
-                        mimetype: 'video/mp4',
-                        caption: `🎬 *Here is your ${selectedVideo.quality}p video!*`
-                    }, { quoted: userReply });
-
-                    await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
-
-                    // Remove Listener After Reply
-                    conn.ev.off('messages.upsert', handleReply);
-                }
-            } catch (error) {
-                console.error("Reply Handling Error:", error);
-            }
-        };
-
-        conn.ev.on('messages.upsert', handleReply);
+        // Store the sent message ID and corresponding video details
+        global.fbVideoRequests = global.fbVideoRequests || {};
+        global.fbVideoRequests[sentMsg.key.id] = { hdVideo, sdVideo, from };
 
     } catch (error) {
         console.error("Main Function Error:", error);
         await reply('*An error occurred while fetching the video. Please try again later!*');
+    }
+});
+
+// Global Event Listener - Handles all responses to Facebook video requests
+conn.ev.on('messages.upsert', async (update) => {
+    try {
+        const userReply = update.messages[0];
+        if (!userReply.message) return;
+        const textReply = userReply.message.conversation || userReply.message.extendedTextMessage?.text;
+        const replyToMsgId = userReply.message.extendedTextMessage?.contextInfo?.stanzaId;
+
+        if (!replyToMsgId || !global.fbVideoRequests || !global.fbVideoRequests[replyToMsgId]) return;
+
+        const { hdVideo, sdVideo, from } = global.fbVideoRequests[replyToMsgId];
+
+        let selectedVideo;
+        if (textReply.trim() === '1' && hdVideo) {
+            selectedVideo = hdVideo;
+        } else if (textReply.trim() === '2' && sdVideo) {
+            selectedVideo = sdVideo;
+        } else {
+            return await conn.sendMessage(from, { text: '*Invalid choice! Please reply with 1 for HD or 2 for SD.*', quoted: userReply });
+        }
+
+        await conn.sendMessage(from, { react: { text: '⬇️', key: userReply.key } });
+
+        await conn.sendMessage(from, {
+            video: { url: selectedVideo.url },
+            mimetype: 'video/mp4',
+            caption: `🎬 *Here is your ${selectedVideo.quality}p video!*`
+        }, { quoted: userReply });
+
+        await conn.sendMessage(from, { react: { text: '✅', key: userReply.key } });
+
+        // Remove processed request
+        delete global.fbVideoRequests[replyToMsgId];
+
+    } catch (error) {
+        console.error("Reply Handling Error:", error);
     }
 });
