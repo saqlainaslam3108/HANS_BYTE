@@ -15,13 +15,18 @@ cmd({
         }
 
         const apiUrl = `https://api.ryzendesu.vip/api/downloader/fbdl?url=${encodeURIComponent(q)}`;
-        console.log("API URL:", apiUrl); // Debugging log
+        console.log("API URL:", apiUrl); // Debugging Log
 
         const response = await fetchJson(apiUrl);
-        console.log("API Response:", response); // Debugging log
+        console.log("API Response:", response); // Debugging Log
 
         // Validate API response
-        if (!response || response.status === false || !response.result) {
+        if (!response || typeof response !== "object") {
+            console.error("Error: Invalid API response.");
+            return await reply('*Invalid API response. Please try again later!*');
+        }
+
+        if (response.status === false || !response.result) {
             console.error("Error: API response error or missing data.");
             return await reply('*API Error: Failed to fetch the video. Please try again later!*');
         }
@@ -56,7 +61,7 @@ cmd({
         await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
 
     } catch (error) {
-        console.error("Caught Error:", error); // Debugging log
+        console.error("Caught Error:", error); // Debugging Log
         await reply('*An error occurred while fetching the video. Please try again later!*');
     }
 });
