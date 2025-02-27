@@ -45,13 +45,10 @@ cmd({
             return await reply('Sorry, unable to fetch the download link for this video.');
         }
 
-        // Add watermark to the video link - Assuming the watermark functionality is integrated in the service
-        const watermarkedVideoUrl = `${videoLink}&watermark=VORTEX_MD`; // Example: adding watermark via URL parameters
-
-        // Send the video with the watermark applied
+        // Send the video directly from the API response
         await conn.sendMessage(from, {
-            video: { url: watermarkedVideoUrl },
-            caption: `🎥 *Facebook Video Download with Watermark*\n\n> ⚖️ Powered By - : VORTEX MD | Pansilu Nethmina 💚`
+            video: { url: videoLink },
+            caption: `🎥 *Facebook Video Download*\n\n> ⚖️ Powered By - : VORTEX MD | Pansilu Nethmina 💚`
         }, { quoted: mek });
 
         await conn.sendMessage(from, { react: { text: '⬇️', key: mek.key } });
