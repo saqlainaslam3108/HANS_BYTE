@@ -27,6 +27,8 @@ cmd({
         // Call the API to fetch the download link
         const response = await fetchJson(`${domain}/facebook-dl?apikey=${api_key}&facebookUrl=${encodeURIComponent(q)}`);
 
+        console.log("API Response:", response);  // Debugging line to log the API response
+
         if (response.error) {
             return await reply(`Error: ${response.error}`);
         }
