@@ -1,57 +1,36 @@
-/*
-Please Give Credit 🙂❤️
-⚖️ Powered By - : VORTEX MD | Pansilu Nethmina 💚
-*/
+const axios = require('axios');
 
-const { cmd, commands } = require('../command');
-const { fetchJson } = require('../lib/functions');
+// Command for downloading Facebook videos
+const downloadFacebookVideo = async (m, args) => {
+    if (!args[0]) {
+        return m.reply("Please provide a Facebook video URL.");
+    }
 
-cmd({
-    pattern: "fbdown",
-    alias: ["facebookdl", "fbdl"],
-    react: '⬇️',
-    category: "download",
-    desc: "Download Facebook videos in HD",
-    filename: __filename
-}, async (conn, m, mek, { from, q, reply }) => {
+    const videoUrl = args[0];
+
     try {
-        if (!q) return await reply("*Please provide a Facebook video URL.*");
+        // Call the API to fetch the download link
+        const response = await axios.get(`https://dark-shan-yt.koyeb.app/download/facebook?url=${encodeURIComponent(videoUrl)}`);
 
-        const apiUrl = `https://dark-shan-yt.koyeb.app/download/facebook?url=${encodeURIComponent(q)}`;
-        const response = await fetchJson(apiUrl);
+        // Check if the response contains the video download URL
+        if (response.data && response.data.result) {
+            const videoDownloadUrl = response.data.result;
 
-        if (response.status && response.video && response.video.length > 0) {
-            const hdVideo = response.video.find(video => video.quality === 'HD');
-
-            if (hdVideo && hdVideo.url) {
-                await conn.sendMessage(from, { react: { text: '⬇️', key: mek.key } });
-
-                await conn.sendMessage(from, {
-                    video: { url: hdVideo.url },
-                    caption: `*Facebook Video Downloaded (HD)*\n\n> ⚖️ Powered By - : VORTEX MD | Pansilu Nethmina 💚`
-                }, { quoted: mek });
-
-                await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
-            } else {
-                // HD video not found, try to send the best quality available
-                const bestVideo = response.video[0]; // Assuming the first one is the best
-                if (bestVideo && bestVideo.url) {
-                    await conn.sendMessage(from, { react: { text: '⬇️', key: mek.key } });
-
-                    await conn.sendMessage(from, {
-                        video: { url: bestVideo.url },
-                        caption: `*Facebook Video Downloaded (Best Quality Available)*\n\n> ⚖️ Powered By - : VORTEX MD | Pansilu Nethmina 💚`
-                    }, { quoted: mek });
-                    await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
-                } else {
-                    await reply("*Could not find any downloadable video.*");
-                }
-            }
+            // Send the video download link to the user
+            m.reply(`Here is the HD Facebook video download link: ${videoDownloadUrl}`);
         } else {
-            await reply("*Invalid Facebook video URL or video not found.*");
+            m.reply("Sorry, I couldn't find a valid download link for this video.");
         }
     } catch (error) {
-        console.error("Error in fbdown command:", error);
-        await reply("*An error occurred while processing your request. Please try again later.*");
+        console.error(error);
+        m.reply("There was an error fetching the video. Please try again later.");
+    }
+};
+
+// Add this function to your bot's command handler
+bot.on('message', (m) => {
+    if (m.body.startsWith('!upload')) {
+        const args = m.body.split(' ').slice(1);
+        downloadFacebookVideo(m, args);
     }
 });
