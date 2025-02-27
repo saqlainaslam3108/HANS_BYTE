@@ -29,6 +29,9 @@ cmd({
         const videoData = response.data;
         const videoLinks = videoData.results;
         
+        // Log the `results` to check what data is there
+        console.log("Video Links (Results):", videoLinks);
+
         // Filter only HD video (720p)
         const hdVideo = videoLinks.find(v => v.quality === 720);
         if (!hdVideo) {
