@@ -1,48 +1,56 @@
-const { cmd } = require('../command');
-const { fetchJson } = require('../lib/functions');
+const { cmd } = require("../command");
+const axios = require("axios");
+const path = require("path");
 
-cmd({
-    pattern: "facebook",
-    alias: ["fb", "fbvid"],
-    react: '📥',
+cmd(
+  {
+    pattern: "facebookvideo",
+    react: "🎥",
+    desc: "Download Facebook video",
     category: "download",
-    desc: "Download HD Facebook videos",
-    filename: __filename
-}, async (conn, m, mek, { from, q, reply }) => {
+    filename: __filename,
+  },
+  async (
+    robin,
+    mek,
+    m,
+    { from, quoted, body, isCmd, command, args, q, isGroup, sender, reply }
+  ) => {
     try {
-        if (!q || !q.includes('facebook.com')) return await reply('*Please provide a valid Facebook video URL!*');
+      if (!q) return reply("*Provide a Facebook video URL to download.* 🎥");
 
-        const apiUrl = `https://dark-shan-yt.koyeb.app/download/facebook?url=${encodeURIComponent(q)}`;
-        const response = await fetchJson(apiUrl);
+      // Construct the API URL
+      const apiUrl = `https://apis.davidcyriltech.my.id/facebook2?url=${encodeURIComponent(q)}`;
 
-        if (!response.status || !response.data || !response.data.results) {
-            return await reply('*Failed to fetch the video. Please try again!*');
-        }
+      // Fetch video download URL from API
+      const response = await axios.get(apiUrl);
+      if (response.data.status !== "success") {
+        return reply("❌ Failed to fetch video. Please check the URL and try again.");
+      }
 
-        const videoData = response.data;
-        const videoLinks = videoData.results;
-        
-        // Filter only HD video (720p)
-        const hdVideo = videoLinks.find(v => v.quality === 720);
-        if (!hdVideo) return await reply('*HD video not available for this link!*');
+      const videoUrl = response.data.result.url;
 
-        await conn.sendMessage(m.chat, {
-            image: { url: videoData.preview },
-            caption: `🎬 *Facebook HD Video*`
-        }, { quoted: mek });
+      // Get the file as a buffer
+      const videoBuffer = await axios.get(videoUrl, { responseType: "arraybuffer" });
 
-        await conn.sendMessage(from, { react: { text: '⬇️', key: mek.key } });
+      // Get file name from the URL
+      const videoName = path.basename(videoUrl);
 
-        await conn.sendMessage(from, {
-            video: { url: hdVideo.url },
-            mimetype: 'video/mp4',
-            caption: `🎬 *Here is your HD video!*`
-        }, { quoted: mek });
+      // Send the video to the user
+      await robin.sendMessage(
+        from,
+        {
+          video: { url: videoUrl },
+          mimetype: "video/mp4",
+          caption: `Here is your Facebook video! 🎥`,
+        },
+        { quoted: mek }
+      );
 
-        await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
-
-    } catch (error) {
-        console.error(error);
-        await reply('*An error occurred while fetching the video. Please try again later!*');
+      reply(`*Your Facebook video has been downloaded successfully!* 🎥`);
+    } catch (e) {
+      console.error(e);
+      reply(`❌ Error: ${e.message}`);
     }
-});
+  }
+);
