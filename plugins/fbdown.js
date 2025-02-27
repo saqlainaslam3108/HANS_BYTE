@@ -18,19 +18,26 @@ cmd(
     try {
       if (!q) return reply("*Please provide a Facebook video link.* 🎥❤️");
 
-      // Use the Facebook video URL provided by the user
       const fbVideoUrl = q;
+
+      // Log the URL to check it's correct
+      console.log(`Facebook URL: ${fbVideoUrl}`);
 
       // API URL with your key and the video URL
       const apiUrl = `https://mr-manul-ofc-apis.vercel.app/facebook-dl?apikey=Manul-Official-Key-3467&facebookUrl=${encodeURIComponent(fbVideoUrl)}`;
-      
+
+      // Log the full API URL to check if it's formatted correctly
+      console.log(`API URL: ${apiUrl}`);
+
       // Send request to the API to fetch download link
       const response = await axios.get(apiUrl);
-      
-      // Check if the response has a valid download link
+
+      // Log the API response to see what's returned
+      console.log(`API Response: ${JSON.stringify(response.data)}`);
+
       if (response.data && response.data.download_url) {
         const downloadUrl = response.data.download_url;
-        
+
         // Send the video download link to the user
         reply(`🎥 *Facebook Video Download Link:*\n\n🔗 ${downloadUrl}\n\nEnjoy! 🎬`);
       } else {
