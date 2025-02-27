@@ -75,6 +75,7 @@ cmd(
 🔹 .upload <animepahe link>
 🔹 .sinhala <text>
 🔹 .dl <d.link>
+🔹 .rtik <text>
 
 👥 GROUP COMMANDS
 🔹 .mute
@@ -96,6 +97,7 @@ cmd(
 🔹 .hirunews
 🔹 .weather <text>
 🔹 .img <text>
+🔹 .itnnews <text>
 
 ╔══════════⚔️═══════════╗  
           *Made by Pansilu Nethmina*
