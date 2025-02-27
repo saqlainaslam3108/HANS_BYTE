@@ -33,7 +33,14 @@ cmd({
             return await reply(`Error: ${response.error}`);
         }
 
-        const videoLink = response.link;
+        const urls = response.data?.urls;
+        if (!urls || urls.length === 0) {
+            return await reply('Sorry, no download links available for this video.');
+        }
+
+        // Assuming the first URL in the array is the correct one
+        const videoLink = urls[0]?.url;
+
         if (!videoLink) {
             return await reply('Sorry, unable to fetch the download link for this video.');
         }
