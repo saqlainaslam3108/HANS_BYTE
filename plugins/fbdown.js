@@ -45,9 +45,10 @@ cmd({
             return await reply('Sorry, unable to fetch the download link for this video.');
         }
 
-        // Send the download link to the user
+        // Send the video as a file (we use the video URL directly)
         await conn.sendMessage(from, {
-            text: `🎥 *Facebook Video Download Link:*\n\n🔗 ${videoLink}\n\n> ⚖️ Powered By - : VORTEX MD | Pansilu Nethmina 💚`
+            video: { url: videoLink },
+            caption: `🎥 *Facebook Video Download Link:*\n\n🔗 ${videoLink}\n\n> ⚖️ Powered By - : VORTEX MD | Pansilu Nethmina 💚`
         }, { quoted: mek });
 
         await conn.sendMessage(from, { react: { text: '⬇️', key: mek.key } });
