@@ -6,7 +6,7 @@ cmd({
     alias: ["fb", "fbvid"],
     react: '📥',
     category: "download",
-    desc: "Download HD Facebook videos",
+    desc: "Download HD or SD Facebook videos",
     filename: __filename
 }, async (conn, m, mek, { from, q, reply }) => {
     try {
@@ -22,24 +22,50 @@ cmd({
         const videoData = response.data;
         const videoLinks = videoData.results;
         
-        // Filter only HD video (720p)
         const hdVideo = videoLinks.find(v => v.quality === 720);
-        if (!hdVideo) return await reply('*HD video not available for this link!*');
+        const sdVideo = videoLinks.find(v => v.quality < 720); // SD සඳහා වෙනම විකල්පයක්
 
-        await conn.sendMessage(m.chat, {
+        if (!hdVideo && !sdVideo) return await reply('*No downloadable video found for this link!*');
+
+        let videoOptions = `🎬 *Facebook Video Found!*\n\n`;
+        if (hdVideo) videoOptions += `1️⃣ HD (720p)\n`;
+        if (sdVideo) videoOptions += `2️⃣ SD (${sdVideo.quality}p)\n`;
+        videoOptions += `\n📌 *Reply with 1 or 2 to choose a quality.*`;
+
+        const sentMsg = await conn.sendMessage(m.chat, {
             image: { url: videoData.preview },
-            caption: `🎬 *Facebook HD Video*`
+            caption: videoOptions
         }, { quoted: mek });
 
-        await conn.sendMessage(from, { react: { text: '⬇️', key: mek.key } });
+        const messageID = sentMsg.key.id;
 
-        await conn.sendMessage(from, {
-            video: { url: hdVideo.url },
-            mimetype: 'video/mp4',
-            caption: `🎬 *Here is your HD video!*`
-        }, { quoted: mek });
+        conn.ev.on('messages.upsert', async (update) => {
+            const userReply = update.messages[0];
+            if (!userReply.message) return;
+            const textReply = userReply.message.conversation || userReply.message.extendedTextMessage?.text;
+            const isReplyToBotMsg = userReply.message.extendedTextMessage && userReply.message.extendedTextMessage.contextInfo.stanzaId === messageID;
 
-        await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
+            if (isReplyToBotMsg) {
+                let selectedVideo;
+                if (textReply.trim() === '1' && hdVideo) {
+                    selectedVideo = hdVideo;
+                } else if (textReply.trim() === '2' && sdVideo) {
+                    selectedVideo = sdVideo;
+                } else {
+                    return await reply('*Invalid choice! Please reply with 1 for HD or 2 for SD.*');
+                }
+
+                await conn.sendMessage(from, { react: { text: '⬇️', key: mek.key } });
+
+                await conn.sendMessage(from, {
+                    video: { url: selectedVideo.url },
+                    mimetype: 'video/mp4',
+                    caption: `🎬 *Here is your ${selectedVideo.quality}p video!*`
+                }, { quoted: userReply });
+
+                await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
+            }
+        });
 
     } catch (error) {
         console.error(error);
