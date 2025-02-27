@@ -48,39 +48,14 @@ cmd({
 
         await conn.sendMessage(from, { react: { text: '⬇️', key: mek.key } });
 
-        // Stream & save the video before sending
-        const videoPath = path.join(__dirname, 'fb_video.mp4');
-        const writer = fs.createWriteStream(videoPath);
+        // Stream & send the first available video
+        await conn.sendMessage(from, {
+            video: { url: hdVideo.url },
+            mimetype: 'video/mp4',
+            caption: `🎬 *Here is your HD video!*\n\n© 𝗩𝗢𝗥𝗧𝗘𝗫 𝗠𝗗`
+        }, { quoted: mek });
 
-        const videoStream = await axios({
-            method: 'get',
-            url: hdVideo.url,
-            responseType: 'stream',
-        });
-
-        videoStream.data.pipe(writer);
-
-        writer.on('finish', async () => {
-            // Send video from local file
-            await conn.sendMessage(from, {
-                video: fs.readFileSync(videoPath),
-                mimetype: 'video/mp4',
-                caption: `🎬 *Here is your HD video!*\n\n© 𝗩𝗢𝗥𝗧𝗘𝗫 𝗠𝗗`
-            }, { quoted: mek });
-
-            await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
-
-            // Delete local file after sending
-            fs.unlinkSync(videoPath);
-        });
-
-        writer.on('error', async (err) => {
-            console.error("File Write Error:", err);
-            await conn.sendMessage(from, {
-                image: { url: "https://raw.githubusercontent.com/NethminaPansil/Whtsapp-bot/refs/heads/main/images%20(10).jpeg" },
-                caption: "*Error occurred while processing the video. Please try again later!*"
-            }, { quoted: mek });
-        });
+        await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
 
     } catch (error) {
         console.error("Main Error:", error);
