@@ -1,14 +1,7 @@
-/*
-Please Give Credit 🙂❤️
-⚖️ Powered By - : VORTEX MD | Pansilu Nethmina 💚
-*/
-
 const { cmd, commands } = require('../command');
 const { fetchJson } = require('../lib/functions');
 const domain = `https://mr-manul-ofc-apis.vercel.app`;
-const api_key = `Manul-Official-Key-3467`; // Corrected API key
-
-//============================================
+const api_key = `Manul-Official-Key-3467`; // Use the correct API key
 
 cmd({
     pattern: "fbvideo",
@@ -24,10 +17,9 @@ cmd({
             return await reply('*Please provide a valid Facebook video URL!*');
         }
 
-        // Call the API to fetch the download link
+        // Fetch the API response again for each new request
         const response = await fetchJson(`${domain}/facebook-dl?apikey=${api_key}&facebookUrl=${encodeURIComponent(q)}`);
-
-        console.log("API Response:", response);  // Debugging line to log the API response
+        console.log("API Response:", response);  // Debugging log
 
         if (response.error) {
             return await reply(`Error: ${response.error}`);
@@ -38,17 +30,18 @@ cmd({
             return await reply('Sorry, no download links available for this video.');
         }
 
-        // Assuming the first URL in the array is the correct one
+        // Extract the first URL from the response
         const videoLink = urls[0]?.url;
 
         if (!videoLink) {
             return await reply('Sorry, unable to fetch the download link for this video.');
         }
 
-        // Send the video directly from the API response
+        // Send the video directly from the API response with watermark
         await conn.sendMessage(from, {
             video: { url: videoLink },
-            caption: `🎥 *Facebook Video Download*\n\n> ⚖️ Powered By - : VORTEX MD | Pansilu Nethmina 💚`
+            caption: `🎥 *Facebook Video Download*\n\n> ⚖️ Powered By - : VORTEX MD | Pansilu Nethmina 💚`,
+            mentions: [from], // This sends the watermark in the caption.
         }, { quoted: mek });
 
         await conn.sendMessage(from, { react: { text: '⬇️', key: mek.key } });
@@ -57,6 +50,4 @@ cmd({
         console.error('Error in fbvideo command:', error);
         await reply('Sorry, something went wrong. Please try again later.');
     }
-});
-
-//============= VORTEX MD | Pansilu Nethmina 💚 ==========
+});🤌🤌
