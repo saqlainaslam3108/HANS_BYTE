@@ -1,71 +1,52 @@
-const { cmd } = require('../command');
+/*
+Please Give Credit 🙂❤️
+⚖️ Powered By - : VORTEX MD | Pansilu Nethmina 💚
+*/
+
+const { cmd, commands } = require('../command');
 const { fetchJson } = require('../lib/functions');
+const domain = `https://mr-manul-ofc-apis.vercel.app`;
+const api_key = `Manul-Official-Key-3467`; // Corrected API key
+
+//============================================
 
 cmd({
-    pattern: "facebook",
-    alias: ["fb", "fbvid"],
-    react: '📥',
+    pattern: "fbvideo",
+    alias: ["facebookvideo", "fbvd"],
+    react: '📹',
     category: "download",
-    desc: "Download HD Facebook videos",
+    desc: "Download Facebook video using provided URL",
     filename: __filename
-}, async (conn, m, mek, { from, q, reply }) => {
+}, async (conn, m, mek, { from, isMe, isOwner, q, reply }) => {
     try {
-        if (!q || !q.includes('facebook.com')) {
+        // Check if Facebook URL is provided
+        if (!q || !q.trim().includes('facebook.com')) {
             return await reply('*Please provide a valid Facebook video URL!*');
         }
 
-        const apiUrl = `https://api.ryzendesu.vip/api/downloader/fbdl?url=${encodeURIComponent(q)}`;
-        console.log("API URL:", apiUrl); // Debugging Log
+        // Call the API to fetch the download link
+        const response = await fetchJson(`${domain}/facebook-dl?apikey=${api_key}&facebookUrl=${encodeURIComponent(q)}`);
 
-        const response = await fetchJson(apiUrl).catch(err => {
-            console.error("Error fetching data from API:", err);
-            throw new Error('Failed to fetch data from the API');
-        });
-        
-        console.log("API Response:", response); // Debugging Log
-
-        // Validate API response
-        if (!response || typeof response !== "object") {
-            console.error("Error: Invalid API response.");
-            return await reply('*Invalid API response. Please try again later!*');
+        if (response.error) {
+            return await reply(`Error: ${response.error}`);
         }
 
-        if (response.status === false || !response.result) {
-            console.error("Error: API response error or missing data.");
-            return await reply('*API Error: Failed to fetch the video. Please try again later!*');
+        const videoLink = response.link;
+        if (!videoLink) {
+            return await reply('Sorry, unable to fetch the download link for this video.');
         }
 
-        // Extract video data
-        const videoData = response.result;
-        const hdVideoUrl = videoData.hd || videoData.sd; // Get HD or fallback to SD
-        if (!hdVideoUrl) {
-            console.error("Error: No valid video URL found.");
-            return await reply('*No video available for this link!*');
-        }
-
-        const previewImage = videoData.thumbnail || 'https://example.com/fallback_image.jpg'; // Default thumbnail
-
-        // Send video preview
-        await conn.sendMessage(m.chat, {
-            image: { url: previewImage },
-            caption: `🎬 *Facebook HD Video*`
+        // Send the download link to the user
+        await conn.sendMessage(from, {
+            text: `🎥 *Facebook Video Download Link:*\n\n🔗 ${videoLink}\n\n> ⚖️ Powered By - : VORTEX MD | Pansilu Nethmina 💚`
         }, { quoted: mek });
 
-        // React with download icon
         await conn.sendMessage(from, { react: { text: '⬇️', key: mek.key } });
 
-        // Send video file
-        await conn.sendMessage(from, {
-            video: { url: hdVideoUrl },
-            mimetype: 'video/mp4',
-            caption: `🎬 *Here is your HD video!*`
-        }, { quoted: mek });
-
-        // React with success icon
-        await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
-
     } catch (error) {
-        console.error("Caught Error:", error); // Debugging Log
-        await reply('*An error occurred while fetching the video. Please try again later!*');
+        console.error('Error in fbvideo command:', error);
+        await reply('Sorry, something went wrong. Please try again later.');
     }
 });
+
+//============= VORTEX MD | Pansilu Nethmina 💚 ==========
