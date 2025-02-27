@@ -1,5 +1,6 @@
 const { cmd } = require('../command');
 const { fetchJson } = require('../lib/functions');
+const axios = require('axios');
 
 cmd({
     pattern: "facebook",
@@ -45,9 +46,12 @@ cmd({
 
         await conn.sendMessage(from, { react: { text: '⬇️', key: mek.key } });
 
-        // Send video using direct URL
+        // Download video as buffer
+        const videoBuffer = await axios.get(hdVideo.url, { responseType: 'arraybuffer' });
+
+        // Send video using buffer
         await conn.sendMessage(from, {
-            video: { url: hdVideo.url }, // Direct URL method
+            video: videoBuffer.data,
             mimetype: 'video/mp4',
             caption: `🎬 *Here is your HD video!*\n\n© 𝗩𝗢𝗥𝗧𝗘𝗫 𝗠𝗗`
         }, { quoted: mek });
