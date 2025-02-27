@@ -1,76 +1,48 @@
 const { cmd } = require('../command');
 const { fetchJson } = require('../lib/functions');
-const axios = require('axios'); // Axios for fetching videos as buffers
 
 cmd({
     pattern: "facebook",
     alias: ["fb", "fbvid"],
     react: '📥',
     category: "download",
-    desc: "Download HD Facebook videos with watermark",
+    desc: "Download HD Facebook videos",
     filename: __filename
 }, async (conn, m, mek, { from, q, reply }) => {
     try {
-        if (!q || !q.includes('facebook.com')) 
-            return await reply('*Please provide a valid Facebook video URL!*');
+        if (!q || !q.includes('facebook.com')) return await reply('*Please provide a valid Facebook video URL!*');
 
         const apiUrl = `https://dark-shan-yt.koyeb.app/download/facebook?url=${encodeURIComponent(q)}`;
         const response = await fetchJson(apiUrl);
 
         if (!response.status || !response.data || !response.data.results) {
-            await conn.sendMessage(from, {
-                image: { url: "https://raw.githubusercontent.com/NethminaPansil/Whtsapp-bot/refs/heads/main/images%20(10).jpeg" },
-                caption: "*Failed to fetch the video. Please try again!*"
-            }, { quoted: mek });
-            return;
+            return await reply('*Failed to fetch the video. Please try again!*');
         }
 
         const videoData = response.data;
         const videoLinks = videoData.results;
-
+        
         // Filter only HD video (720p)
         const hdVideo = videoLinks.find(v => v.quality === 720);
-        if (!hdVideo) {
-            await conn.sendMessage(from, {
-                image: { url: "https://raw.githubusercontent.com/NethminaPansil/Whtsapp-bot/refs/heads/main/images%20(10).jpeg" },
-                caption: "*HD video not available for this link!*"
-            }, { quoted: mek });
-            return;
-        }
+        if (!hdVideo) return await reply('*HD video not available for this link!*');
 
-        // Send preview image
         await conn.sendMessage(m.chat, {
             image: { url: videoData.preview },
-            caption: `🎬 *Facebook HD Video*\n\n© 𝗩𝗢𝗥𝗧𝗘𝗫 𝗠𝗗`
+            caption: `🎬 *Facebook HD Video*`
         }, { quoted: mek });
 
         await conn.sendMessage(from, { react: { text: '⬇️', key: mek.key } });
 
-        // Download video and send as buffer
-        try {
-            const videoBuffer = (await axios.get(hdVideo.url, { responseType: 'arraybuffer' })).data;
-            
-            await conn.sendMessage(from, {
-                video: videoBuffer,
-                mimetype: 'video/mp4',
-                caption: `🎬 *Here is your HD video!*\n\n© 𝗩𝗢𝗥𝗧𝗘𝗫 𝗠𝗗`
-            }, { quoted: mek });
+        await conn.sendMessage(from, {
+            video: { url: hdVideo.url },
+            mimetype: 'video/mp4',
+            caption: `🎬 *Here is your HD video!*`
+        }, { quoted: mek });
 
-            await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
-
-        } catch (error) {
-            console.error("Video Sending Error:", error);
-            await conn.sendMessage(from, {
-                image: { url: "https://raw.githubusercontent.com/NethminaPansil/Whtsapp-bot/refs/heads/main/images%20(10).jpeg" },
-                caption: "*Failed to send the video. Please try again later!*"
-            }, { quoted: mek });
-        }
+        await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
 
     } catch (error) {
-        console.error("Main Error:", error);
-        await conn.sendMessage(from, {
-            image: { url: "https://raw.githubusercontent.com/NethminaPansil/Whtsapp-bot/refs/heads/main/images%20(10).jpeg" },
-            caption: "*An error occurred while fetching the video. Please try again later!*"
-        }, { quoted: mek });
+        console.error(error);
+        await reply('*An error occurred while fetching the video. Please try again later!*');
     }
 });
