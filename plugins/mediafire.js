@@ -1,10 +1,9 @@
 const { cmd } = require("../command");
 const axios = require("axios");
-const path = require("path");
 
 cmd(
   {
-    pattern: "mediafire",
+    pattern: "upload",
     react: "📤",
     desc: "Upload files from Mediafire",
     category: "upload",
@@ -21,43 +20,47 @@ cmd(
 
       // Fetch the API response
       const { data } = await axios.get(apiUrl);
-      console.log("API Response:", data); // Debugging purpose
+      console.log("API Response:", data); // Debugging
 
       if (!data || !data.link) {
         return reply(`❌ *Failed to retrieve download link.*\n\n*API Response:* ${JSON.stringify(data, null, 2)}`);
       }
 
       const fileUrl = data.link;
-      const fileName = data.filename || path.basename(fileUrl);
-      const fileExtension = path.extname(fileName).substring(1);
+      const fileName = data.filename || "file";
+      const fileSize = parseFloat(data.size) || 0;
 
-      reply("🔄 *Downloading file...*");
+      // Test the actual file download
+      reply("🔄 *Verifying file link...*");
 
-      // Get the file as a buffer
-      const fileBuffer = await axios.get(fileUrl, { responseType: "arraybuffer" });
+      const testResponse = await axios.get(fileUrl, {
+        responseType: "arraybuffer",
+        headers: { "User-Agent": "Mozilla/5.0" }, // Prevent HTML page download
+      });
 
-      // Set MIME type based on file extension
-      let mimeType = data.mimetype || "application/octet-stream"; // Default MIME type
-      if (fileExtension === "mp4") mimeType = "video/mp4";
-      else if (fileExtension === "apk") mimeType = "application/vnd.android.package-archive";
-      else if (fileExtension === "jpg" || fileExtension === "jpeg") mimeType = "image/jpeg";
-      else if (fileExtension === "png") mimeType = "image/png";
-      else if (fileExtension === "pdf") mimeType = "application/pdf";
-      else if (fileExtension === "zip") mimeType = "application/zip";
+      if (testResponse.headers["content-type"].includes("text/html")) {
+        return reply(`❌ *Mediafire link is not a direct download link!*\n\n👉 *Try downloading manually:* ${fileUrl}`);
+      }
 
-      // Send file to user
+      if (testResponse.data.length < 1000) {
+        return reply(`❌ *File link might be broken!*\n\n👉 *Try manual download:* ${fileUrl}`);
+      }
+
+      reply("🔄 *Uploading file...*");
+
+      // Send document with correct MIME type
       await robin.sendMessage(
         from,
         {
           document: { url: fileUrl },
-          mimetype: mimeType,
+          mimetype: data.mimetype || "application/octet-stream",
           fileName: fileName,
-          caption: `Here is your ${fileExtension.toUpperCase()} file!`,
+          caption: `📄 *Here is your file!*`,
         },
         { quoted: mek }
       );
 
-      reply(`✅ *Your ${fileExtension.toUpperCase()} file has been uploaded successfully!* 📤`);
+      reply(`✅ *Your file has been uploaded successfully!* 📤`);
     } catch (e) {
       console.error(e);
       reply(`❌ Error: ${e.message}`);
