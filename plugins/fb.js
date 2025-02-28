@@ -44,48 +44,41 @@ cmd(
 
       // Validate the Facebook URL format
       const fbRegex = /(https?:\/\/)?(www\.)?(facebook|fb)\.com\/.+/;
-      if (!fbRegex.test(q)) return reply("*Invalid Facebook URL! Please check and try again.* 🌚");
+      if (!fbRegex.test(q))
+        return reply("*Invalid Facebook URL! Please check and try again.* 🌚");
 
-      // Fetch video details using Genux API
+      // Fetch video details
       reply("*Downloading your video...* 💤");
+      const apiUrl = `https://api.genux.me/api/download/fb?url=${encodeURIComponent(
+        q
+      )}&apikey=GENUX-PANSILU-NETHMINA-`;
 
-      const apiUrl = `https://api.genux.me/api/download/fb?url=${encodeURIComponent(q)}&apikey=GENUX-PANSILU-NETHMINA-`;
-
+      // Request the Genux API
       const response = await axios.get(apiUrl);
-      console.log("Genux API Response:", response.data); // Debugging: Log the response
+      console.log("Full Genux API Response:", JSON.stringify(response.data, null, 2));
 
-      const result = response.data.result[0]; // Get the first video result
-
-      if (!result || !result.url) {
-        return reply("*Failed to download video. Please try again later.* 😥");
+      const result = response.data.result;
+      if (!result || result.length === 0) {
+        return reply("*No downloadable video found!* 😮‍💨");
       }
 
-      const { quality, url } = result;
+      // Check and handle result for multiple qualities
+      const videoResult = result[0]; // Taking the first object for now
+      const { quality, url } = videoResult;
+      if (!url) {
+        return reply("*Failed to download video. No URL found!* 😥");
+      }
 
-      // Prepare and send the message with video details
-      let desc = `*❤️ 𝙑𝙊𝙍𝙏𝙀𝙓 FB VIDEO DOWNLOADER ❤️*  
-👻 *Quality*: ${quality || "Unknown"}  
-𝐌𝐚𝐝𝐞 𝐛𝐲 𝙋𝙖𝙣𝙨𝙞𝙡𝙪 𝙉𝙚𝙩𝙝𝙢𝙞𝙣𝙖`;
+      let caption = `*❤️ 𝙑𝙊𝙍𝙏𝙀𝙓 FB VIDEO DOWNLOADER ❤️*  👻 *Quality*: ${quality || "Unknown"}  𝐌𝐚𝐝𝐞 𝐛𝐲 𝙋𝙖𝙣𝙨𝙞𝙡𝙪 𝙉𝙚𝙩𝙝𝙢𝙞𝙣𝙖`;
 
+      // Send the video
       await robin.sendMessage(
         from,
-        {
-          image: {
-            url: "https://raw.githubusercontent.com/NethminaPansil/Whtsapp-bot/refs/heads/main/images%20(10).jpeg",
-          },
-          caption: desc,
-        },
+        { video: { url: url }, caption: caption },
         { quoted: mek }
       );
 
-      // Send the video URL
-      await robin.sendMessage(
-        from,
-        { video: { url: url }, caption: "Download your Facebook video" },
-        { quoted: mek }
-      );
-
-      return reply("𝘿𝙊𝙉𝙀 📥");
+      return reply("𝘿𝙊𝙉𝙀 📥 ");
     } catch (e) {
       console.error(e);
       reply(`*Error:* ${e.message || e}`);
