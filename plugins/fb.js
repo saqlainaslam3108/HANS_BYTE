@@ -22,12 +22,20 @@ cmd(
       const { data } = await axios.get(apiUrl);
       console.log("API Response:", data); // Debugging
 
-      if (!data || (!data.sd && !data.hd)) {
+      if (!data || !data.data || !data.data.results || data.data.results.length === 0) {
         return reply(`❌ *Failed to retrieve video link.*\n\n*API Response:* ${JSON.stringify(data, null, 2)}`);
       }
 
-      const videoUrl = data.hd || data.sd; // HD තියෙනවා නම් HD, නැත්තන් SD
-      const quality = data.hd ? "HD" : "SD";
+      // HD quality URL එක තිබ්බොත් එනවා, නැත්තම් SD URL එක
+      const hdVideo = data.data.results.find(video => video.type === "HD");
+      const sdVideo = data.data.results.find(video => video.type === "SD");
+
+      const videoUrl = hdVideo ? hdVideo.url : sdVideo ? sdVideo.url : null;
+      const quality = hdVideo ? "HD" : "SD";
+
+      if (!videoUrl) {
+        return reply("❌ *No downloadable video found!*");
+      }
 
       reply(`🔄 *Downloading ${quality} quality video...*`);
 
