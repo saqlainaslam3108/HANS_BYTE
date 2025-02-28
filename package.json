@@ -36,6 +36,8 @@
     "xnxx-dl": "^1.0.2",
     "g-i-s": "^2.1.7",
     "xml2js":"^0.6.2",
-    "cheerio":"^1.0.0"
+    "cheerio":"^1.0.0",
+    "@shineiichijo/marika":"^3.0.1",
+    "@vitalets/google-translate-api":"^9.2.1"
   }
 }
