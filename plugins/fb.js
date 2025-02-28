@@ -18,15 +18,24 @@ cmd(
 
       // API response එක ගන්න
       const { data } = await axios.get(apiUrl);
-      console.log("API Response:", data); // Debugging
+      console.log("Full API Response:", JSON.stringify(data, null, 2)); // Debugging
 
       if (!data || !data.data || !data.data.results || data.data.results.length === 0) {
         return reply("❌ *Failed to retrieve video link.*");
       }
 
-      // HD quality URL එක තිබ්බොත් එනවා, නැත්තම් SD URL එක
-      const hdVideo = data.data.results.find(video => video.type === "HD");
-      const sdVideo = data.data.results.find(video => video.type === "SD");
+      console.log("Results Array:", data.data.results); // Debugging
+
+      // HD & SD video URLs ගන්න
+      const videos = data.data.results.map(v => ({
+        type: v.type,
+        url: v.url,
+      }));
+
+      console.log("Extracted Videos:", videos); // Debugging
+
+      const hdVideo = videos.find(video => video.type === "HD");
+      const sdVideo = videos.find(video => video.type === "SD");
 
       const videoUrl = hdVideo ? hdVideo.url : sdVideo ? sdVideo.url : null;
 
