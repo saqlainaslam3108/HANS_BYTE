@@ -62,11 +62,15 @@ cmd(
         return reply("*No downloadable video found!* 😮‍💨");
       }
 
-      // Check and handle result for multiple qualities
-      const videoResult = result[0]; // Taking the first object for now
-      const { quality, url } = videoResult;
-      if (!url) {
+      // Check each result for available video qualities
+      const videoResult = result[0]; // Assuming we take the first object, but we check its properties
+      if (!videoResult || !videoResult.url) {
         return reply("*Failed to download video. No URL found!* 😥");
+      }
+
+      const { quality, url } = videoResult;  // Safe destructuring
+      if (!quality || !url) {
+        return reply("*Failed to extract video details.* 😞");
       }
 
       let caption = `*❤️ 𝙑𝙊𝙍𝙏𝙀𝙓 FB VIDEO DOWNLOADER ❤️*  👻 *Quality*: ${quality || "Unknown"}  𝐌𝐚𝐝𝐞 𝐛𝐲 𝙋𝙖𝙣𝙨𝙞𝙡𝙪 𝙉𝙚𝙩𝙝𝙢𝙞𝙣𝙖`;
