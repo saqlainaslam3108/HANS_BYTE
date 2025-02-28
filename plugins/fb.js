@@ -4,63 +4,105 @@ const axios = require("axios");
 cmd(
   {
     pattern: "fb",
-    react: "📥",
-    desc: "Download Facebook videos in HD/SD quality",
+    alias: ["facebook"],
+    react: "😶‍🌫️",
+    desc: "Download Facebook Video",
     category: "download",
     filename: __filename,
   },
-  async (robin, mek, m, { from, quoted, args, q, reply }) => {
+  async (
+    robin,
+    mek,
+    m,
+    {
+      from,
+      quoted,
+      body,
+      isCmd,
+      command,
+      args,
+      q,
+      isGroup,
+      sender,
+      senderNumber,
+      botNumber2,
+      botNumber,
+      pushname,
+      isMe,
+      isOwner,
+      groupMetadata,
+      groupName,
+      participants,
+      groupAdmins,
+      isBotAdmins,
+      isAdmins,
+      reply,
+    }
+  ) => {
     try {
-      if (!q) return reply("*Provide a Facebook video link to download.* 📥");
+      if (!q) return reply("*Please provide a valid Facebook video URL!* ❤️");
 
-      const fbUrl = q;
-      const apiUrl = `https://dark-shan-yt.koyeb.app/download/facebook?url=${encodeURIComponent(fbUrl)}`;
+      // Validate the Facebook URL format
+      const fbRegex = /(https?:\/\/)?(www\.)?(facebook|fb)\.com\/.+/;
+      if (!fbRegex.test(q)) return reply("*Invalid Facebook URL! Please check and try again.* 🌚");
 
-      // API response එක ගන්න
-      const { data } = await axios.get(apiUrl);
+      // Fetch video details using Genux API
+      reply("*Downloading your video...* 💤");
 
-      // Debugging the API response
-      console.log("Full API Response:", JSON.stringify(data, null, 2));
+      const apiUrl = `https://api.genux.me/api/download/fb?url=${encodeURIComponent(q)}&apikey=GENUX-PANSILU-NETHMINA-`;
 
-      // Check if the API response has video data
-      if (!data || !data.data || !data.data.results || data.data.results.length === 0) {
-        return reply("❌ *Failed to retrieve video link.*");
+      const response = await axios.get(apiUrl);
+      const result = response.data;
+
+      if (!result || (!result.sd && !result.hd)) {
+        return reply("*Failed to download video. Please try again later.* 😥");
       }
 
-      const videos = data.data.results.map(v => ({
-        type: v.type,
-        url: v.url,
-      }));
+      const { title, sd, hd } = result;
 
-      console.log("Extracted Videos:", videos);
+      // Prepare and send the message with video details
+      let desc = `*❤️ 𝙑𝙊𝙍𝙏𝙀𝙓 FB VIDEO DOWNLOADER ❤️*  
+👻 *Title*: ${title || "Unknown"} 
+👻 *Quality*: ${hd ? "HD Available" : "SD Only"}  
+𝐌𝐚𝐝𝐞 𝐛𝐲 𝙋𝙖𝙣𝙨𝙞𝙡𝙪 𝙉𝙚𝙩𝙝𝙢𝙞𝙣𝙖`;
 
-      // Check for HD video first
-      const hdVideo = videos.find(video => video.type === "HD");
-      // Fallback to SD video if HD is not available
-      const videoUrl = hdVideo ? hdVideo.url : videos.find(video => video.type === "SD")?.url;
-
-      if (!videoUrl) {
-        return reply("❌ *No downloadable video found!*");
-      }
-
-      // Check if videoUrl is valid
-      if (!videoUrl.startsWith("http")) {
-        return reply("❌ *Invalid video URL.*");
-      }
-
-      // Send the video
       await robin.sendMessage(
         from,
         {
-          video: { url: videoUrl },
-          mimetype: "video/mp4",
-          caption: "Here is your requested video 🎬",
+          image: {
+            url: "https://raw.githubusercontent.com/NethminaPansil/Whtsapp-bot/refs/heads/main/images%20(10).jpeg",
+          },
+          caption: desc,
         },
         { quoted: mek }
       );
+
+      // Send the video if available
+      if (hd) {
+        await robin.sendMessage(
+          from,
+          { video: { url: hd }, caption: "----------HD VIDEO----------" },
+          { quoted: mek }
+        );
+        await robin.sendMessage(
+          from,
+          { video: { url: sd }, caption: "----------SD VIDEO----------" },
+          { quoted: mek }
+        );
+      } else if (sd) {
+        await robin.sendMessage(
+          from,
+          { video: { url: sd }, caption: "----------SD VIDEO----------" },
+          { quoted: mek }
+        );
+      } else {
+        return reply("*No downloadable video found!* 😮‍💨");
+      }
+
+      return reply("𝘿𝙊𝙉𝙀 📥");
     } catch (e) {
       console.error(e);
-      reply(`❌ Error: ${e.message}`);
+      reply(`*Error:* ${e.message || e}`);
     }
   }
 );
