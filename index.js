@@ -128,6 +128,16 @@ if (
     ) {
       await robin.readMessages([mek.key]);
     }
+
+
+
+    //--------------
+    
+conn.ev.on('messages.upsert', async (mek) => {
+    const statusAutoReact = require('./plugins/statusAutoReact');
+    await statusAutoReact(conn, mek, config);
+});
+
     
     const m = sms(robin, mek);
     const type = getContentType(mek.message);
