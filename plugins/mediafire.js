@@ -3,7 +3,7 @@ const axios = require("axios");
 
 cmd(
   {
-    pattern: "mediafire",
+    pattern: "mf",
     react: "📤",
     desc: "Upload files from Mediafire",
     category: "upload",
@@ -14,7 +14,7 @@ cmd(
       if (!q) return reply("*Provide a Mediafire link to upload.* 📤");
 
       const mediafireUrl = q;
-      const apiUrl = `https://ipa-oya.vercel.app/mfire?url=${encodeURIComponent(mediafireUrl)}`;
+      const apiUrl = `https://api.genux.me/api/download/mediafire?url=${encodeURIComponent(mediafireUrl)}&apikey=GENUX-PANSILU-NETHMINA-`;
 
       reply("🔄 *Fetching Mediafire link...*");
 
@@ -30,20 +30,9 @@ cmd(
       const fileName = data.filename || "file";
       const fileSize = parseFloat(data.size) || 0;
 
-      // Test the actual file download
-      reply("🔄 *Verifying file link...*");
-
-      const testResponse = await axios.get(fileUrl, {
-        responseType: "arraybuffer",
-        headers: { "User-Agent": "Mozilla/5.0" }, // Prevent HTML page download
-      });
-
-      if (testResponse.headers["content-type"].includes("text/html")) {
-        return reply(`❌ *Mediafire link is not a direct download link!*\n\n👉 *Try downloading manually:* ${fileUrl}`);
-      }
-
-      if (testResponse.data.length < 1000) {
-        return reply(`❌ *File link might be broken!*\n\n👉 *Try manual download:* ${fileUrl}`);
+      // File size check (limit: 50MB)
+      if (fileSize > 50) {
+        return reply(`⚠️ *File is too large to send on WhatsApp!* (Size: ${fileSize}MB)\n\n📩 *Download manually:* ${fileUrl}`);
       }
 
       reply("🔄 *Uploading file...*");
