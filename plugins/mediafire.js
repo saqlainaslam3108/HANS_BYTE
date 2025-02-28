@@ -23,12 +23,12 @@ cmd(
       const { data } = await axios.get(apiUrl);
       console.log("API Response:", data); // Debugging purpose
 
-      if (!data || !data.direct_link) {
+      if (!data || !data.link) {
         return reply(`❌ *Failed to retrieve download link.*\n\n*API Response:* ${JSON.stringify(data, null, 2)}`);
       }
 
-      const fileUrl = data.direct_link;
-      const fileName = data.file_name || path.basename(fileUrl);
+      const fileUrl = data.link;
+      const fileName = data.filename || path.basename(fileUrl);
       const fileExtension = path.extname(fileName).substring(1);
 
       reply("🔄 *Downloading file...*");
@@ -37,12 +37,13 @@ cmd(
       const fileBuffer = await axios.get(fileUrl, { responseType: "arraybuffer" });
 
       // Set MIME type based on file extension
-      let mimeType = "application/octet-stream"; // Default MIME type
+      let mimeType = data.mimetype || "application/octet-stream"; // Default MIME type
       if (fileExtension === "mp4") mimeType = "video/mp4";
       else if (fileExtension === "apk") mimeType = "application/vnd.android.package-archive";
       else if (fileExtension === "jpg" || fileExtension === "jpeg") mimeType = "image/jpeg";
       else if (fileExtension === "png") mimeType = "image/png";
       else if (fileExtension === "pdf") mimeType = "application/pdf";
+      else if (fileExtension === "zip") mimeType = "application/zip";
 
       // Send file to user
       await robin.sendMessage(
