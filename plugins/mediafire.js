@@ -17,15 +17,21 @@ cmd(
       const mediafireUrl = q;
       const apiUrl = `https://ipa-oya.vercel.app/mfire?url=${encodeURIComponent(mediafireUrl)}`;
 
-      reply("🔄 *Downloading file from Mediafire...*");
+      reply("🔄 *Fetching Mediafire link...*");
 
-      // Get the direct download link
+      // Fetch the API response
       const { data } = await axios.get(apiUrl);
-      if (!data || !data.direct_link) return reply("❌ *Failed to retrieve download link.*");
+      console.log("API Response:", data); // Debugging purpose
+
+      if (!data || !data.direct_link) {
+        return reply(`❌ *Failed to retrieve download link.*\n\n*API Response:* ${JSON.stringify(data, null, 2)}`);
+      }
 
       const fileUrl = data.direct_link;
       const fileName = data.file_name || path.basename(fileUrl);
       const fileExtension = path.extname(fileName).substring(1);
+
+      reply("🔄 *Downloading file...*");
 
       // Get the file as a buffer
       const fileBuffer = await axios.get(fileUrl, { responseType: "arraybuffer" });
