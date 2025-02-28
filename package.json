@@ -35,6 +35,7 @@
     "nexo-aio-downloader": "^1.4.2",
     "xnxx-dl": "^1.0.2",
     "g-i-s": "^2.1.7",
-    "xml2js":"^0.6.2"
+    "xml2js":"^0.6.2",
+    "cheerio":"^1.0.0"
   }
 }
