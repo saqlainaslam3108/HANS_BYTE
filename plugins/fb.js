@@ -18,38 +18,43 @@ cmd(
 
       // API response එක ගන්න
       const { data } = await axios.get(apiUrl);
-      console.log("Full API Response:", JSON.stringify(data, null, 2)); // Debugging
 
+      // Debugging the API response
+      console.log("Full API Response:", JSON.stringify(data, null, 2));
+
+      // Check if the API response has video data
       if (!data || !data.data || !data.data.results || data.data.results.length === 0) {
         return reply("❌ *Failed to retrieve video link.*");
       }
 
-      console.log("Results Array:", data.data.results); // Debugging
-
-      // HD & SD video URLs ගන්න
       const videos = data.data.results.map(v => ({
         type: v.type,
         url: v.url,
       }));
 
-      console.log("Extracted Videos:", videos); // Debugging
+      console.log("Extracted Videos:", videos);
 
+      // Check for HD video first
       const hdVideo = videos.find(video => video.type === "HD");
-      const sdVideo = videos.find(video => video.type === "SD");
-
-      const videoUrl = hdVideo ? hdVideo.url : sdVideo ? sdVideo.url : null;
+      // Fallback to SD video if HD is not available
+      const videoUrl = hdVideo ? hdVideo.url : videos.find(video => video.type === "SD")?.url;
 
       if (!videoUrl) {
         return reply("❌ *No downloadable video found!*");
       }
 
-      // Video direct link එකෙන් යවන්න
+      // Check if videoUrl is valid
+      if (!videoUrl.startsWith("http")) {
+        return reply("❌ *Invalid video URL.*");
+      }
+
+      // Send the video
       await robin.sendMessage(
         from,
         {
           video: { url: videoUrl },
           mimetype: "video/mp4",
-          caption: "Here is your requested video 🎬"
+          caption: "Here is your requested video 🎬",
         },
         { quoted: mek }
       );
