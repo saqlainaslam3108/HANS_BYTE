@@ -74,30 +74,35 @@ cmd(
 🔹 .fb <link>
 🔹 .upload <animepahe link>
 🔹 .sinhala <text>
-🔹 .dl <d.link>
+🔹 .dl <d_link>
 🔹 .rtik <text>
+🔹 .mediafire <text>
 
 👥 GROUP COMMANDS
 🔹 .mute
 🔹 .kick
+🔹 .unmute
+🔹 .demote
+🔹 .promote
 
 🔒 OWNER COMMANDS
 🔹 .restart
+🔹 .left
+🔹 .block
 
 ✏️ CONVERT COMMANDS
 🔹 .sticker <reply img>
-🔹 .img <reply sticker>
-🔹 .tr <lang> <text>
-🔹 .tts <text>
+🔹 .toimg <reply sticker>
 🔹 .gen <text>
 🔹 .gen2 <text>
+🔹 .txt2img <text>
 
 🔍 SEARCH COMMANDS
 🔹 .anime <text>
 🔹 .hirunews
+🔹 .itnnews
 🔹 .weather <text>
 🔹 .img <text>
-🔹 .itnnews <text>
 
 ╔══════════⚔️═══════════╗  
           *Made by Pansilu Nethmina*
