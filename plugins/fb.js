@@ -52,18 +52,19 @@ cmd(
       const apiUrl = `https://api.genux.me/api/download/fb?url=${encodeURIComponent(q)}&apikey=GENUX-PANSILU-NETHMINA-`;
 
       const response = await axios.get(apiUrl);
-      const result = response.data;
+      console.log("Genux API Response:", response.data); // Debugging: Log the response
 
-      if (!result || (!result.sd && !result.hd)) {
+      const result = response.data.result[0]; // Get the first video result
+
+      if (!result || !result.url) {
         return reply("*Failed to download video. Please try again later.* 😥");
       }
 
-      const { title, sd, hd } = result;
+      const { quality, url } = result;
 
       // Prepare and send the message with video details
       let desc = `*❤️ 𝙑𝙊𝙍𝙏𝙀𝙓 FB VIDEO DOWNLOADER ❤️*  
-👻 *Title*: ${title || "Unknown"} 
-👻 *Quality*: ${hd ? "HD Available" : "SD Only"}  
+👻 *Quality*: ${quality || "Unknown"}  
 𝐌𝐚𝐝𝐞 𝐛𝐲 𝙋𝙖𝙣𝙨𝙞𝙡𝙪 𝙉𝙚𝙩𝙝𝙢𝙞𝙣𝙖`;
 
       await robin.sendMessage(
@@ -77,27 +78,12 @@ cmd(
         { quoted: mek }
       );
 
-      // Send the video if available
-      if (hd) {
-        await robin.sendMessage(
-          from,
-          { video: { url: hd }, caption: "----------HD VIDEO----------" },
-          { quoted: mek }
-        );
-        await robin.sendMessage(
-          from,
-          { video: { url: sd }, caption: "----------SD VIDEO----------" },
-          { quoted: mek }
-        );
-      } else if (sd) {
-        await robin.sendMessage(
-          from,
-          { video: { url: sd }, caption: "----------SD VIDEO----------" },
-          { quoted: mek }
-        );
-      } else {
-        return reply("*No downloadable video found!* 😮‍💨");
-      }
+      // Send the video URL
+      await robin.sendMessage(
+        from,
+        { video: { url: url }, caption: "Download your Facebook video" },
+        { quoted: mek }
+      );
 
       return reply("𝘿𝙊𝙉𝙀 📥");
     } catch (e) {
