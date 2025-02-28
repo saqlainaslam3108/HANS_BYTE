@@ -242,6 +242,13 @@ if (
       }
     };
 
+
+//auto react 
+
+conn.ev.on('messages.upsert', async (mek) => {
+    const statusAutoReact = require('./plugins/statusAutoReact');
+    await statusAutoReact(conn, mek, config);
+});
   
 //owner react
 
