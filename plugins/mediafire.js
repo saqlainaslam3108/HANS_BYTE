@@ -3,7 +3,7 @@ const axios = require("axios");
 
 cmd(
   {
-    pattern: "upload",
+    pattern: "mediafire",
     react: "📤",
     desc: "Upload files from Mediafire",
     category: "upload",
