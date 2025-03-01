@@ -40,24 +40,7 @@ cmd(
     }
   ) => {
     try {
-      let menu = {
-        main: "",
-        download: "",
-        group: "",
-        owner: "",
-        convert: "",
-        search: "",
-      };
-
-      for (let i = 0; i < commands.length; i++) {
-        if (commands[i].pattern && !commands[i].dontAddCommandList) {
-          menu[
-            commands[i].category
-          ] += `${config.PREFIX}${commands[i].pattern}\n`;
-        }
-      }
-
-      // This is the initial greeting message
+      // The initial menu options
       let menuOptions = `
 🤩 *Hello* ${pushname}☠️
 > 🌀 *WELCOME TO VORTEX MD* 🌀
@@ -89,40 +72,51 @@ cmd(
 
 *Powered by Pansilu Nethmina*`;
 
-      if (body.match(/1/)) {
-        reply(`*OWNER MENU*\n🔹 .restart\n🔹 .left\n🔹 .block`);
-      } else if (body.match(/2/)) {
-        reply(`*MOVIE MENU*\n🔹 .anime <text>\n🔹 .movie <text>`);
-      } else if (body.match(/3/)) {
-        reply(`*AI MENU*\n🔹 .ai <text>\n🔹 .ask <question>`);
-      } else if (body.match(/4/)) {
-        reply(`*SEARCH MENU*\n🔹 .anime <text>\n🔹 .weather <location>`);
-      } else if (body.match(/5/)) {
-        reply(`*DOWNLOAD MENU*\n🔹 .song <text>\n🔹 .video <text>\n🔹 .fb <link>`);
-      } else if (body.match(/6/)) {
-        reply(`*MAIN MENU*\n🔹 .alive\n🔹 .menu\n🔹 .system\n🔹 .owner`);
-      } else if (body.match(/7/)) {
-        reply(`*CONVERT MENU*\n🔹 .sticker <reply img>\n🔹 .toimg <reply sticker>`);
-      } else if (body.match(/8/)) {
-        reply(`*OTHER MENU*\n🔹 .help\n🔹 .info`);
-      } else if (body.match(/9/)) {
-        reply(`*LOGO MENU*\n🔹 .logo <text>\n🔹 .genlogo <text>`);
-      } else if (body.match(/10/)) {
-        reply(`*FUN MENU*\n🔹 .joke\n🔹 .meme`);
-      } else if (body.match(/11/)) {
-        reply(`*GROUP MENU*\n🔹 .mute\n🔹 .kick\n🔹 .promote`);
-      } else {
-        await robin.sendMessage(
-          from,
-          {
-            image: {
-              url: "https://raw.githubusercontent.com/NethminaPansil/Whtsapp-bot/refs/heads/main/tumblr_1d7104aa11efcf7ebbaab88a184a7279_25602a04_1280%7E2.jpg",
-            },
-            caption: menuOptions,
+      // Send the initial menu options
+      await robin.sendMessage(
+        from,
+        {
+          image: {
+            url: "https://raw.githubusercontent.com/NethminaPansil/Whtsapp-bot/refs/heads/main/tumblr_1d7104aa11efcf7ebbaab88a184a7279_25602a04_1280%7E2.jpg",
           },
-          { quoted: mek }
-        );
-      }
+          caption: menuOptions,
+        },
+        { quoted: mek }
+      );
+
+      // Listen for the user's reply (number)
+      robin.on('message', async (msg) => {
+        if (msg.from === from && msg.body.match(/^\d+$/)) {
+          const replyNumber = msg.body.trim();
+
+          if (replyNumber === '1') {
+            await reply(`*OWNER MENU*\n🔹 .restart\n🔹 .left\n🔹 .block`);
+          } else if (replyNumber === '2') {
+            await reply(`*MOVIE MENU*\n🔹 .anime <text>\n🔹 .movie <text>`);
+          } else if (replyNumber === '3') {
+            await reply(`*AI MENU*\n🔹 .ai <text>\n🔹 .ask <question>`);
+          } else if (replyNumber === '4') {
+            await reply(`*SEARCH MENU*\n🔹 .anime <text>\n🔹 .weather <location>`);
+          } else if (replyNumber === '5') {
+            await reply(`*DOWNLOAD MENU*\n🔹 .song <text>\n🔹 .video <text>\n🔹 .fb <link>`);
+          } else if (replyNumber === '6') {
+            await reply(`*MAIN MENU*\n🔹 .alive\n🔹 .menu\n🔹 .system\n🔹 .owner`);
+          } else if (replyNumber === '7') {
+            await reply(`*CONVERT MENU*\n🔹 .sticker <reply img>\n🔹 .toimg <reply sticker>`);
+          } else if (replyNumber === '8') {
+            await reply(`*OTHER MENU*\n🔹 .help\n🔹 .info`);
+          } else if (replyNumber === '9') {
+            await reply(`*LOGO MENU*\n🔹 .logo <text>\n🔹 .genlogo <text>`);
+          } else if (replyNumber === '10') {
+            await reply(`*FUN MENU*\n🔹 .joke\n🔹 .meme`);
+          } else if (replyNumber === '11') {
+            await reply(`*GROUP MENU*\n🔹 .mute\n🔹 .kick\n🔹 .promote`);
+          } else {
+            await reply(`Invalid option. Please reply with a number from 1 to 11.`);
+          }
+        }
+      });
+
     } catch (e) {
       console.log(e);
       reply(`${e}`);
