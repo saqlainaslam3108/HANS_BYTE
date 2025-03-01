@@ -40,7 +40,7 @@ cmd(
     }
   ) => {
     try {
-      // The initial menu options
+      // Send the initial greeting and options
       let menuOptions = `
 🤩 *Hello* ${pushname}☠️
 > 🌀 *WELCOME TO VORTEX MD* 🌀
@@ -72,7 +72,6 @@ cmd(
 
 *Powered by Pansilu Nethmina*`;
 
-      // Send the initial menu options
       await robin.sendMessage(
         from,
         {
@@ -84,11 +83,13 @@ cmd(
         { quoted: mek }
       );
 
-      // Listen for the user's reply (number)
-      robin.on('message', async (msg) => {
-        if (msg.from === from && msg.body.match(/^\d+$/)) {
-          const replyNumber = msg.body.trim();
+      // Now, listen for the user's reply
+      const replyListener = async (message) => {
+        // Ensure the message is from the same user
+        if (message.from === from && message.body.match(/^\d+$/)) {
+          const replyNumber = message.body.trim();
 
+          // Based on the number, send the appropriate menu
           if (replyNumber === '1') {
             await reply(`*OWNER MENU*\n🔹 .restart\n🔹 .left\n🔹 .block`);
           } else if (replyNumber === '2') {
@@ -114,8 +115,14 @@ cmd(
           } else {
             await reply(`Invalid option. Please reply with a number from 1 to 11.`);
           }
+
+          // Once the response is handled, remove the listener to avoid multiple responses
+          robin.removeListener('message', replyListener);
         }
-      });
+      };
+
+      // Add the listener to wait for the reply
+      robin.on('message', replyListener);
 
     } catch (e) {
       console.log(e);
