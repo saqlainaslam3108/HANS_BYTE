@@ -4,9 +4,9 @@ const config = require('../config');
 cmd(
   {
     pattern: "menu",
-    alise: ["getmenu"],
+    alias: ["getmenu"],
     react: "📔",
-    desc: "get cmd list",
+    desc: "Get cmd list",
     category: "main",
     filename: __filename,
   },
@@ -57,69 +57,72 @@ cmd(
         }
       }
 
-      let madeMenu = `👋 *Hello  ${pushname}*
-╔════════════════╗  
-     🍁 *VORTEX MD* 🍁  
-╚════════════════╝  
-📜 MAIN COMMANDS
-🔹 .alive
-🔹 .menu
-🔹 .ai <text>
-🔹 .system
-🔹 .owner
+      // This is the initial greeting message
+      let menuOptions = `
+🤩 *Hello* ${pushname}☠️
+> 🌀 *WELCOME TO VORTEX MD* 🌀
 
-📥 DOWNLOAD COMMANDS
-🔹 .song <text>
-🔹 .video <text>
-🔹 .fb <link>
-🔹 .upload <animepahe link>
-🔹 .sinhala <text>
-🔹 .dl <d_link>
-🔹 .rtik <text>
-🔹 .mediafire <text>
+╭──────────────────━┈⊷
+│◦ ✗🤖BOT NAME : *VORTEX MD*
+│◦ ✗👤OWNER NAME : *Pansilu Nethmina*
+│◦ ✗☎️OWNER NUMBER : *${senderNumber}*
+│◦ ✗⏰UPTIME : 1 minute, 49 seconds
+│◦ ✗💾RAM : 90.16MB / 63276MB
+│◦ ✗💫PREFIX : .
+╰──────────────────━┈⊷
 
-👥 GROUP COMMANDS
-🔹 .mute
-🔹 .kick
-🔹 .unmute
-🔹 .demote
-🔹 .promote
+*🔢 REPLY WITH THE NUMBER BELOW TO GET THE MENU*
 
-🔒 OWNER COMMANDS
-🔹 .restart
-🔹 .left
-🔹 .block
+1 │❯❯◦ OWNER MENU
+2 │❯❯◦ MOVIE MENU
+3 │❯❯◦ AI MENU
+4 │❯❯◦ SEARCH MENU
+5 │❯❯◦ DOWNLOAD MENU
+6 │❯❯◦ MAIN MENU
+7 │❯❯◦ CONVERT MENU
+8 │❯❯◦ OTHER MENU
+9 │❯❯◦ LOGO MENU
+10 │❯❯◦ FUN MENU
+11 │❯❯◦ GROUP MENU
 
-✏️ CONVERT COMMANDS
-🔹 .sticker <reply img>
-🔹 .toimg <reply sticker>
-🔹 .gen <text>
-🔹 .gen2 <text>
-🔹 .txt2img <text>
+> *Gitlab Repo* https://gitlab.com/anukunu2000/asitha-md-v3/-/tree/master
 
-🔍 SEARCH COMMANDS
-🔹 .anime <text>
-🔹 .hirunews
-🔹 .itnnews
-🔹 .weather <text>
-🔹 .img <text>
+*Powered by Pansilu Nethmina*`;
 
-╔══════════⚔️═══════════╗  
-          *Made by Pansilu Nethmina*
-          > ᐯㄖ尺ㄒ乇乂 几ᗪ 爪乇几卄
-╚══════════⚔️═══════════╝
-
-`;
-      await robin.sendMessage(
-        from,
-        {
-          image: {
-            url: "https://raw.githubusercontent.com/NethminaPansil/Whtsapp-bot/refs/heads/main/tumblr_1d7104aa11efcf7ebbaab88a184a7279_25602a04_1280%7E2.jpg",
+      if (body.match(/1/)) {
+        reply(`*OWNER MENU*\n🔹 .restart\n🔹 .left\n🔹 .block`);
+      } else if (body.match(/2/)) {
+        reply(`*MOVIE MENU*\n🔹 .anime <text>\n🔹 .movie <text>`);
+      } else if (body.match(/3/)) {
+        reply(`*AI MENU*\n🔹 .ai <text>\n🔹 .ask <question>`);
+      } else if (body.match(/4/)) {
+        reply(`*SEARCH MENU*\n🔹 .anime <text>\n🔹 .weather <location>`);
+      } else if (body.match(/5/)) {
+        reply(`*DOWNLOAD MENU*\n🔹 .song <text>\n🔹 .video <text>\n🔹 .fb <link>`);
+      } else if (body.match(/6/)) {
+        reply(`*MAIN MENU*\n🔹 .alive\n🔹 .menu\n🔹 .system\n🔹 .owner`);
+      } else if (body.match(/7/)) {
+        reply(`*CONVERT MENU*\n🔹 .sticker <reply img>\n🔹 .toimg <reply sticker>`);
+      } else if (body.match(/8/)) {
+        reply(`*OTHER MENU*\n🔹 .help\n🔹 .info`);
+      } else if (body.match(/9/)) {
+        reply(`*LOGO MENU*\n🔹 .logo <text>\n🔹 .genlogo <text>`);
+      } else if (body.match(/10/)) {
+        reply(`*FUN MENU*\n🔹 .joke\n🔹 .meme`);
+      } else if (body.match(/11/)) {
+        reply(`*GROUP MENU*\n🔹 .mute\n🔹 .kick\n🔹 .promote`);
+      } else {
+        await robin.sendMessage(
+          from,
+          {
+            image: {
+              url: "https://raw.githubusercontent.com/NethminaPansil/Whtsapp-bot/refs/heads/main/tumblr_1d7104aa11efcf7ebbaab88a184a7279_25602a04_1280%7E2.jpg",
+            },
+            caption: menuOptions,
           },
-          caption: madeMenu,
-        },
-        { quoted: mek }
-      );
+          { quoted: mek }
+        );
+      }
     } catch (e) {
       console.log(e);
       reply(`${e}`);
