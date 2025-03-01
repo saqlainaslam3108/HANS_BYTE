@@ -1,38 +1,41 @@
-import axios from 'axios'
+const axios = require('axios');
 
-let handler = async (m, { conn, text }) => {
-  if (!text) throw '✳️ What do you want me to search for on YouTube?'
+const handler = async (m, { conn, text }) => {
+  if (!text) throw '✳️ Enter a Word!';
 
   try {
-    const query = encodeURIComponent(text)
-    const response = await axios.get(`https://weeb-api.vercel.app/ytsearch?query=${query}`)
-    const results = response.data
+    const query = encodeURIComponent(text);
+    const response = await axios.get(`https://weeb-api.vercel.app/ytsearch?query=${query}`);
+    const results = response.data;
 
-    if (results.length === 0) {
-      throw 'No results found for the given query.'
+    if (!results || results.length === 0) {
+      throw '❌ Not results found!';
     }
 
-    const firstResult = results[0]
+    const firstResult = results[0];
 
     const message = ` 
-   ✏️ *VORTEX MD YT SEARCH* ✏️
-乂 ${firstResult.title}
-乂 *Link* : ${firstResult.url}
-乂 *Duration* : ${firstResult.timestamp}
-乂 *Published :* ${firstResult.ago}
-乂 *Views:* ${firstResult.views}
+   ✏️ *VORTEX MD - YouTube Search* ✏️
+📌 *Title:* ${firstResult.title}
+🔗 *Link:* ${firstResult.url}
+⏳ *Duration:* ${firstResult.timestamp}
+📅 *Published:* ${firstResult.ago}
+👀 *Views:* ${firstResult.views}
+    `;
 
-    `
+    await conn.sendMessage(m.chat, { 
+      image: { url: firstResult.thumbnail }, 
+      caption: message 
+    }, { quoted: m });
 
-    conn.sendFile(m.chat, firstResult.thumbnail, 'yts.jpeg', message, m)
   } catch (error) {
-    console.error(error)
-    throw 'An error occurred while searching for YouTube videos.'
+    console.error(error);
+    throw '🚨 Error !';
   }
-}
+};
 
-handler.help = ['ytsearch']
-handler.tags = ['downloader']
-handler.command = ['ytsearch', 'yts']
+handler.help = ['ytsearch'];
+handler.tags = ['search'];
+handler.command = ['ytsearch', 'yts'];
 
-export default handler
+module.exports = handler;
