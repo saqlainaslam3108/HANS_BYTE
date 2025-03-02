@@ -4,130 +4,125 @@ const config = require('../config');
 cmd(
   {
     pattern: "menu",
-    alias: ["getmenu"],
+    alise: ["getmenu"],
     react: "📔",
-    desc: "Get command list",
+    desc: "get cmd list",
     category: "main",
     filename: __filename,
   },
-  async (robin, mek, m, { from, pushname, reply }) => {
+  async (
+    robin,
+    mek,
+    m,
+    {
+      from,
+      quoted,
+      body,
+      isCmd,
+      command,
+      args,
+      q,
+      isGroup,
+      sender,
+      senderNumber,
+      botNumber2,
+      botNumber,
+      pushname,
+      isMe,
+      isOwner,
+      groupMetadata,
+      groupName,
+      participants,
+      groupAdmins,
+      isBotAdmins,
+      isAdmins,
+      reply,
+    }
+  ) => {
     try {
-      let menuText = `
-👋 *Hello ${pushname}*  
+      let menu = {
+        main: "",
+        download: "",
+        group: "",
+        owner: "",
+        convert: "",
+        search: "",
+      };
+
+      for (let i = 0; i < commands.length; i++) {
+        if (commands[i].pattern && !commands[i].dontAddCommandList) {
+          menu[
+            commands[i].category
+          ] += `${config.PREFIX}${commands[i].pattern}\n`;
+        }
+      }
+
+      let madeMenu = `👋 *Hello  ${pushname}*
 ╔════════════════╗  
-       🍁 *VORTEX MD* 🍁  
+     🍁 *VORTEX MD* 🍁  
 ╚════════════════╝  
+📜 MAIN COMMANDS
+🔹 .alive
+🔹 .menu
+🔹 .ai <text>
+🔹 .system
+🔹 .owner
 
-📜 *Select a category by replying with a number:*
+📥 DOWNLOAD COMMANDS
+🔹 .song <text>
+🔹 .video <text>
+🔹 .fb <link>
+🔹 .upload <animepahe link>
+🔹 .sinhala <text>
+🔹 .dl <d_link>
+🔹 .rtik <text>
+🔹 .mediafire <text>
 
-1️⃣ MAIN COMMANDS  
-2️⃣ DOWNLOAD COMMANDS  
-3️⃣ GROUP COMMANDS  
-4️⃣ OWNER COMMANDS  
-5️⃣ CONVERT COMMANDS  
-6️⃣ SEARCH COMMANDS  
+👥 GROUP COMMANDS
+🔹 .mute
+🔹 .kick
+🔹 .unmute
+🔹 .demote
+🔹 .promote
 
-> *⚖️ Powered By - ©𝗩𝗢𝗥𝗧𝗘𝗫 𝗠𝗗 💚*
+🔒 OWNER COMMANDS
+🔹 .restart
+🔹 .left
+🔹 .block
+
+✏️ CONVERT COMMANDS
+🔹 .sticker <reply img>
+🔹 .toimg <reply sticker>
+🔹 .gen <text>
+🔹 .gen2 <text>
+🔹 .txt2img <text>
+
+🔍 SEARCH COMMANDS
+🔹 .anime <text>
+🔹 .hirunews
+🔹 .itnnews
+🔹 .weather <text>
+🔹 .img <text>
+
+╔══════════⚔️═══════════╗  
+          *Made by Pansilu Nethmina*
+          > ᐯㄖ尺ㄒ乇乂 几ᗪ 爪乇几卄
+╚══════════⚔️═══════════╝
+
 `;
-
-      const msgMenu = await robin.sendMessage(
+      await robin.sendMessage(
         from,
         {
           image: {
             url: "https://raw.githubusercontent.com/NethminaPansil/Whtsapp-bot/refs/heads/main/tumblr_1d7104aa11efcf7ebbaab88a184a7279_25602a04_1280%7E2.jpg",
           },
-          caption: menuText,
+          caption: madeMenu,
         },
         { quoted: mek }
       );
-
-      robin.ev.on("messages.upsert", async (msgUpdate) => {
-        const msg = msgUpdate.messages[0];
-        if (!msg.message || !msg.message.extendedTextMessage) return;
-
-        const selectedOption = msg.message.extendedTextMessage.text.trim();
-
-        if (
-          msg.message.extendedTextMessage.contextInfo &&
-          msg.message.extendedTextMessage.contextInfo.stanzaId === msgMenu.key.id
-        ) {
-          let responseText = "";
-          switch (selectedOption) {
-            case "1":
-              responseText = `
-📜 *MAIN COMMANDS*  
-🔹 .alive  
-🔹 .menu  
-🔹 .ai <text>  
-🔹 .system  
-🔹 .owner  
-              `;
-              break;
-            case "2":
-              responseText = `
-📥 *DOWNLOAD COMMANDS*  
-🔹 .song <text>  
-🔹 .video <text>  
-🔹 .fb <link>  
-🔹 .upload <animepahe link>  
-🔹 .sinhala <text>  
-🔹 .dl <d_link>  
-🔹 .rtik <text>  
-🔹 .mediafire <text>  
-              `;
-              break;
-            case "3":
-              responseText = `
-👥 *GROUP COMMANDS*  
-🔹 .mute  
-🔹 .kick  
-🔹 .unmute  
-🔹 .demote  
-🔹 .promote  
-              `;
-              break;
-            case "4":
-              responseText = `
-🔒 *OWNER COMMANDS*  
-🔹 .restart  
-🔹 .left  
-🔹 .block  
-              `;
-              break;
-            case "5":
-              responseText = `
-✏️ *CONVERT COMMANDS*  
-🔹 .sticker <reply img>  
-🔹 .toimg <reply sticker>  
-🔹 .gen <text>  
-🔹 .gen2 <text>  
-🔹 .txt2img <text>  
-              `;
-              break;
-            case "6":
-              responseText = `
-🔍 *SEARCH COMMANDS*  
-🔹 .anime <text>  
-🔹 .hirunews  
-🔹 .itnnews  
-🔹 .weather <text>  
-🔹 .img <text>  
-              `;
-              break;
-            default:
-              responseText = "❌ Invalid option. Please select a valid number.";
-          }
-
-          await robin.sendMessage(
-            from,
-            { text: responseText },
-            { quoted: mek }
-          );
-        }
-      });
     } catch (e) {
       console.log(e);
-      reply("An error occurred while processing your request.");
+      reply(`${e}`);
     }
   }
 );
