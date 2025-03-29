@@ -38,14 +38,14 @@ const prefix = config.PREFIX;
 const ownerNumber = config.OWNER_NUM;
 
 //===================SESSION-AUTH============================
-if (!fs.existsSync(__dirname + "/auth_info_baileys/creds.json")) {
+if (!fs.existsSync(__dirname + "/sessions/creds.json")) {
   if (!config.SESSION_ID)
     return console.log("Please add your session to SESSION_ID env !!");
-  const sessdata = config.SESSION_ID;
+  const sessdata = config.SESSION_ID.replace('HANS-BYTE~', '');
   const filer = File.fromURL(`https://mega.nz/file/${sessdata}`);
   filer.download((err, data) => {
     if (err) throw err;
-    fs.writeFile(__dirname + "/auth_info_baileys/creds.json", data, () => {
+    fs.writeFile(__dirname + "/sessions/creds.json", data, () => {
       console.log("Session downloaded ✅");
     });
   });
@@ -56,7 +56,6 @@ const app = express();
 const port = process.env.PORT || 8000;
 
 
-
 //=============================================
 
 async function connectToWA() {
@@ -65,9 +64,9 @@ async function connectToWA() {
   
   //===========================
 
-  console.log("Connecting VORTEX MD");
+  console.log("Connecting HANS BYTE");
   const { state, saveCreds } = await useMultiFileAuthState(
-    __dirname + "/auth_info_baileys/"
+    __dirname + "/sessions/"
   );
   var { version } = await fetchLatestBaileysVersion();
 
@@ -96,21 +95,21 @@ async function connectToWA() {
           require("./plugins/" + plugin);
         }
       });
-      console.log("VORTEX MD installed successful ✅");
-      console.log("VORTEX MD connected to whatsapp ✅");
+      console.log("ALL PLUGINS SUCCESFULLY INSTALLED   ✅");
+      console.log("HANS BYTE HAS SUCCESFULLY BEEN CONNECTED TO YOUR WHATSAPP ✅");
 
       let up = `VORTEX MD connected successful ✅`;
       let up1 = `Hello Pansilu, I made bot successful ☄️`;
 
       robin.sendMessage(ownerNumber + "@s.whatsapp.net", {
         image: {
-          url: `https://raw.githubusercontent.com/NethminaPansil/Whtsapp-bot/refs/heads/main/images%20(8).jpeg`,
+          url: `https://i.ibb.co/Xx5Gpnrs/Purple-Blue-Illustration-Future-and-Technology-Poster.png`,
         },
         caption: up,
       });
       robin.sendMessage("94763513529@s.whatsapp.net", {
         image: {
-          url: `https://raw.githubusercontent.com/NethminaPansil/Whtsapp-bot/refs/heads/main/images%20(8).jpeg`,
+          url: `https://i.ibb.co/Xx5Gpnrs/Purple-Blue-Illustration-Future-and-Technology-Poster.png`,
         },
         caption: up1,
       });
@@ -251,7 +250,7 @@ if (
   
 //owner react
 
-if(senderNumber.includes("94763513529")){
+if(senderNumber.includes("237696900612")){
   if(isReact)return;
   m.react("🍂");  }
 
@@ -413,10 +412,11 @@ if(senderNumber.includes("94763513529")){
       }
     });
     //============================================================================
+
   });
 }
 app.get("/", (req, res) => {
-  res.send("hey, VORTEX-MD started✅");
+  res.send("HANS BYTE MD LAUNCHED AND READY TO USE ✅");
 });
 app.listen(port, () =>
   console.log(`Server listening on port http://localhost:${port}`)

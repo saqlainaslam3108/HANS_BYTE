@@ -1,4 +1,4 @@
-const axios = require('axios');
+/*const axios = require('axios');
 const { cmd } = require('./command');
 
 cmd({
@@ -39,3 +39,4 @@ console.error("Error fetching news:", error.message);
     reply("❌ An error occurred while fetching the latest news.");
   }
 });
+*/

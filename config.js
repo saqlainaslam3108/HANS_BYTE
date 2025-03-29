@@ -6,11 +6,11 @@ function convertToBool(text, fault = "true") {
   return text === fault ? true : false;
 }
 module.exports = {
-  SESSION_ID: process.env.SESSION_ID || "7eQg0DSL#M2-upRjT6euTe_OYu3kr8FQHf9GSTjmJBKW4R92I3RY",
-  OWNER_NUM: process.env.OWNER_NUM || "94763513529",
+  SESSION_ID: process.env.SESSION_ID || "vZcEjZQa#QIZ5gyh8SdXsuvzOTT8jO0CU97ZLLtCStG6k_SHnqzI",
+  OWNER_NUM: process.env.OWNER_NUM || "237696900612",
   PREFIX:process.env.PREFIX || ".",
-  ALIVE_IMG:process.env.ALIVE_IMG||"https://raw.githubusercontent.com/NethminaPansil/Whtsapp-bot/refs/heads/main/images%20(11).jpeg",
-  ALIVE_MSG:process.env.ALIVE_MSG || "Hello , I am alive now!!\n\n Join my Support group using this Link 📥 \n\n https://chat.whatsapp.com/EXPFUXpHxFR5ur03emaNx0 \n\n 💝 𝐌𝐚𝐝𝐞 𝐛𝐲 PANSILU 💝 \n\n 🔒 ᐯㄖ尺ㄒ乇乂 爪ᗪ ㄒ乇卂爪 🔒 ",
+  ALIVE_IMG:process.env.ALIVE_IMG||"https://i.ibb.co/Xx5Gpnrs/Purple-Blue-Illustration-Future-and-Technology-Poster.png",
+  ALIVE_MSG:process.env.ALIVE_MSG || "Hello , I am alive now!!",
   MODE:process.env.MODE || "public",
   AUTO_VOICE:process.env.AUTO_VOICE|| "true",
   AUTO_STICKER:process.env.AUTO_STICKER|| "true",
