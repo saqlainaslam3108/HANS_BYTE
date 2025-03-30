@@ -1,1 +1,79 @@
-const _0x4fbf5e=_0x345a;function _0x35fe(){const _0x24b47d=['jpeg','extname','63dQClmb','video/mp4','\x22\x20has\x20been\x20uploaded\x20successfully!*\x20📤','39391UFlEyQ','*Provide\x20a\x20direct\x20download\x20link\x20to\x20upload.*\x20📤','27wdvGNv','5941098OoKNik','jpg','../command','576008AowLui','image/png','message','application/octet-stream','axios','split','5479800MUxGVq','❌\x20Error:\x20','error','1388128FBLVeE','*Your\x20file\x20\x22','arraybuffer','upload','image/jpeg','file','2720630FuoeSQ','sendMessage','4403770twxkxz','get','application/vnd.android.package-archive','includes','Upload\x20files','mov','avi','36wkYZUF','substring','png','pdf','toLowerCase','mkv'];_0x35fe=function(){return _0x24b47d;};return _0x35fe();}function _0x345a(_0x5856d5,_0x133760){const _0x35fe1d=_0x35fe();return _0x345a=function(_0x345a40,_0x457823){_0x345a40=_0x345a40-0x9a;let _0x268358=_0x35fe1d[_0x345a40];return _0x268358;},_0x345a(_0x5856d5,_0x133760);}(function(_0x26fd2f,_0x248a47){const _0x55a5ca=_0x345a,_0x24bdf7=_0x26fd2f();while(!![]){try{const _0x10d042=-parseInt(_0x55a5ca(0xb0))/0x1*(-parseInt(_0x55a5ca(0xa5))/0x2)+-parseInt(_0x55a5ca(0xb2))/0x3*(parseInt(_0x55a5ca(0xb6))/0x4)+parseInt(_0x55a5ca(0x9e))/0x5+-parseInt(_0x55a5ca(0xb3))/0x6+parseInt(_0x55a5ca(0xbf))/0x7+-parseInt(_0x55a5ca(0xbc))/0x8+-parseInt(_0x55a5ca(0xad))/0x9*(-parseInt(_0x55a5ca(0x9c))/0xa);if(_0x10d042===_0x248a47)break;else _0x24bdf7['push'](_0x24bdf7['shift']());}catch(_0x256490){_0x24bdf7['push'](_0x24bdf7['shift']());}}}(_0x35fe,0xb01d1));const {cmd}=require(_0x4fbf5e(0xb5)),axios=require(_0x4fbf5e(0xba)),path=require('path');cmd({'pattern':_0x4fbf5e(0xc2),'react':'📤','desc':_0x4fbf5e(0xa2),'category':'upload','filename':__filename},async(_0x48c967,_0x156610,_0x417d19,{from:_0x4ae650,quoted:_0x2bef94,body:_0x30e030,isCmd:_0x4136ef,command:_0x2996a1,args:_0x5e90fa,q:_0x1ccd83,isGroup:_0x51a0dd,sender:_0x16e489,reply:_0x472836})=>{const _0x35aff7=_0x4fbf5e;try{if(!_0x1ccd83)return _0x472836(_0x35aff7(0xb1));const _0x20cce2=_0x1ccd83,_0x43956e=new URLSearchParams(_0x20cce2[_0x35aff7(0xbb)]('?')[0x1]),_0x1544cf=_0x43956e[_0x35aff7(0x9f)](_0x35aff7(0x9b)),_0x9b5f57=path[_0x35aff7(0xac)](_0x1544cf)[_0x35aff7(0xa6)](0x1)[_0x35aff7(0xa9)](),_0x53079f=await axios['get'](_0x20cce2,{'responseType':_0x35aff7(0xc1)});let _0xd4fed2=_0x35aff7(0xb9);if(['mp4',_0x35aff7(0xaa),_0x35aff7(0xa4),_0x35aff7(0xa3)][_0x35aff7(0xa1)](_0x9b5f57))_0xd4fed2=_0x35aff7(0xae);else{if(_0x9b5f57==='apk')_0xd4fed2=_0x35aff7(0xa0);else{if(_0x9b5f57===_0x35aff7(0xb4)||_0x9b5f57===_0x35aff7(0xab))_0xd4fed2=_0x35aff7(0x9a);else{if(_0x9b5f57===_0x35aff7(0xa7))_0xd4fed2=_0x35aff7(0xb7);else{if(_0x9b5f57===_0x35aff7(0xa8))_0xd4fed2='application/pdf';}}}}await _0x48c967[_0x35aff7(0x9d)](_0x4ae650,{'document':{'url':_0x20cce2},'mimetype':_0xd4fed2,'fileName':_0x1544cf,'caption':'Here\x20is\x20your\x20'+_0x1544cf},{'quoted':_0x156610}),_0x472836(_0x35aff7(0xc0)+_0x1544cf+_0x35aff7(0xaf));}catch(_0x19ef62){console[_0x35aff7(0xbe)](_0x19ef62),_0x472836(_0x35aff7(0xbd)+_0x19ef62[_0x35aff7(0xb8)]);}});
+const { cmd, commands } = require("../command");
+const axios = require("axios");
+const path = require("path");
+
+cmd({
+    pattern: "upload",
+    react: '📤',
+    desc: "Upload file from URL.",
+    category: "upload",
+    filename: __filename
+},
+async (robin, mek, m, {
+    from,
+    quoted,
+    body,
+    isCmd,
+    command,
+    args,
+    q,
+    isGroup,
+    sender,
+    reply
+}) => {
+    try {
+        // Validate that a URL has been provided
+        if (!q) return reply("*Please provide a direct download link to upload.* 📤");
+
+        // Extract the download URL and attempt to get the file name from URL parameters or path
+        const downloadUrl = q;
+        const urlObj = new URL(downloadUrl);
+        let fileName = urlObj.searchParams.get("file");
+        if (!fileName) {
+            fileName = downloadUrl.split("/").pop();
+        }
+
+        // Determine the file extension and set the appropriate MIME type
+        const fileExtension = path.extname(fileName).slice(1).toLowerCase();
+        let mimeType = "application/octet-stream"; // default MIME type
+
+        if (["mp4", "avi", "mov", "mkv"].includes(fileExtension)) {
+            mimeType = "video/mp4";
+        } else if (fileExtension === "apk") {
+            mimeType = "application/vnd.android.package-archive";
+        } else if (["jpg", "jpeg", "png"].includes(fileExtension)) {
+            mimeType = `image/${fileExtension}`;
+        } else if (fileExtension === "pdf") {
+            mimeType = "application/pdf";
+        } else if (["mp3", "wav"].includes(fileExtension)) {
+            mimeType = "audio/mpeg";
+        }
+
+        // Update presence to show that the bot is processing the file download
+        await robin.sendPresenceUpdate('recording', from);
+        await reply("*📥 Downloading the file...*");
+
+        // Download the file as an arraybuffer using axios
+        const response = await axios.get(downloadUrl, { responseType: "arraybuffer" });
+
+        // Send the downloaded file to the user as a document
+        await robin.sendMessage(
+            from,
+            {
+                document: {
+                    url: downloadUrl // Depending on your framework, you might attach the file data directly from response.data
+                },
+                mimetype: mimeType,
+                fileName: fileName,
+                caption: `Here is your ${fileName}`
+            },
+            { quoted: mek }
+        );
+
+        // Notify the user of a successful upload
+        return reply(`Your file "${fileName}" has been uploaded successfully! 📤`);
+    } catch (error) {
+        console.error(error);
+        return reply("❌ An error occurred while processing your request.");
+    }
+});

@@ -68,7 +68,7 @@ cmd(
         from,
         {
           image: imageBuffer,
-          caption: "Here is your converted image!\n\n𝐌𝐚𝐝𝐞 𝐛𝐲 卩卂几丂丨ㄥㄩ",
+          caption: "*HERE IS YOUR CONVERTED IMAGE* \n\n> BY HANS BYTE MD",
         },
         { quoted: mek }
       );

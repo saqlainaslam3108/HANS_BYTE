@@ -4,6 +4,7 @@ const { dl } = require('darksadasyt-anime');  // Import the anime download funct
 cmd(
   {
     pattern: "animeDownload",
+    alias: "andl",
     react: "🎥",
     desc: "Get Direct Download Link for Anime Episode",
     category: "download",

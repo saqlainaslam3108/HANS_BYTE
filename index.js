@@ -98,18 +98,33 @@ async function connectToWA() {
       console.log("ALL PLUGINS SUCCESFULLY INSTALLED   ✅");
       console.log("HANS BYTE HAS SUCCESFULLY BEEN CONNECTED TO YOUR WHATSAPP ✅");
 
-      let up = `VORTEX MD connected successful ✅`;
-      let up1 = `Hello Pansilu, I made bot successful ☄️`;
+      let up = `
+  ╔═════════════════╗
+  ║      𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 X 𝐁𝐎𝐓           
+  ║  SUCCESSFULLY CONNECTED ✅ 😍        
+  ╠═════════════════╣
+  ║      • PREFIX: .            
+  ╟─────────────────╢
+  ║ ♻ 𝐖𝐇𝐀𝐓𝐒𝐀𝐏𝐏 𝐂𝐇𝐀𝐍𝐍𝐄𝐋 𝐋𝐈𝐍𝐊         
+  ║ https://whatsapp.com/channel/0029VaZDIdxDTkKB4JSWUk1O              
+  ╟─────────────────╢
+  ║ ♻ 𝐖𝐇𝐀𝐓𝐒𝐀𝐏𝐏 𝐆𝐑𝐎𝐔𝐏 𝐋𝐈𝐍𝐊          
+  ║ https://chat.whatsapp.com/K0GPSSfr16j8VsIAU8uHYM                 
+  ╠═════════════════╣
+  ║   𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃               
+  ║ > © ᴘᴏᴡᴇʀᴇᴅ ʙʏ Hans Tech Team        
+  ╚═════════════════╝`;
+      let up1 = `Hello Mr Hans i succesfully deployed HANS BYTE`;
 
       robin.sendMessage(ownerNumber + "@s.whatsapp.net", {
         image: {
-          url: `https://i.ibb.co/Xx5Gpnrs/Purple-Blue-Illustration-Future-and-Technology-Poster.png`,
+          url: `https://i.ibb.co/6Rxhg321/Chat-GPT-Image-Mar-30-2025-03-39-42-AM.png`,
         },
         caption: up,
       });
-      robin.sendMessage("94763513529@s.whatsapp.net", {
+      robin.sendMessage("237696900612@s.whatsapp.net", {
         image: {
-          url: `https://i.ibb.co/Xx5Gpnrs/Purple-Blue-Illustration-Future-and-Technology-Poster.png`,
+          url: `https://i.ibb.co/6Rxhg321/Chat-GPT-Image-Mar-30-2025-03-39-42-AM.png`,
         },
         caption: up1,
       });

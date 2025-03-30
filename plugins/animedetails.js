@@ -18,6 +18,18 @@ cmd(
     try {
       if (!q) return reply("*Please provide an anime link.* 🎭");
 
+      // Newsletter context info
+      const _0x273817 = {
+        'mentionedJid': [sender],
+        'forwardingScore': 0x3e7,
+        'isForwarded': true,
+        'forwardedNewsletterMessageInfo': {
+          'newsletterJid': '120363292876277898@newsletter',
+          'newsletterName': "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
+          'serverMessageId': 0x8f
+        }
+      };
+
       // Fetching the anime details
       const results = await getep(q);
       const { result, results: episodeList } = results;
@@ -34,8 +46,16 @@ cmd(
         detailsMessage += `📺 Episode ${episode.episode} - 🔗 episode.php?${episode.url}\n`;
       });
 
-      // Sending the anime details and episodes
-      reply(detailsMessage);
+      // Sending the anime details with newsletter context (but no actual redirect)
+      await robin.sendMessage(
+        from,
+        {
+          text: detailsMessage,
+          contextInfo: _0x273817
+        },
+        { quoted: mek }
+      );
+
     } catch (e) {
       console.error(e);
       reply(`❌ Error: ${e.message}`);

@@ -4,9 +4,9 @@ const axios = require("axios");
 cmd(
   {
     pattern: "prompt",
-    alias: ["gen2"],
+    alias: ["gen2", "text2img", "dalle"],
     react: "📺",
-    desc: "Generate AI images using Promt.",
+    desc: "Generate AI images using Prompt.",
     category: "ai",
     use: ".gen2 <Your Question>",
     filename: __filename
@@ -28,7 +28,7 @@ cmd(
       // Send image as buffer
       await conn.sendMessage(msg.key.remoteJid, { 
         image: Buffer.from(response.data), 
-        caption: `🖼 Generated Image for: *${text}*`
+        caption: `🖼 Generated Image for: *${text}*\n\n> BY HANS BYTE`
       });
 
     } catch (error) {

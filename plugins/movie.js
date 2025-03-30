@@ -1,83 +1,59 @@
-const { cmd } = require('../command');
-const { fetchJson } = require('../lib/functions');
 const axios = require('axios');
-const fs = require('fs-extra');
-const path = require('path');
-const config = require('../config');
-
-const API_URL = "https://api.skymansion.site/movies-dl/search";
-const DOWNLOAD_URL = "https://api.skymansion.site/movies-dl/download";
-const API_KEY = config.MOVIE_API_KEY;
+const { cmd } = require('../command');
+const config = require('../config'); // Ensure your API key is in config
 
 cmd({
     pattern: "movie",
-    alias: ["moviedl", "films"],
-    react: '🎬',
-    category: "download",
-    desc: "Search and download movies from PixelDrain",
+    desc: "Fetch detailed information about a movie.",
+    category: "other",
+    react: "🎬",
     filename: __filename
-}, async (robin, m, mek, { from, q, reply }) => {
+},
+async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
     try {
-        if (!q || q.trim() === '') return await reply('❌ Please provide a movie name! (e.g., Deadpool)');
-
-        // Fetch movie search results
-        const searchUrl = `${API_URL}?q=${encodeURIComponent(q)}&api_key=${API_KEY}`;
-        let response = await fetchJson(searchUrl);
-
-        if (!response || !response.SearchResult || !response.SearchResult.result.length) {
-            return await reply(`❌ No results found for: *${q}*`);
+        const movieName = args.join(' ');
+        if (!movieName) {
+            return reply("Please provide the movie name :).");
         }
 
-        const selectedMovie = response.SearchResult.result[0]; // Select first result
-        const detailsUrl = `${DOWNLOAD_URL}/?id=${selectedMovie.id}&api_key=${API_KEY}`;
-        let detailsResponse = await fetchJson(detailsUrl);
+        const apiUrl = `http://www.omdbapi.com/?t=${encodeURIComponent(movieName)}&apikey=${config.OMDB_API_KEY}`;
+        const response = await axios.get(apiUrl);
 
-        if (!detailsResponse || !detailsResponse.downloadLinks || !detailsResponse.downloadLinks.result.links.driveLinks.length) {
-            return await reply('❌ No PixelDrain download links found.');
+        const data = response.data;
+        if (data.Response === "False") {
+            return reply("🚫 Movie not found.");
         }
 
-        // Select the 720p PixelDrain link
-        const pixelDrainLinks = detailsResponse.downloadLinks.result.links.driveLinks;
-        const selectedDownload = pixelDrainLinks.find(link => link.quality === "SD 480p");
-        
-        if (!selectedDownload || !selectedDownload.link.startsWith('http')) {
-            return await reply('❌ No valid 480p PixelDrain link available.');
-        }
+        const movieInfo = `
+🎬 *Movie Information* 🎬
 
-        // Convert to direct download link
-        const fileId = selectedDownload.link.split('/').pop();
-        const directDownloadLink = `https://pixeldrain.com/api/file/${fileId}?download`;
-        
-        
-        // Download movie
-        const filePath = path.join(__dirname, `${selectedMovie.title}-480p.mp4`);
-        const writer = fs.createWriteStream(filePath);
-        
-        const { data } = await axios({
-            url: directDownloadLink,
-            method: 'GET',
-            responseType: 'stream'
-        });
+🎥 *Title:* ${data.Title}
+📅 *Year:* ${data.Year}
+🌟 *Rated:* ${data.Rated}
+📆 *Released:* ${data.Released}
+⏳ *Runtime:* ${data.Runtime}
+🎭 *Genre:* ${data.Genre}
+🎬 *Director:* ${data.Director}
+✍️ *Writer:* ${data.Writer}
+🎭 *Actors:* ${data.Actors}
+📝 *Plot:* ${data.Plot}
+🌍 *Language:* ${data.Language}
+🇺🇸 *Country:* ${data.Country}
+🏆 *Awards:* ${data.Awards}
+⭐ *IMDB Rating:* ${data.imdbRating}
+🗳️ *IMDB Votes:* ${data.imdbVotes}
+`;
 
-        data.pipe(writer);
+        // Define the image URL
+        const imageUrl = data.Poster && data.Poster !== 'N/A' ? data.Poster : config.ALIVE_IMG;
 
-        writer.on('finish', async () => {
-            await robin.sendMessage(from, {
-                document: fs.readFileSync(filePath),
-                mimetype: 'video/mp4',
-                fileName: `${selectedMovie.title}-480p.mp4`,
-                caption: `🎬 *${selectedMovie.title}*\n📌 Quality: 480p\n✅ *Download Complete!*`,
-                quoted: mek 
-            });
-            fs.unlinkSync(filePath);
-        });
-
-        writer.on('error', async (err) => {
-            console.error('Download Error:', err);
-            await reply('❌ Failed to download movie. Please try again.');
-        });
-    } catch (error) {
-        console.error('Error in movie command:', error);
-        await reply('❌ Sorry, something went wrong. Please try again later.');
+        // Send the movie information along with the poster image
+        await conn.sendMessage(from, {
+            image: { url: imageUrl },
+            caption: `${movieInfo}\n> ACD-MD`
+        }, { quoted: mek });
+    } catch (e) {
+        console.log(e);
+        reply(`❌ єяяσя: ${e.message}`);
     }
 });

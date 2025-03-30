@@ -25,7 +25,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
         const watermark = manul.watermark
         const music = manul.music
         let desc = `
-*🎬 𝗩𝗢𝗥𝗧𝗘𝗫 𝐓𝐈𝐊𝐓𝐎𝐊 𝐃𝐎𝐖𝐍𝐋𝐎𝐀𝐃𝐄𝐑 🎬*
+*🎬 HANS BYTE MD TIKTOK 🎬*
 
 *𝗧𝗶𝘁𝗹𝗲 -:* _~${title}~_
 
@@ -35,7 +35,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
 2. 𝗡𝗼 𝗪𝗮𝘁𝗲𝗿 𝗠𝗮𝗿𝗸 ❎
 3. 𝗔𝗨𝗗𝗜𝗢 🎧
 
-> *𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 - : ©𝗩𝗢𝗥𝗧𝗘𝗫 𝗠𝗗 *
+> *BY HANS BYTE MD ✘*
 `;
 
         const vv = await conn.sendMessage(from, { image: { url: cover }, caption: desc }, { quoted: mek });
@@ -49,16 +49,16 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
             if (msg.message.extendedTextMessage.contextInfo && msg.message.extendedTextMessage.contextInfo.stanzaId === vv.key.id) {
                 switch (selectedOption) {
                     case '1':
-                    await conn.sendMessage(from,{video:{url: watermark },mimetype:"video/mp4",caption :"> 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 - : ©𝗩𝗢𝗥𝗧𝗘𝗫 𝗠𝗗 "},{quoted:mek})
+                    await conn.sendMessage(from,{video:{url: watermark },mimetype:"video/mp4",caption :"> BY HANS BYTE MD"},{quoted:mek})
                         break;
                         
                     case '2':
-                    await conn.sendMessage(from,{video:{url: no_watermark },mimetype:"video/mp4",caption :"> 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 - : ©𝗩𝗢𝗥𝗧𝗘𝗫 𝗠𝗗 "},{quoted:mek})
+                    await conn.sendMessage(from,{video:{url: no_watermark },mimetype:"video/mp4",caption :"> BY HANS BYTE MD"},{quoted:mek})
                         break;
        
                     case '3':               
 //============Send Audio======================
-await conn.sendMessage(from,{audio:{url: music },mimetype:"audio/mpeg",caption :"> *𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 - : ©𝐌𝐑 𝐌𝐀𝐍𝐔𝐋 𝐎𝐅𝐂 *"},{quoted:mek})
+await conn.sendMessage(from,{audio:{url: music },mimetype:"audio/mpeg",caption :"> BY HANS BYTE MD"},{quoted:mek})
                         break;
  
                     default:
@@ -74,4 +74,4 @@ await conn.sendMessage(from,{audio:{url: music },mimetype:"audio/mpeg",caption :
         reply('An error occurred while processing your request.');
     }
 });
-//=============©VORTEX MD 💚==========
+

@@ -1,58 +1,83 @@
 const { cmd } = require("../command");
 const axios = require("axios");
 
+// MIME type mapping for common file types
+const mimeMap = {
+    'zip': 'application/zip',
+    'pdf': 'application/pdf',
+    'mp3': 'audio/mpeg',
+    'mp4': 'video/mp4',
+    'jpg': 'image/jpeg',
+    'png': 'image/png',
+    'txt': 'text/plain',
+    'doc': 'application/msword',
+    'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'xls': 'application/vnd.ms-excel',
+    'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'ppt': 'application/vnd.ms-powerpoint',
+    'pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+};
+
 cmd(
-  {
-    pattern: "mf",
-    react: "📤",
-    desc: "Upload files from Mediafire",
-    category: "upload",
-    filename: __filename,
-  },
-  async (robin, mek, m, { from, quoted, args, q, reply }) => {
-    try {
-      if (!q) return reply("*Provide a Mediafire link to upload.* 📤");
+    {
+        pattern: "mf",
+        alias: ["mfire", "mediafire"],
+        react: "📤",
+        desc: "Upload files from Mediafire",
+        category: "upload",
+        filename: __filename,
+    },
+    async (robin, mek, m, { from, quoted, args, q, reply }) => {
+        try {
+            if (!q) return reply("*Please provide a Mediafire link* 📤");
 
-      const mediafireUrl = q;
-      const apiUrl = `https://api.genux.me/api/download/mediafire?url=${encodeURIComponent(mediafireUrl)}&apikey=GENUX-PANSILU-NETHMINA-`;
+            const mediafireUrl = q;
+            const apiUrl = `https://apis.davidcyriltech.my.id/mediafire?url=${encodeURIComponent(mediafireUrl)}`;
 
-      reply("🔄 *Fetching Mediafire link...*");
+            reply("🔍 *Fetching Mediafire link...*");
 
-      // Fetch the API response
-      const { data } = await axios.get(apiUrl);
-      console.log("API Response:", data); // Debugging
+            const { data } = await axios.get(apiUrl);
+            console.log("API Response:", data);
 
-      if (!data || !data.link) {
-        return reply(`❌ *Failed to retrieve download link.*\n\n*API Response:* ${JSON.stringify(data, null, 2)}`);
-      }
+            if (!data?.downloadLink) {
+                return reply(`❌ *Failed to retrieve file information*\n${JSON.stringify(data, null, 2)}`);
+            }
 
-      const fileUrl = data.link;
-      const fileName = data.filename || "file";
-      const fileSize = parseFloat(data.size) || 0;
+            const fileUrl = data.downloadLink;
+            const fileName = data.fileName || "file";
+            const sizeString = data.size || "0MB";
+            
+            // Parse file size (remove non-numeric characters and convert to float)
+            const fileSize = parseFloat(sizeString.replace(/[^0-9.]/g, '')) || 0;
 
-      // File size check (limit: 50MB)
-      if (fileSize > 50) {
-        return reply(`⚠️ *File is too large to send on WhatsApp!* (Size: ${fileSize}MB)\n\n📩 *Download manually:* ${fileUrl}`);
-      }
+            // Check if size exceeds WhatsApp's 50MB limit
+            if (fileSize > 50) {
+                return reply(
+                    `⚠️ *File too large!* (${data.size})\n` +
+                    `WhatsApp supports files up to 50MB\n` 
+                );
+            }
 
-      reply("🔄 *Uploading file...*");
+            reply("⬆️ *HANS BYTE uploading file to WhatsApp...*");
 
-      // Send document with correct MIME type
-      await robin.sendMessage(
-        from,
-        {
-          document: { url: fileUrl },
-          mimetype: data.mimetype || "application/octet-stream",
-          fileName: fileName,
-          caption: `📄 *Here is your file!*`,
-        },
-        { quoted: mek }
-      );
+            // Get proper MIME type
+            const fileExtension = data.mimeType?.toLowerCase() || fileName.split('.').pop();
+            const mimeType = mimeMap[fileExtension] || 'application/octet-stream';
 
-      reply(`✅ *Your file has been uploaded successfully!* 📤`);
-    } catch (e) {
-      console.error(e);
-      reply(`❌ Error: ${e.message}`);
+            await robin.sendMessage(
+                from,
+                {
+                    document: { url: fileUrl },
+                    mimetype: mimeType,
+                    fileName: fileName,
+                    caption: `📁 *${fileName}*\n📦 Size: ${data.size || 'Unknown'}\n\n> BY HANS BYTE ✘`,
+                },
+                { quoted: mek }
+            );
+
+        } catch (e) {
+            console.error("Mediafire Error:", e);
+            reply(`❌ Error: ${e.message}\nPlease check the link and try again.`);
+        }
     }
-  }
 );

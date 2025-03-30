@@ -58,63 +58,120 @@ cmd(
       }
 
       let madeMenu = `👋 *Hello  ${pushname}*
-╔════════════════╗  
-     🍁 *VORTEX MD* 🍁  
-╚════════════════╝  
-📜 MAIN COMMANDS
-🔹 .alive
-🔹 .menu
-🔹 .ai <text>
-🔹 .system
-🔹 .owner
+✧⋄⋆⋅⋆⋄✧⋄⋆⋅⋆⋄✧⋄⋆⋅⋆⋄✧
+  *HANS BYTE MD*
+✧⋄⋆⋅⋆⋄✧⋄⋆⋅⋆⋄✧⋄⋆⋅⋆⋄✧
 
-📥 DOWNLOAD COMMANDS
-🔹 .song <text>
-🔹 .video <text>
-🔹 .fb <link>
-🔹 .upload <animepahe link>
-🔹 .sinhala <text>
-🔹 .dl <d_link>
-🔹 .rtik <text>
-🔹 .mediafire <text>
+╭─⊳⋅🤖 𝕮𝖔𝖗𝖊 𝖀𝖙𝖎𝖑𝖘 ⋅⊲─╮
+⌬ ${config.PREFIX}alive
+⌬ ${config.PREFIX}menu
+⌬ ${config.PREFIX}system
+⌬ ${config.PREFIX}owner
 
-👥 GROUP COMMANDS
-🔹 .mute
-🔹 .kick
-🔹 .unmute
-🔹 .demote
-🔹 .promote
+╭─⊳⋅⛩️ 𝕬𝖓𝖎𝖒𝖊 ⋅⊲─╮
+⌬ ${config.PREFIX}anime
+⌬ ${config.PREFIX}andl
+⌬ ${config.PREFIX}download
+⌬ ${config.PREFIX}animedetails
 
-🔒 OWNER COMMANDS
-🔹 .restart
-🔹 .left
-🔹 .block
 
-✏️ CONVERT COMMANDS
-🔹 .sticker <reply img>
-🔹 .toimg <reply sticker>
-🔹 .gen <text>
-🔹 .gen2 <text>
-🔹 .txt2img <text>
+╭─⊳⋅📡 𝕬𝕴 ⋅⊲─╮
+⟠ ${config.PREFIX}ai 
+⟠ ${config.PREFIX}gpt 
+⟠ ${config.PREFIX}gemini 
+⟠ ${config.PREFIX}deepseek
+⟠ ${config.PREFIX}claude
+⟠ ${config.PREFIX}meta ai
 
-🔍 SEARCH COMMANDS
-🔹 .anime <text>
-🔹 .hirunews
-🔹 .itnnews
-🔹 .weather <text>
-🔹 .img <text>
 
-╔══════════⚔️═══════════╗  
-          *Made by Pansilu Nethmina*
-          > ᐯㄖ尺ㄒ乇乂 几ᗪ 爪乇几卄
-╚══════════⚔️═══════════╝
+╭─⊳⋅🎵 𝕸𝖊𝖉𝖎𝖆 𝕿𝖔𝖔𝖑𝖘 ⋅⊲─╮
+⭒ ${config.PREFIX}sticker
+⭒ ${config.PREFIX}toimg
+⭒ ${config.PREFIX}gen / dalle <text>
+⭒ ${config.PREFIX}txt2img
+⭒ ${config.PREFIX}shorten <url>
+⭒ ${config.PREFIX}tourl
+⭒ ${config.PREFIX}movie
+⭒ ${config.PREFIX}img
+⭒ ${config.PREFIX}gifsearch
+⭒ ${config.PREFIX}vv
 
+
+╭─⊳⋅⬇️ 𝕯𝖔𝖜𝖓𝖑𝖔𝖆𝖉𝖊𝖗𝖘 ⋅⊲─╮
+⋗ 𝘼𝙪𝙙𝙞𝙤:
+  ⇝ ${config.PREFIX}song <title>
+  ⇝ ${config.PREFIX}ttmp3
+  ⇝ ${config.PREFIX}spotify
+⋗ 𝙑𝙞𝙙𝙚𝙤:
+  ⇝ ${config.PREFIX}video <query>
+  ⇝ ${config.PREFIX}fb <link>
+  ⇝ ${config.PREFIX}ttmp4
+  ⇝ ${config.PREFIX}insta
+⋗ 𝙁𝙞𝙡𝙚𝙨:
+  ⇝ ${config.PREFIX}dl <url>
+  ⇝ ${config.PREFIX}mediafire
+  ⇝ ${config.PREFIX}rtik
+  ⇝ ${config.PREFIX}tiktok
+  ⇝ ${config.PREFIX}gdrive 
+
+⋗ 𝐀𝐏𝐏:
+ ⇝ ${config.PREFIX}apk
+
+╭─⊳⋅🔍 𝕾𝖊𝖆𝖗𝖈𝖍 𝕰𝖓𝖌𝖎𝖓𝖊𝖘 ⋅⊲─╮
+⨳ ${config.PREFIX}anime
+⨳ ${config.PREFIX}img
+⨳ ${config.PREFIX}weather
+
+╭─⊳⋅✞ 𝓡𝓔𝓵𝓲𝓰𝓲𝓸𝓷⋅⊲─╮
+⤞ ${config.PREFIX}bible 
+⤞ ${config.PREFIX}quran
+
+
+╭─⊳⋅🗞️ 𝕹𝖊𝖜𝖘 𝕱𝖊𝖊𝖉𝖘 ⋅⊲─╮
+⨠ ${config.PREFIX}hirunews
+⨠ ${config.PREFIX}itnnews
+
+╭─⊳⋅🛠️ 𝕾𝖞𝖘𝖙𝖊𝖒 𝕮𝖔𝖓𝖙𝖗𝖔𝖑 ⋅⊲─╮
+⚙ ${config.PREFIX}restart
+⚙ ${config.PREFIX}leave
+⚙ ${config.PREFIX}block
+
+╭─⊳⋅👥 𝕲𝖗𝖔𝖚𝖕 𝕸𝖌𝖒𝖙 ⋅⊲─╮
+✫ ${config.PREFIX}mute
+✫ ${config.PREFIX}unmute
+✫ ${config.PREFIX}promote
+✫ ${config.PREFIX}demote
+✫ ${config.PREFIX}kick
+✫ ${config.PREFIX}add
+✫ ${config.PREFIX}gcpp
+✫ ${config.PREFIX}fullpp
+✫ ${config.PREFIX}gclink
+✫ ${config.PREFIX}tagall
+✫ ${config.PREFIX}take
+✫ ${config.PREFIX}kickall
+✫ ${config.PREFIX}kickall2
+✫ ${config.PREFIX}kickadmins
+
+
+╭─⊳⋅🌐 𝕷𝖔𝖈𝖆𝖑𝖎𝖟𝖆𝖙𝖎𝖔𝖓 ⋅⊲─╮
+⎇ ${config.PREFIX}sinhala
+
+╭─⊳⋅🔞 𝕹𝕾𝕱𝖂 ⋅⊲─╮
+⤷ ${config.PREFIX}xnxx-dl
+⤷ ${config.PREFIX}epsearch
+⤷ ${config.PREFIX}epdownload
+⤷ ${config.PREFIX}hentai
+
+
+✧⋄⋆⋅⋆⋄✧⋄⋆⋅⋆⋄✧⋄⋆⋅⋆⋄✧
+ *HANS BYTE MD*
+✧⋄⋆⋅⋆⋄✧⋄⋆⋅⋆⋄✧⋄⋆⋅⋆⋄✧
 `;
       await robin.sendMessage(
         from,
         {
           image: {
-            url: "https://raw.githubusercontent.com/NethminaPansil/Whtsapp-bot/refs/heads/main/tumblr_1d7104aa11efcf7ebbaab88a184a7279_25602a04_1280%7E2.jpg",
+            url: "https://i.ibb.co/6Rxhg321/Chat-GPT-Image-Mar-30-2025-03-39-42-AM.png",
           },
           caption: madeMenu,
         },

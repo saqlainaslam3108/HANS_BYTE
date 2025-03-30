@@ -1,5 +1,5 @@
-/*const axios = require('axios');
-const { cmd } = require('./command');
+const axios = require('axios');
+const { cmd } = require('../command');
 
 cmd({
   pattern: 'bbcnews',
@@ -8,9 +8,8 @@ cmd({
   use: '.bbcnews',
   category: 'News',
   filename: __filename
-}, async (conn, mek, m, { reply }) => {
+}, async (conn, mek, m, { from, sender, reply }) => {
   try {
-  
     const res = await axios.get('https://suhas-bro-api.vercel.app/news/bbc');
     const newsData = res.data;
 
@@ -18,25 +17,39 @@ cmd({
       return reply("❌ No news available at the moment.");
     }
 
-   
     const article = newsData[0]; // Get the first news article
 
-  
-    let newsReply = 📰 Latest BBC News:\n\n;
-    newsReply += 📅 Date: article.date;
-    newsReply += 📝 Title:{article.title}\n;
-    newsReply += 🗒️ Summary: article.summary;
-    newsReply += 🔗 Link:{article.link}\n\n;
+    // Newsletter context info
+    const _0x273817 = {
+      'mentionedJid': [sender],
+      'forwardingScore': 0x3e7,
+      'isForwarded': true,
+      'forwardedNewsletterMessageInfo': {
+        'newsletterJid': '120363292876277898@newsletter',
+        'newsletterName': "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
+        'serverMessageId': 0x8f
+      }
+    };
 
-    
-> *© 𝙿𝚘𝚠𝚎𝚛𝚎𝚍 𝙱𝚢 𝚅𝙾𝚁𝚃𝙴𝚇 𝙼𝙳*
+    let newsReply = `📰 *Latest BBC News*\n\n`;
+    newsReply += `📅 *Date:* ${article.date}\n`;
+    newsReply += `📝 *Title:* ${article.title}\n`;
+    newsReply += `🗒️ *Summary:* ${article.summary}\n`;
+    newsReply += `🔗 *Link:* ${article.link}\n\n`;
+    newsReply += `*© POWERED BY HANS BYTE ✘*`;
 
-    reply(newsReply);
+    // Send with newsletter context but no actual redirect
+    await conn.sendMessage(
+      from,
+      {
+        text: newsReply,
+        contextInfo: _0x273817
+      },
+      { quoted: mek }
+    );
 
   } catch (error) {
-
-console.error("Error fetching news:", error.message);
+    console.error("Error fetching news:", error.message);
     reply("❌ An error occurred while fetching the latest news.");
   }
 });
-*/

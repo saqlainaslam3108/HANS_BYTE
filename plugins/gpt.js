@@ -4,42 +4,46 @@ const axios = require("axios");
 cmd(
   {
     pattern: "gpt",
-    alias: ["chatgpt"],
-    react: "💬",
-    desc: "Chat with AI using Manu API.",
+    alias: ["chatgpt", "ai"],
+    react: "🤖",
+    desc: "Chat with AI using GPT-4 API",
     category: "ai",
-    use: ".ai-chat <Your Message>",
+    use: ".gpt <your message>",
     filename: __filename
   },
   async (conn, mek, msg, { reply, args }) => {
     try {
       const userMessage = args.join(" ");
       if (!userMessage) {
-        return reply("❗️ Please provide a message.");
+        return reply("❗ Please provide a message to chat with AI.");
       }
 
-      const apiUrl = `https://manul-ofc-api-site-afeb13f3dabf.herokuapp.com/manu-ai-chat?q=${encodeURIComponent(userMessage)}`;
+      const apiUrl = `https://suhas-bro-apii.vercel.app/Gpt-4?q=${encodeURIComponent(userMessage)}`;
 
-      // React with chat emoji
-      await conn.sendMessage(msg.key.remoteJid, { react: { text: "💬", key: msg.key } });
+      // Show typing indicator
+      await conn.sendPresenceUpdate('composing', msg.key.remoteJid);
 
       // API request to fetch AI response
       const response = await axios.get(apiUrl);
-
-      // Debug the entire response to see the data structure
       console.log("API Response:", response.data);
 
-      // Check if the response contains AI reply
-      if (response.data && response.data.reply) {
-        const aiReply = response.data.reply;
-        await reply(aiReply);
+      // Check and format the response
+      if (response.data && response.data.response) {
+        const aiResponse = `*${response.data.title || 'AI Response'}*\n` +
+                          `💡 ${response.data.response}\n\n` +
+                          `_Powered by *HANS BYTE MD*_`;
+        
+        await reply(aiResponse);
       } else {
-        return reply("❌ API response format is unexpected or missing reply.");
+        return reply("❌ Unexpected API response format. Please try again later.");
       }
 
     } catch (error) {
       console.error("Error:", error);
-      reply("❌ Error fetching AI response.");
+      reply("❌ Error fetching AI response. The service might be temporarily unavailable.");
+    } finally {
+      // Stop typing indicator
+      await conn.sendPresenceUpdate('paused', msg.key.remoteJid);
     }
   }
 );

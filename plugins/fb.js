@@ -1,91 +1,87 @@
 const { cmd } = require("../command");
 const axios = require("axios");
 
-cmd(
-  {
-    pattern: "fb",
-    alias: ["facebook"],
-    react: "😶‍🌫️",
-    desc: "Download Facebook Video",
-    category: "download",
-    filename: __filename,
-  },
-  async (
-    robin,
-    mek,
-    m,
-    {
-      from,
-      quoted,
-      body,
-      isCmd,
-      command,
-      args,
-      q,
-      isGroup,
-      sender,
-      senderNumber,
-      botNumber2,
-      botNumber,
-      pushname,
-      isMe,
-      isOwner,
-      groupMetadata,
-      groupName,
-      participants,
-      groupAdmins,
-      isBotAdmins,
-      isAdmins,
-      reply,
-    }
-  ) => {
+cmd({
+    pattern: "fbdl",
+    alias: ["fb", "facebook"],
+    desc: "Download Facebook videos",
+    category: "media",
+    filename: __filename
+},
+async(robin, mek, m, {from, q, sender, reply}) => {
     try {
-      if (!q) return reply("*Please provide a valid Facebook video URL!* ❤️");
+        if (!q) return reply("Please provide a Facebook URL");
+        
+        // Validate Facebook URL
+        const fbRegex = /^(https?:\/\/)?(www\.|m\.)?(facebook\.com|fb\.watch)\/.+/i;
+        if (!fbRegex.test(q)) return reply("❌ Invalid Facebook URL");
 
-      // Validate the Facebook URL format
-      const fbRegex = /(https?:\/\/)?(www\.)?(facebook|fb)\.com\/.+/;
-      if (!fbRegex.test(q))
-        return reply("*Invalid Facebook URL! Please check and try again.* 🌚");
+        await reply("📥 Processing Facebook video...");
 
-      // Fetch video details
-      reply("*Downloading your video...* 💤");
-      const apiUrl = `https://api.genux.me/api/download/fb?url=${encodeURIComponent(
-        q
-      )}&apikey=GENUX-PANSILU-NETHMINA-`;
+        // Newsletter context info
+        const _0x273817 = {
+            'mentionedJid': [sender],
+            'forwardingScore': 0x3e7,
+            'isForwarded': true,
+            'forwardedNewsletterMessageInfo': {
+                'newsletterJid': '120363292876277898@newsletter',
+                'newsletterName': "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
+                'serverMessageId': 0x8f
+            }
+        };
 
-      // Request the Genux API
-      const response = await axios.get(apiUrl);
-      console.log("Full Genux API Response:", JSON.stringify(response.data, null, 2));
+        const apiUrl = `https://suhas-bro-api.vercel.app/download/fbdown?url=${encodeURIComponent(q)}`;
+        const response = await axios.get(apiUrl);
 
-      const result = response.data.result;
-      if (!result || result.length === 0) {
-        return reply("*No downloadable video found!* 😮‍💨");
-      }
+        if (!response.data.status || !response.data.result) {
+            return reply("❌ Failed to fetch video. Invalid URL or API error.");
+        }
 
-      // Check each result for available video qualities
-      const videoResult = result[0]; // Assuming we take the first object, but we check its properties
-      if (!videoResult || !videoResult.url) {
-        return reply("*Failed to download video. No URL found!* 😥");
-      }
+        const { thumb, title, desc, sd, hd } = response.data.result;
+        const videoUrl = hd || sd;
 
-      const { quality, url } = videoResult;  // Safe destructuring
-      if (!quality || !url) {
-        return reply("*Failed to extract video details.* 😞");
-      }
+        // Prepare info message
+        const infoMessage = `
+╔══════════════════╗
+   📱 𝗙𝗔𝗖𝗘𝗕𝗢𝗢𝗞 𝗩𝗜𝗗𝗘𝗢
+╚══════════════════╝
 
-      let caption = `*❤️ 𝙑𝙊𝙍𝙏𝙀𝙓 FB VIDEO DOWNLOADER ❤️*  👻 *Quality*: ${quality || "Unknown"}  𝐌𝐚𝐝𝐞 𝐛𝐲 𝙋𝙖𝙣𝙨𝙞𝙡𝙪 𝙉𝙚𝙩𝙝𝙢𝙞𝙣𝙖`;
+📌 𝗧𝗜𝗧𝗟𝗘: ${title || "No title available"}
+📝 𝗗𝗘𝗦𝗖: ${desc || "No description available"}
 
-      // Send the video
-      await robin.sendMessage(
-        from,
-        { video: { url: url }, caption: caption },
-        { quoted: mek }
-      );
+🔗 𝗦𝗢𝗨𝗥𝗖𝗘 𝗨𝗥𝗟: ${q}
 
-      return reply("𝘿𝙊𝙉𝙀 📥 ");
-    } catch (e) {
-      console.error(e);
-      reply(`*Error:* ${e.message || e}`);
+╔══════════════════╗
+  ✦ 𝗛𝗮𝗻𝘀 𝗕𝘆𝘁𝗲 𝗠𝗗 ✦
+╚══════════════════╝
+        `.trim();
+
+        // Send thumbnail with info (with newsletter context)
+        await robin.sendMessage(
+            from,
+            {
+                image: { url: thumb },
+                caption: infoMessage,
+                contextInfo: _0x273817
+            },
+            { quoted: mek }
+        );
+
+        // Send video file (with newsletter context)
+        await robin.sendMessage(
+            from,
+            {
+                video: { url: videoUrl },
+                mimetype: "video/mp4",
+                caption: `📥 ${title || "Facebook Video"}\n\n⚡ Powered by 𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝗘 𝗠𝗗`,
+                fileName: `facebook_video_${Date.now()}.mp4`,
+                contextInfo: _0x273817
+            },
+            { quoted: mek }
+        );
+
+    } catch (error) {
+        console.error("Facebook DL Error:", error);
+        reply("❌ Error downloading video. Please check the URL and try again.");
     }
-  }
-);
+});

@@ -1,117 +1,110 @@
-const { cmd } = require("../command");
-const yts = require("yt-search");
+const { cmd, commands } = require("../command");
 const axios = require("axios");
+const yts = require("yt-search");
 
-cmd(
-  {
-    pattern: "ytv",
-    react: "🎥",
-    desc: "Download YouTube Video",
-    category: "download",
-    filename: __filename,
-  },
-  async (
-    robin,
-    mek,
-    m,
-    { from, quoted, body, isCmd, command, args, q, isGroup, sender, reply }
-  ) => {
+cmd({
+    pattern: "ytmp4",
+    react: '📽️',
+    alias: ["video", "playvid"],
+    desc: "Download video from YouTube",
+    category: "media",
+    filename: __filename
+},
+async(robin, mek, m, {from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
     try {
-      if (!q) return reply("*Provide a name or a YouTube link.* 🎥❤️");
+        if (!q) return reply("Please provide a YouTube URL or search query");
 
-      // Search for the video
-      const search = await yts(q);
-      const data = search.videos[0];
-      const url = data.url;
+        // Check if input is YouTube URL or search query
+        const isYoutubeUrl = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)/.test(q);
+        let videoUrl, videoInfo;
 
-      // Video metadata description
-      let desc = `🎥 *VORTEX VIDEO DOWNLOADER* 🎥
-      
-👻 *Title* : ${data.title}
-👻 *Duration* : ${data.timestamp}
-👻 *Views* : ${data.views}
-👻 *Uploaded* : ${data.ago}
-👻 *Channel* : ${data.author.name}
-👻 *Link* : ${data.url}
-
-𝐌𝐚𝐝𝐞 𝐛𝐲 ＰＡＮＳＩＬＵ`;
-
-      // Send metadata and thumbnail message
-      await robin.sendMessage(
-        from,
-        { image: { url: data.thumbnail }, caption: desc },
-        { quoted: mek }
-      );
-
-      // Video download function to fetch available resolutions
-      const getResolutions = async (url) => {
-        const apiUrl = `https://p.oceansaver.in/ajax/download.php?url=${encodeURIComponent(
-          url
-        )}&api=dfcb6d76f2f6a9894gjkege8a4ab232222`;
-        
-        console.log(`API URL: ${apiUrl}`);  // Log the URL for debugging
-
-        const response = await axios.get(apiUrl);
-        
-        // Log the full response to check the error message
-        console.log(response.data);  // Log the response from the API
-        
-        if (response.data && response.data.success) {
-          return response.data.formats; // List of available formats (resolutions)
+        if (isYoutubeUrl) {
+            videoUrl = q;
+            await reply("📥 Processing YouTube URL...");
+            
+            // Get video info directly from URL
+            const searchResults = await yts({ videoId: videoUrl.split(/v=|\//).pop().split("&")[0] });
+            videoInfo = {
+                title: searchResults.title,
+                url: videoUrl,
+                thumbnail: searchResults.thumbnail,
+                views: searchResults.views,
+                duration: searchResults.duration.timestamp,
+                uploaded: searchResults.ago,
+                channel: searchResults.author.name
+            };
         } else {
-          throw new Error("Failed to fetch video formats.");
+            await reply("🔍 Searching YouTube...");
+            const searchResults = await yts(q);
+            if (!searchResults.videos.length) return reply("❌ No results found");
+            
+            const video = searchResults.videos[0];
+            videoUrl = video.url;
+            videoInfo = {
+                title: video.title,
+                url: video.url,
+                thumbnail: video.thumbnail,
+                views: video.views,
+                duration: video.duration.timestamp,
+                uploaded: video.ago,
+                channel: video.author.name
+            };
         }
-      };
 
-      // Fetch available resolutions for the video
-      const formats = await getResolutions(url);
-      
-      // Display available resolutions with numbers
-      const availableResolutions = formats
-        .map((format, index) => `${index + 1}) ${format.qualityLabel}`)
-        .join("\n");
+        // Fetch video download link
+        const apiUrl = `https://apis.davidcyriltech.my.id/download/ytmp4?url=${encodeURIComponent(videoUrl)}`;
+        const response = await axios.get(apiUrl);
 
-      // Ask the user to choose a resolution by number
-      await reply(
-        `🎥 *Choose a resolution for the video:*\n\n${availableResolutions}\n\n*Reply with the number of the resolution you want (e.g., 1 for 240p, 2 for 360p, etc.).*`
-      );
+        if (!response.data.success || !response.data.result?.download_url) {
+            return reply("❌ Failed to fetch video download link");
+        }
 
-      // Listen for the user's reply
-      robin.on("message", async (msg) => {
-        if (msg.from === from && msg.text) {
-          const userChoice = parseInt(msg.text.trim());
+        const { title, download_url } = response.data.result;
 
-          if (isNaN(userChoice) || userChoice < 1 || userChoice > formats.length) {
-            return reply(
-              "*Invalid choice. Please select a valid resolution number from the list.* 🎥"
-            );
-          }
+        // Prepare info message
+        const infoMessage = `
+╔══════════════════╗
+   🎥 𝗩𝗜𝗗𝗘𝗢 𝗜𝗡𝗙𝗢
+╚══════════════════╝
 
-          // Get the selected format based on the number
-          const selectedFormat = formats[userChoice - 1];
+📌 𝗧𝗜𝗧𝗟𝗘: ${videoInfo.title}
 
-          // Download the video in the selected resolution
-          const downloadUrl = selectedFormat.url;
-          const videoBuffer = await axios.get(downloadUrl, {
-            responseType: "arraybuffer",
-          });
+⏳ 𝗗𝗨𝗥𝗔𝗧𝗜𝗢𝗡: ${videoInfo.duration}
+👀 𝗩𝗜𝗘𝗪𝗦: ${videoInfo.views.toLocaleString()}
+📅 𝗨𝗣𝗟𝗢𝗔𝗗𝗘𝗗: ${videoInfo.uploaded}
+📺 𝗖𝗛𝗔𝗡𝗡𝗘𝗟: ${videoInfo.channel}
 
-          // Send the video
-          await robin.sendMessage(
+🔗 𝗟𝗜𝗡𝗞: ${videoInfo.url}
+
+╔══════════════════╗
+  ✦ 𝗛𝗮𝗻𝘀 𝗕𝘆𝘁𝗲 𝗠𝗗 ✦
+╚══════════════════╝
+        `.trim();
+
+        // Send thumbnail with video info
+        await robin.sendMessage(
             from,
             {
-              video: videoBuffer.data,
-              caption: `🎥 *${data.title}*`,
+                image: { url: videoInfo.thumbnail },
+                caption: infoMessage
             },
             { quoted: mek }
-          );
+        );
 
-          reply("*Thanks for using my bot!* 🎥❤️");
-        }
-      });
-    } catch (e) {
-      console.error(e);
-      reply(`❌ Error: ${e.message}`);
+        // Send video file
+        await robin.sendMessage(
+            from,
+            {
+                video: { url: download_url },
+                mimetype: "video/mp4",
+                caption: `📥 ${title}`,
+                fileName: `${title}.mp4`
+            },
+            { quoted: mek }
+        );
+
+    } catch (error) {
+        console.error("YTMP4 Error:", error);
+        reply("❌ Error processing request. Please try again later.");
     }
-  }
-);
+});
