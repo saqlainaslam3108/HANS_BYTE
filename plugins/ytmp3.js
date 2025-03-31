@@ -1,4 +1,4 @@
-const { cmd, commands } = require("../command");
+/*const { cmd, commands } = require("../command");
 const axios = require("axios");
 const config = require("../config");
 const yts = require("yt-search");
@@ -131,3 +131,4 @@ async(robin, mek, m, {from, quoted, body, isCmd, command, args, q, isGroup, send
 });
 
 
+*/

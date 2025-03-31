@@ -67,6 +67,9 @@ cmd(
 ⌬ ${config.PREFIX}menu
 ⌬ ${config.PREFIX}system
 ⌬ ${config.PREFIX}owner
+⌬ ${config.PREFIX}ping
+⌬ ${config.PREFIX}owner
+⌬ ${config.PREFIX}dev
 
 ╭─⊳⋅⛩️ 𝕬𝖓𝖎𝖒𝖊 ⋅⊲─╮
 ⌬ ${config.PREFIX}anime
@@ -107,6 +110,8 @@ cmd(
   ⇝ ${config.PREFIX}fb <link>
   ⇝ ${config.PREFIX}ttmp4
   ⇝ ${config.PREFIX}insta
+  ⇝ ${config.PREFIX}movie
+
 ⋗ 𝙁𝙞𝙡𝙚𝙨:
   ⇝ ${config.PREFIX}dl <url>
   ⇝ ${config.PREFIX}mediafire
@@ -121,6 +126,7 @@ cmd(
 ⨳ ${config.PREFIX}anime
 ⨳ ${config.PREFIX}img
 ⨳ ${config.PREFIX}weather
+⨳ ${config.PREFIX}movie
 
 ╭─⊳⋅✞ 𝓡𝓔𝓵𝓲𝓰𝓲𝓸𝓷⋅⊲─╮
 ⤞ ${config.PREFIX}bible 
@@ -162,11 +168,31 @@ cmd(
 ⤷ ${config.PREFIX}epdownload
 ⤷ ${config.PREFIX}hentai
 
+╭─⊳⋅👨‍💻 𝓓𝓔𝓥𝓢 ⋅⊲─╮
+✏ ${config.PREFIX}gitclone
+
+╭─⊳⋅😜 𝓕𝓤𝓝 ⋅⊲─╮
+✘ ${config.PREFIX}quote
+✘ ${config.PREFIX}jokes
+
 
 ✧⋄⋆⋅⋆⋄✧⋄⋆⋅⋆⋄✧⋄⋆⋅⋆⋄✧
  *HANS BYTE MD*
 ✧⋄⋆⋅⋆⋄✧⋄⋆⋅⋆⋄✧⋄⋆⋅⋆⋄✧
+
 `;
+      
+      const newsletterContext = {
+        mentionedJid: [sender],
+        forwardingScore: 1000,
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+          newsletterJid: '120363292876277898@newsletter',
+          newsletterName: "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
+          serverMessageId: 143,
+        },
+      };
+
       await robin.sendMessage(
         from,
         {
@@ -174,6 +200,7 @@ cmd(
             url: "https://i.ibb.co/6Rxhg321/Chat-GPT-Image-Mar-30-2025-03-39-42-AM.png",
           },
           caption: madeMenu,
+          contextInfo: newsletterContext,
         },
         { quoted: mek }
       );

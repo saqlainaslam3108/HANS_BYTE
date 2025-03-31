@@ -1,46 +1,26 @@
-const { cmd, commands } = require('../command');
+const { cmd } = require('../command');
 const fetch = require('node-fetch');
-const fs = require('fs');
-const path = require('path');
-const https = require('https');
 
 cmd({
     pattern: "spotify",
-    alias: ["spdl", "spotifydl"],
+    alias: ["spotdl", "music"],
     react: "🎵",
-    desc: "Download Spotify tracks",
-    category: "download",
+    desc: "🎶 𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱 𝗦𝗽𝗼𝘁𝗶𝗳𝘆 𝗧𝗿𝗮𝗰𝗸",
+    category: "📁 𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱",
     filename: __filename
 },
-async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+async (conn, mek, m, { from, quoted, q, reply, sender }) => {
     try {
-        // Check if the prompt (Spotify URL) is provided
-        if (!q) {
-            return reply("*❌ Please provide a valid Spotify track URL!*\nExample: `.spotify <URL>`");
-        }
+        if (!q) return reply("❌ *𝙋𝙡𝙚𝙖𝙨𝙚 𝙥𝙧𝙤𝙫𝙞𝙙𝙚 𝙖 𝙑𝘼𝙇𝙄𝘿 𝙎𝙥𝙤𝙩𝙞𝙛𝙮 𝙏𝙧𝙖𝙘𝙠 𝙐𝙍𝙇!* ❌");
 
-        // Validate URL (basic check)
-        if (!q.startsWith("https://open.spotify.com/track/")) {
-            return reply("*❌ Invalid Spotify track URL!*");
-        }
+        const res = await fetch(`https://apis.davidcyriltech.my.id/spotifydl?url=${encodeURIComponent(q)}`);
+        const data = await res.json();
+        
+        if (!data.success) return reply("❌ *𝙁𝙖𝙞𝙡𝙚𝙙 𝙩𝙤 𝙛𝙚𝙩𝙘𝙝 𝙎𝙥𝙤𝙩𝙞𝙛𝙮 𝙩𝙧𝙖𝙘𝙠.* ❌");
 
-        const apiUrl = `https://apis.davidcyriltech.my.id/spotifydl?url=${encodeURIComponent(q)}`;
-        const response = await fetch(apiUrl);
-        const data = await response.json();
+        // Check the API response structure
+        console.log(JSON.stringify(data, null, 2)); // Log the response for debugging
 
-        if (data.status !== 200 || !data.success) return reply("❌ Failed to fetch the Spotify track.");
-
-        const trackInfo = {
-            title: data.title || 'Unknown Title',
-            channel: data.channel || 'Unknown Channel',
-            duration: data.duration || 'Unknown Duration',
-            thumbnail: data.thumbnail || '',
-            downloadLink: data.DownloadLink || ''
-        };
-
-        if (!trackInfo.downloadLink) return reply("❌ No download link found for this track.");
-
-        // Newsletter context info
         const newsletterContext = {
             mentionedJid: [sender],
             forwardingScore: 1000,
@@ -53,51 +33,39 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
         };
 
         let desc = `
-╔══✦❘༻ *HANS BYTE* ༺❘✦══╗
-┇  🎶 *𝗦𝗣𝗢𝗧𝗜𝗙𝗬 𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗𝗘𝗥* 🎶
-┇╭───────────────────
-┇│•🎧 𝗧𝗶𝘁𝗹𝗲: ${trackInfo.title} 
-┇│•🎤 𝗖𝗵𝗮𝗻𝗻𝗲𝗹: ${trackInfo.channel}
-┇│•⏳ 𝗗𝘂𝗿𝗮𝘁𝗶𝗼𝗻: ${trackInfo.duration}
-┇│•🌐 𝗟𝗶𝗻𝗸: ${q}
-╰─・─・─・─・─・─・─・─╯
-╭━✦❘༻ 𝗦𝗢𝗡𝗚 𝗜𝗡𝗙𝗢 ༺❘✦━╮
-│•🔗 𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗 𝗟𝗜𝗡𝗞: ${trackInfo.downloadLink}
-╰━✦❘༻ *HANS BYTE* ༺❘✦━╯
-> POWERED BY HANS BYTE MD `;
+╭═══〘 *🎵 𝗦𝗽𝗼𝘁𝗶𝗳𝘆 𝗧𝗿𝗮𝗰𝗸 𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱* 〙═══⊷❍
+┃ 🎶 *𝙏𝙞𝙩𝙡𝙚:*  *『 ${data.title} 』*
+┃ 🎤 *𝘼𝙧𝙩𝙞𝙨𝙩:* *『 ${data.artist || data.channel} 』*
+┃ ⏳ *𝘿𝙪𝙧𝙖𝙩𝙞𝙤𝙣:* *『 ${data.duration} 』*
+┃ 📥 *𝘿𝙤𝙬𝙣𝙡𝙤𝙖𝙙 𝙨𝙩𝙖𝙧𝙩𝙚𝙙...*
+╰──━──━──━──━──━──━──━──━──━─╯
 
-        // Send the description and thumbnail as an image first
-        await conn.sendMessage(from, {
-            image: { url: trackInfo.thumbnail },
-            caption: desc,
-            contextInfo: newsletterContext
-        }, { quoted: mek });
+*🔰 𝗣𝗼𝘄𝗲𝗿𝗲𝗱 𝗯𝘆 𝗛𝗮𝗻𝘀 𝗕𝘆𝘁𝗲 𝗠𝗗* ⚡`;
 
-        // Now, download the MP3 file from the provided DownloadLink
-        const filePath = path.join(__dirname, 'spotify_track.mp3');
-        const fileStream = fs.createWriteStream(filePath);
-
-        https.get(trackInfo.downloadLink, (res) => {
-            res.pipe(fileStream);
-
-            fileStream.on('finish', async () => {
-                // Send the downloaded file as a message after sending the metadata
-                await conn.sendMessage(from, {
-                    audio: { url: filePath }, 
-                    caption: `Enjoy the track! 🎶 - ${trackInfo.title}`,
-                    contextInfo: newsletterContext
-                }, { quoted: mek });
-
-                // Clean up the downloaded file after sending it
-                fs.unlinkSync(filePath);
-            });
-        }).on('error', (err) => {
-            console.error('Error downloading the file:', err);
-            reply("⚠️ Error downloading the Spotify track.");
-        });
-
+        await conn.sendMessage(
+            from, 
+            { 
+                image: { url: data.thumbnail }, 
+                caption: desc,
+                contextInfo: newsletterContext
+            }, 
+            { quoted: mek }
+        );
+        
+        await conn.sendMessage(
+            from, 
+            { 
+                audio: { url: data.DownloadLink || data.downloadUrl }, 
+                mimetype: "audio/mpeg", 
+                fileName: `『 ${data.title} 』.mp3`, 
+                caption: "✅ *𝗠𝘂𝘀𝗶𝗰 𝗨𝗽𝗹𝗼𝗮𝗱𝗲𝗱 𝗦𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹𝗹𝘆!* ✅\n🔰 *𝗣𝗼𝘄𝗲𝗿𝗲𝗱 𝗯𝘆 𝗛𝗮𝗻𝘀 𝗕𝘆𝘁𝗲 𝗠𝗗* ⚡",
+                contextInfo: newsletterContext
+            }, 
+            { quoted: mek }
+        );
+        
     } catch (e) {
-        console.error("Error fetching Spotify track:", e);
-        reply("⚠️ Error fetching the Spotify track.");
+        console.error(e);
+        reply("❌ *𝘼𝙣 𝙚𝙧𝙧𝙤𝙧 𝙤𝙘𝙘𝙪𝙧𝙧𝙚𝙙 𝙬𝙝𝙞𝙡𝙚 𝙛𝙚𝙩𝙘𝙝𝙞𝙣𝙜 𝙩𝙝𝙚 𝙎𝙥𝙤𝙩𝙞𝙛𝙮 𝙩𝙧𝙖𝙘𝙠.* ❌");
     }
 });

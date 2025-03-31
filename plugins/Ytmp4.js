@@ -1,110 +1,196 @@
-const { cmd, commands } = require("../command");
-const axios = require("axios");
-const yts = require("yt-search");
+const { cmd } = require('../command');
+const yts = require('yt-search');
+const fetch = require('node-fetch');
+const fs = require('fs');
+const ffmpeg = require('fluent-ffmpeg');
+const { promisify } = require('util');
+const path = require('path');
+const pipeline = promisify(require('stream').pipeline);
 
+// Configure paths
+ffmpeg.setFfmpegPath(process.env.FFMPEG_PATH || 'ffmpeg');
+const tempDir = path.join(__dirname, '../temp');
+
+// Newsletter context configuration
+const newsletterContext = {
+    mentionedJid: [], // Can add specific JIDs if needed
+    forwardingScore: 1000,
+    isForwarded: true,
+    forwardedNewsletterMessageInfo: {
+        newsletterJid: '120363292876277898@newsletter',
+        newsletterName: "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
+        serverMessageId: 143,
+    }
+};
+
+//====== Song Command (YTMP3 via conversion) ======
 cmd({
-    pattern: "ytmp4",
-    react: '📽️',
-    alias: ["video", "playvid"],
-    desc: "Download video from YouTube",
-    category: "media",
+    pattern: "song",
+    alias: ['play', 'ytmp3'],
+    react: "🎵",
+    desc: "Download audio from YouTube",
+    category: "download",
     filename: __filename
 },
-async(robin, mek, m, {from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+async (conn, mek, m, { from, q, reply, sender }) => {
     try {
-        if (!q) return reply("Please provide a YouTube URL or search query");
+        if (!q) return reply("*❌ Please provide a song title or YouTube URL*");
+        
+        // Search YouTube
+        const search = await yts(q);
+        const video = search.videos[0];
+        if (!video) return reply("*❌ No results found*");
 
-        // Check if input is YouTube URL or search query
-        const isYoutubeUrl = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)/.test(q);
-        let videoUrl, videoInfo;
+        // Prepare newsletter context
+        const messageContext = {
+            ...newsletterContext,
+            mentionedJid: [sender]
+        };
 
-        if (isYoutubeUrl) {
-            videoUrl = q;
-            await reply("📥 Processing YouTube URL...");
-            
-            // Get video info directly from URL
-            const searchResults = await yts({ videoId: videoUrl.split(/v=|\//).pop().split("&")[0] });
-            videoInfo = {
-                title: searchResults.title,
-                url: videoUrl,
-                thumbnail: searchResults.thumbnail,
-                views: searchResults.views,
-                duration: searchResults.duration.timestamp,
-                uploaded: searchResults.ago,
-                channel: searchResults.author.name
-            };
-        } else {
-            await reply("🔍 Searching YouTube...");
-            const searchResults = await yts(q);
-            if (!searchResults.videos.length) return reply("❌ No results found");
-            
-            const video = searchResults.videos[0];
-            videoUrl = video.url;
-            videoInfo = {
-                title: video.title,
-                url: video.url,
-                thumbnail: video.thumbnail,
-                views: video.views,
-                duration: video.duration.timestamp,
-                uploaded: video.ago,
-                channel: video.author.name
-            };
+        // Send video info with newsletter context
+        const infoMsg = `
+╭════════════⊷❍
+│
+│ *🎵 MUSIC DOWNLOADER*
+│──────────────────────
+│ 📌 Title: ${video.title}
+│ 👤 Artist: ${video.author.name}
+│ ⏱️ Duration: ${video.timestamp}
+│ 📊 Views: ${video.views}
+╰──────────●●►
+*🔊 Downloaded via HANS BYTE MD*`.trim();
+
+        await conn.sendMessage(from, {
+            image: { url: video.thumbnail },
+            caption: infoMsg,
+            contextInfo: messageContext
+        }, { quoted: mek });
+
+        // Get video download URL
+        const apiResponse = await fetch(`https://apis.davidcyriltech.my.id/download/ytmp4?url=${encodeURIComponent(video.url)}`);
+        const videoData = await apiResponse.json();
+        
+        if (!videoData.success || !videoData.result?.download_url) {
+            return reply("*❌ Failed to get video download link*");
         }
 
-        // Fetch video download link
-        const apiUrl = `https://apis.davidcyriltech.my.id/download/ytmp4?url=${encodeURIComponent(videoUrl)}`;
-        const response = await axios.get(apiUrl);
+        // Create temp files
+        const tempVideo = path.join(tempDir, `${Date.now()}_video.mp4`);
+        const tempAudio = path.join(tempDir, `${Date.now()}_audio.mp3`);
 
-        if (!response.data.success || !response.data.result?.download_url) {
-            return reply("❌ Failed to fetch video download link");
-        }
+        // Download video
+        const videoRes = await fetch(videoData.result.download_url);
+        await pipeline(videoRes.body, fs.createWriteStream(tempVideo));
 
-        const { title, download_url } = response.data.result;
+        // Convert to MP3
+        await new Promise((resolve, reject) => {
+            ffmpeg(tempVideo)
+                .audioCodec('libmp3lame')
+                .audioBitrate(128)
+                .output(tempAudio)
+                .on('end', resolve)
+                .on('error', reject)
+                .run();
+        });
 
-        // Prepare info message
-        const infoMessage = `
-╔══════════════════╗
-   🎥 𝗩𝗜𝗗𝗘𝗢 𝗜𝗡𝗙𝗢
-╚══════════════════╝
+        // Read converted audio
+        const audioBuffer = fs.readFileSync(tempAudio);
 
-📌 𝗧𝗜𝗧𝗟𝗘: ${videoInfo.title}
+        // Send audio with newsletter context
+        await conn.sendMessage(from, {
+            audio: audioBuffer,
+            mimetype: 'audio/mpeg',
+            caption: "*🎵 HANS BYTE MD*",
+            contextInfo: messageContext
+        }, { quoted: mek });
 
-⏳ 𝗗𝗨𝗥𝗔𝗧𝗜𝗢𝗡: ${videoInfo.duration}
-👀 𝗩𝗜𝗘𝗪𝗦: ${videoInfo.views.toLocaleString()}
-📅 𝗨𝗣𝗟𝗢𝗔𝗗𝗘𝗗: ${videoInfo.uploaded}
-📺 𝗖𝗛𝗔𝗡𝗡𝗘𝗟: ${videoInfo.channel}
+        // Send as document with newsletter context
+        await conn.sendMessage(from, {
+            document: audioBuffer,
+            mimetype: 'audio/mpeg',
+            fileName: `${video.title}.mp3`,
+            caption: "*📁 HANS BYTE MD*",
+            contextInfo: messageContext
+        }, { quoted: mek });
 
-🔗 𝗟𝗜𝗡𝗞: ${videoInfo.url}
-
-╔══════════════════╗
-  ✦ 𝗛𝗮𝗻𝘀 𝗕𝘆𝘁𝗲 𝗠𝗗 ✦
-╚══════════════════╝
-        `.trim();
-
-        // Send thumbnail with video info
-        await robin.sendMessage(
-            from,
-            {
-                image: { url: videoInfo.thumbnail },
-                caption: infoMessage
-            },
-            { quoted: mek }
-        );
-
-        // Send video file
-        await robin.sendMessage(
-            from,
-            {
-                video: { url: download_url },
-                mimetype: "video/mp4",
-                caption: `📥 ${title}`,
-                fileName: `${title}.mp4`
-            },
-            { quoted: mek }
-        );
+        // Cleanup
+        [tempVideo, tempAudio].forEach(file => {
+            if (fs.existsSync(file)) fs.unlinkSync(file);
+        });
 
     } catch (error) {
-        console.error("YTMP4 Error:", error);
-        reply("❌ Error processing request. Please try again later.");
+        console.error('Song Error:', error);
+        reply(`*❌ Error:* ${error.message}`);
+    }
+});
+
+//====== Video Command (YTMP4) ======
+cmd({
+    pattern: "video",
+    alias: ['ytmp4', 'youtube'],
+    react: "🎥",
+    desc: "Download video from YouTube",
+    category: "download",
+    filename: __filename
+},
+async (conn, mek, m, { from, q, reply, sender }) => {
+    try {
+        if (!q) return reply("*❌ Please provide a video title or YouTube URL*");
+        
+        const search = await yts(q);
+        const video = search.videos[0];
+        if (!video) return reply("*❌ No results found*");
+
+        const messageContext = {
+            ...newsletterContext,
+            mentionedJid: [sender]
+        };
+
+        const infoMsg = `
+╭════════════⊷❍
+│
+│ *🎥 Video Downloader*
+│──────────────────────
+│ 📌 Title: ${video.title}
+│ 👤 Channel: ${video.author.name}
+│ ⏱️ Duration: ${video.timestamp}
+│ 📊 Views: ${video.views}
+╰──────────●●►
+*📥 Downloaded via HANS BYTE MD*`.trim();
+
+        await conn.sendMessage(from, {
+            image: { url: video.thumbnail },
+            caption: infoMsg,
+            contextInfo: messageContext
+        }, { quoted: mek });
+
+        // Get video URL
+        const apiResponse = await fetch(`https://apis.davidcyriltech.my.id/download/ytmp4?url=${encodeURIComponent(video.url)}`);
+        const videoData = await apiResponse.json();
+        
+        if (!videoData.success || !videoData.result?.download_url) {
+            return reply("*❌ Failed to get video download link*");
+        }
+
+        // Send video with newsletter context
+        await conn.sendMessage(from, {
+            video: { url: videoData.result.download_url },
+            mimetype: 'video/mp4',
+            caption: "*🎥 HANS BYTE MD*",
+            contextInfo: messageContext
+        }, { quoted: mek });
+
+        // Send as document
+        await conn.sendMessage(from, {
+            document: { url: videoData.result.download_url },
+            mimetype: 'video/mp4',
+            fileName: `${video.title}.mp4`,
+            caption: "*📁 HANS BYTE MD*",
+            contextInfo: messageContext
+        }, { quoted: mek });
+
+    } catch (error) {
+        console.error('Video Error:', error);
+        reply(`*❌ Error:* ${error.message}`);
     }
 });
