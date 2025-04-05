@@ -33,22 +33,26 @@ cmd({
     filename: __filename
 },
 async (conn, mek, m, { from, q, reply, sender }) => {
-    try {
-        if (!q) return reply("*❌ Please provide a song title or YouTube URL*");
-        
-        // Search YouTube
-        const search = await yts(q);
-        const video = search.videos[0];
-        if (!video) return reply("*❌ No results found*");
+    const retryLimit = 3; // Maximum number of retries
+    let attempt = 0;
 
-        // Prepare newsletter context
-        const messageContext = {
-            ...newsletterContext,
-            mentionedJid: [sender]
-        };
+    const fetchAudio = async () => {
+        try {
+            if (!q) return reply("*❌ Please provide a song title or YouTube URL*");
+            
+            // Search YouTube
+            const search = await yts(q);
+            const video = search.videos[0];
+            if (!video) return reply("*❌ No results found*");
 
-        // Send video info with newsletter context
-        const infoMsg = `
+            // Prepare newsletter context
+            const messageContext = {
+                ...newsletterContext,
+                mentionedJid: [sender]
+            };
+
+            // Send video info with newsletter context
+            const infoMsg = `
 ╭════════════⊷❍
 │
 │ *🎵 MUSIC DOWNLOADER*
@@ -60,68 +64,79 @@ async (conn, mek, m, { from, q, reply, sender }) => {
 ╰──────────●●►
 *🔊 Downloaded via HANS BYTE MD*`.trim();
 
-        await conn.sendMessage(from, {
-            image: { url: video.thumbnail },
-            caption: infoMsg,
-            contextInfo: messageContext
-        }, { quoted: mek });
+            await conn.sendMessage(from, {
+                image: { url: video.thumbnail },
+                caption: infoMsg,
+                contextInfo: messageContext
+            }, { quoted: mek });
 
-        // Get video download URL
-        const apiResponse = await fetch(`https://apis.davidcyriltech.my.id/download/ytmp4?url=${encodeURIComponent(video.url)}`);
-        const videoData = await apiResponse.json();
-        
-        if (!videoData.success || !videoData.result?.download_url) {
-            return reply("*❌ Failed to get video download link*");
+            // Get video download URL
+            const apiResponse = await fetch(`https://apis.davidcyriltech.my.id/download/ytmp4?url=${encodeURIComponent(video.url)}`);
+            const videoData = await apiResponse.json();
+            
+            if (!videoData.success || !videoData.result?.download_url) {
+                return reply("*❌ Failed to get video download link*");
+            }
+
+            // Create temp files
+            const tempVideo = path.join(tempDir, `${Date.now()}_video.mp4`);
+            const tempAudio = path.join(tempDir, `${Date.now()}_audio.mp3`);
+
+            // Download video
+            const videoRes = await fetch(videoData.result.download_url);
+            await pipeline(videoRes.body, fs.createWriteStream(tempVideo));
+
+            // Convert to MP3
+            await new Promise((resolve, reject) => {
+                ffmpeg(tempVideo)
+                    .audioCodec('libmp3lame')
+                    .audioBitrate(128)
+                    .output(tempAudio)
+                    .on('end', resolve)
+                    .on('error', reject)
+                    .run();
+            });
+
+            // Read converted audio
+            const audioBuffer = fs.readFileSync(tempAudio);
+
+            // Send audio with newsletter context
+            await conn.sendMessage(from, {
+                audio: audioBuffer,
+                mimetype: 'audio/mpeg',
+                caption: "*🎵 HANS BYTE MD*",
+                contextInfo: messageContext
+            }, { quoted: mek });
+
+            // Send as document with newsletter context
+            await conn.sendMessage(from, {
+                document: audioBuffer,
+                mimetype: 'audio/mpeg',
+                fileName: `${video.title}.mp3`,
+                caption: "*📁 HANS BYTE MD*",
+                contextInfo: messageContext
+            }, { quoted: mek });
+
+            // Cleanup
+            [tempVideo, tempAudio].forEach(file => {
+                if (fs.existsSync(file)) fs.unlinkSync(file);
+            });
+
+        } catch (error) {
+            console.error('Song Error:', error);
+            attempt++;
+
+            if (attempt < retryLimit) {
+                console.log(`Retrying... Attempt ${attempt + 1}`);
+                await fetchAudio(); // Retry on failure
+            } else {
+                reply(`*❌ Error:* ${error.message}`);
+            }
         }
+    };
 
-        // Create temp files
-        const tempVideo = path.join(tempDir, `${Date.now()}_video.mp4`);
-        const tempAudio = path.join(tempDir, `${Date.now()}_audio.mp3`);
-
-        // Download video
-        const videoRes = await fetch(videoData.result.download_url);
-        await pipeline(videoRes.body, fs.createWriteStream(tempVideo));
-
-        // Convert to MP3
-        await new Promise((resolve, reject) => {
-            ffmpeg(tempVideo)
-                .audioCodec('libmp3lame')
-                .audioBitrate(128)
-                .output(tempAudio)
-                .on('end', resolve)
-                .on('error', reject)
-                .run();
-        });
-
-        // Read converted audio
-        const audioBuffer = fs.readFileSync(tempAudio);
-
-        // Send audio with newsletter context
-        await conn.sendMessage(from, {
-            audio: audioBuffer,
-            mimetype: 'audio/mpeg',
-            caption: "*🎵 HANS BYTE MD*",
-            contextInfo: messageContext
-        }, { quoted: mek });
-
-        // Send as document with newsletter context
-        await conn.sendMessage(from, {
-            document: audioBuffer,
-            mimetype: 'audio/mpeg',
-            fileName: `${video.title}.mp3`,
-            caption: "*📁 HANS BYTE MD*",
-            contextInfo: messageContext
-        }, { quoted: mek });
-
-        // Cleanup
-        [tempVideo, tempAudio].forEach(file => {
-            if (fs.existsSync(file)) fs.unlinkSync(file);
-        });
-
-    } catch (error) {
-        console.error('Song Error:', error);
-        reply(`*❌ Error:* ${error.message}`);
-    }
+    // Call the fetchAudio function for the first time
+    await fetchAudio();
 });
 
 //====== Video Command (YTMP4) ======
@@ -134,19 +149,24 @@ cmd({
     filename: __filename
 },
 async (conn, mek, m, { from, q, reply, sender }) => {
-    try {
-        if (!q) return reply("*❌ Please provide a video title or YouTube URL*");
-        
-        const search = await yts(q);
-        const video = search.videos[0];
-        if (!video) return reply("*❌ No results found*");
+    const retryLimit = 3; // Maximum number of retries
+    let attempt = 0;
 
-        const messageContext = {
-            ...newsletterContext,
-            mentionedJid: [sender]
-        };
+    // Retry function
+    const fetchVideo = async () => {
+        try {
+            if (!q) return reply("*❌ Please provide a video title or YouTube URL*");
 
-        const infoMsg = `
+            const search = await yts(q);
+            const video = search.videos[0];
+            if (!video) return reply("*❌ No results found*");
+
+            const messageContext = {
+                ...newsletterContext,
+                mentionedJid: [sender]
+            };
+
+            const infoMsg = `
 ╭════════════⊷❍
 │
 │ *🎥 Video Downloader*
@@ -158,39 +178,50 @@ async (conn, mek, m, { from, q, reply, sender }) => {
 ╰──────────●●►
 *📥 Downloaded via HANS BYTE MD*`.trim();
 
-        await conn.sendMessage(from, {
-            image: { url: video.thumbnail },
-            caption: infoMsg,
-            contextInfo: messageContext
-        }, { quoted: mek });
+            await conn.sendMessage(from, {
+                image: { url: video.thumbnail },
+                caption: infoMsg,
+                contextInfo: messageContext
+            }, { quoted: mek });
 
-        // Get video URL
-        const apiResponse = await fetch(`https://apis.davidcyriltech.my.id/download/ytmp4?url=${encodeURIComponent(video.url)}`);
-        const videoData = await apiResponse.json();
-        
-        if (!videoData.success || !videoData.result?.download_url) {
-            return reply("*❌ Failed to get video download link*");
+            // Get video URL
+            const apiResponse = await fetch(`https://apis.davidcyriltech.my.id/download/ytmp4?url=${encodeURIComponent(video.url)}`);
+            const videoData = await apiResponse.json();
+
+            if (!videoData.success || !videoData.result?.download_url) {
+                return reply("*❌ Failed to get video download link*");
+            }
+
+            // Send video with newsletter context
+            await conn.sendMessage(from, {
+                video: { url: videoData.result.download_url },
+                mimetype: 'video/mp4',
+                caption: "*🎥 HANS BYTE MD*",
+                contextInfo: messageContext
+            }, { quoted: mek });
+
+            // Send as document
+            await conn.sendMessage(from, {
+                document: { url: videoData.result.download_url },
+                mimetype: 'video/mp4',
+                fileName: `${video.title}.mp4`,
+                caption: "*📁 HANS BYTE MD*",
+                contextInfo: messageContext
+            }, { quoted: mek });
+
+        } catch (error) {
+            console.error('Video Error:', error);
+            attempt++;
+
+            if (attempt < retryLimit) {
+                console.log(`Retrying... Attempt ${attempt + 1}`);
+                await fetchVideo(); // Retry on failure
+            } else {
+                reply(`*❌ Error:* ${error.message}`);
+            }
         }
+    };
 
-        // Send video with newsletter context
-        await conn.sendMessage(from, {
-            video: { url: videoData.result.download_url },
-            mimetype: 'video/mp4',
-            caption: "*🎥 HANS BYTE MD*",
-            contextInfo: messageContext
-        }, { quoted: mek });
-
-        // Send as document
-        await conn.sendMessage(from, {
-            document: { url: videoData.result.download_url },
-            mimetype: 'video/mp4',
-            fileName: `${video.title}.mp4`,
-            caption: "*📁 HANS BYTE MD*",
-            contextInfo: messageContext
-        }, { quoted: mek });
-
-    } catch (error) {
-        console.error('Video Error:', error);
-        reply(`*❌ Error:* ${error.message}`);
-    }
+    // Call the fetchVideo function for the first time
+    await fetchVideo();
 });

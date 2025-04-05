@@ -125,3 +125,27 @@ cmd({
     return reply("❌ An error occurred while searching for GIFs. Please try again later.\n\nPowered by HANS BYTE MD");
   }
 });
+
+cmd({
+  pattern: "attp",
+  desc: "Convert text to a GIF sticker.",
+  react: "🪀",
+  category: "convert",
+  use: ".attp HI",
+  filename: __filename,
+}, async (conn, mek, m, { args, reply }) => {
+  try {
+      if (!args.length) return reply("*Please provide text!*");
+
+      const text = args.join(" ");
+      const styledText = stylishText(text);
+
+      // API call with proper URL encoding
+      const gifBuffer = await fetchGif(`https://api.nexoracle.com/image-creating/attp?apikey=2f9b02060a600d6c88&text=${encodeURIComponent(styledText)}`);
+      const stickerBuffer = await gifToSticker(gifBuffer);
+
+      await conn.sendMessage(m.chat, { sticker: stickerBuffer }, { quoted: mek });
+  } catch (error) {
+      reply(`❌ ${error.message}`);
+  }
+});

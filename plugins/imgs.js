@@ -1,5 +1,6 @@
-const { cmd } = require('../command'); // Ensure the path is correct
-const g_i_s = require('g-i-s'); // Import g-i-s for image search
+const { cmd, commands } = require('../command'); // Ensure the path is correct
+const fetch = require('node-fetch');
+const g_i_s = require('g-i-s');
 
 cmd({
     pattern: "img",
@@ -10,20 +11,33 @@ cmd({
     use: '.imgsearch <query>',
     filename: __filename
 },
-async(conn, mek, m, { from, reply, q }) => {
+async (conn, mek, m, { from, reply, q, sender }) => {
+    if (!q || !q.trim()) {
+        return await reply("Please provide a search query!");
+    }
+    
     try {
-        if (!q) return await reply("Please provide a search query!");
-
         g_i_s(q, (error, result) => {
             if (error || !result.length) return reply("No images found!");
-
+            
+            // Newsletter context info
+            const newsletterContext = {
+                mentionedJid: [sender],
+                forwardingScore: 1000,
+                isForwarded: true,
+                forwardedNewsletterMessageInfo: {
+                    newsletterJid: '120363292876277898@newsletter',
+                    newsletterName: "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
+                    serverMessageId: 143,
+                },
+            };
+            
             // Send the first 5 images
             const imageUrls = result.slice(0, 5).map(img => img.url);
             imageUrls.forEach(async (url) => {
-                await conn.sendMessage(from, { image: { url } }, { quoted: mek });
+                await conn.sendMessage(from, { image: { url }, contextInfo: newsletterContext }, { quoted: mek });
             });
         });
-
     } catch (error) {
         console.error(error);
         reply('An error occurred while processing your request. Please try again later.');
