@@ -1,31 +1,113 @@
 {
-  "name": "❤️VORTEX_MD❤️",
-  "description": "Powerful whatsapp bot made by Pansilu Nethmina",
-  "logo": "https://i.imgur.com/ifSvQyk.jpg",
-  "keywords": ["bot"],
-  "success_url": "/",
-
+  "name": "hans-byte-md",
+  "description": "A bot app with features for media processing, auto-reactions, and more",
+  "repository": "https://github.com/HaroldMth/HANS_BYTE",
+  "logo": "https://i.ibb.co/6Rxhg321/Chat-GPT-Image-Mar-30-2025-03-39-42-AM.png",
+  "keywords": [
+    "nodejs",
+    "bot",
+    "media-processing",
+    "auto-reaction",
+    "whatsapp-bot",
+    "telegram-bot",
+    "automation",
+    "chatbot",
+    "sticker-generator",
+    "movie-api",
+    "OMDB"
+  ],
   "env": {
     "SESSION_ID": {
-      "description": "Put the session-id here.",
-      "required": true
-    },  
-
-    "ALIVE_IMG": {
-      "description": "Put your alive img here.",
-      "required": true
+      "description": "Session ID for the bot",
+      "value": "vZcEjZQa#QIZ5gyh8SdXsuvzOTT8jO0CU97ZLLtCStG6k_SHnqzI"
     },
-    
+    "SUDO": {
+      "description": "Admin/Sudo number",
+      "value": "237696900612"
+    },
+    "OWNER_NUM": {
+      "description": "Owner's phone number",
+      "value": "237680260772"
+    },
+    "OWNER_NAME": {
+      "description": "Owner's name",
+      "value": "HANS TECH"
+    },
+    "OWNER_EMAIL": {
+      "description": "Owner's email",
+      "value": "your@email.com"
+    },
+    "OWNER_LOCATION": {
+      "description": "Owner's location",
+      "value": "Africa/Douala"
+    },
+    "OWNER_GITHUB": {
+      "description": "Owner's GitHub profile URL",
+      "value": "https://github.com/HansTech1"
+    },
+    "OMDB_API_KEY": {
+      "description": "OMDB API key",
+      "value": "5e339fb7"
+    },
+    "GEMINI_API_KEY": {
+      "description": "Gemini API key",
+      "value": "AIzaSyDrhALyWLk7RN40C1sX5a03XVk8tO48P_8"
+    },
+    "MOVIE_API_KEY": {
+      "description": "Movie API key",
+      "value": "sky|d154108e41377cceb22ef92434509bc9081ae46b"
+    },
+    "BOT_NAME": {
+      "description": "Bot's name",
+      "value": "𝙃𝘼𝙉𝙎-𝙗𝙮𝙩𝙚"
+    },
+    "PREFIX": {
+      "description": "Command prefix for the bot",
+      "value": "."
+    },
+    "MODE": {
+      "description": "Bot mode (public/private)",
+      "value": "public"
+    },
+    "VERSION": {
+      "description": "Bot version",
+      "value": "𝙑3.2.1"
+    },
+    "STATUS_MESSAGE": {
+      "description": "Bot's status message",
+      "value": "🚀 𝙋𝙤𝙬𝙚𝙧𝙚𝙙 𝙗𝙮 𝙃𝘼𝙉𝙎-𝙗𝙮𝙩𝙚"
+    },
+    "ALIVE_IMG": {
+      "description": "Image URL for the bot's alive message",
+      "value": "https://i.ibb.co/6Rxhg321/Chat-GPT-Image-Mar-30-2025-03-39-42-AM.png"
+    },
     "ALIVE_MSG": {
-      "description": "Put your alive msg here.",
-      "required": true
-    }   
-},
-
-     "buildpacks": [
-        {
-            "url": "https://github.com/heroku/heroku-buildpack-nodejs.git"
-        }
-     ],
-  "stack": "heroku-24"
+      "description": "Message when bot is alive",
+      "value": "Hello , I am alive now!!"
+    },
+    "STICKER_PACKNAME": {
+      "description": "Sticker pack name",
+      "value": "HANS BYTE MD"
+    },
+    "STICKER_AUTHOR": {
+      "description": "Sticker author name",
+      "value": "HANS TECH"
+    },
+    "GROUP_PP_SIZE": {
+      "description": "Group profile picture size",
+      "value": 512
+    },
+    "USER_PP_SIZE": {
+      "description": "User profile picture size",
+      "value": 640
+    },
+    "GITHUB": {
+      "description": "GitHub username",
+      "value": "HaroldMth"
+    },
+    "TIMEZONE": {
+      "description": "Timezone",
+      "value": "𝙒𝘼𝙏+1"
+    }
+  }
 }
