@@ -8,7 +8,18 @@
   <h1>🚀 Next-Gen WhatsApp Bot with Enhanced Features</h1>
 </div>
 
-<div align="center"> <a href="https://whatsapp.com/channel/0029VaZDIdxDTkKB4JSWUk1O"> <img src="https://img.shields.io/badge/Join_WhatsApp_Channel-25D366?style=for-the-badge&logo=whatsapp"/> </a> <br> <img src="https://profile-counter.glitch.me/HANS_BYTE/count.svg" alt="Haroldmth :: Visitor's Count" old_src="https://profile-counter.glitch.me/HaroldMth/count.svg" /></p>
+<p align="center">
+<a href="https://github.com/HaroldMth/followers"><img title="Followers" src="https://img.shields.io/github/followers/SuhailTechInfo?color=blue&style=flat-square"></a>
+<a href="https://github.com/HaroldMth/HANS_BYTE/stargazers/"><img title="Stars" src="https://img.shields.io/github/stars/SuhailTechInfo/Suhail-Md-3?color=blue&style=flat-square"></a>
+<a href="https://github.com/HaroldMth/HANS_BYTE/network/members"><img title="Forks" src="https://img.shields.io/github/forks/SuhailTechInfo/Suhail-Md-3?color=blue&style=flat-square"></a>
+<a href="https://github.com/HaroldMth/HANS_BYTE/"><img title="Size" src="https://img.shields.io/github/repo-size/SuhailTechInfo/Suhail-Md-3?style=flat-square&color=green"></a>
+<a href="https://github.com/HaroldMth/HANS_BYTE/graphs/commit-activity"><img height="20" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg"></a>&nbsp;&nbsp;
+</p>
+<p align='center'>
+</p>
+
+<div align="center"> <a href="https://whatsapp.com/channel/0029VaZDIdxDTkKB4JSWUk1O"> <img src="https://img.shields.io/badge/Join_WhatsApp_Channel-25D366?style=for-the-badge&logo=whatsapp"/> </a> <br>  <p align="center"><img src="https://profile-counter.glitch.me/{HANS_MD}/count.svg" alt="SuhailTechInfo :: Visitor's Count" old_src="https://profile-counter.glitch.me/haroldmth/count.svg" /></p>
+
 ---
 
  ## 🔥 **Features** 
