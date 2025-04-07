@@ -6,6 +6,7 @@ if (fs.existsSync("config.env")) {
   require("dotenv").config({ path: "./config.env" }); // Loads environment variables from config.env
 }
 
+
 // Application Configuration Object
 module.exports = {
   // Session and Owner Information
