@@ -6,7 +6,8 @@
   "scripts": {
     "start": "pm2 start index.js --deep-monitoring --attach --name HANS-BYTE",
     "stop": "pm2 stop HANS-BYTE",
-    "restart": "pm2 restart HANS-BYTE"
+    "restart": "pm2 restart HANS-BYTE",
+    "postinstall": "node -e \"const readline = require('readline'); const fs = require('fs'); const rl = readline.createInterface({ input: process.stdin, output: process.stdout }); rl.question('Enter SESSION_ID: ', session => { rl.question('Enter OWNER_NUM: ', owner => { const config = `module.exports = { SESSION_ID: '${session}', OWNER_NUM: '${owner}' }`; fs.writeFileSync('config.js', config); console.log('config.js created successfully.'); rl.close(); }); });\""
   },
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
