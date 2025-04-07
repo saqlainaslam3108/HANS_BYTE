@@ -302,7 +302,7 @@ Star ⭐ the repo if you love innovation!
 Created with ❤️ by HANS TECH
 
 ### 👥 **Credits**
-Your Name - Core Developer
+[HANS TECH](https://github.com/haroldmth) - Core Developer
 
 Baileys - Library Provider
 
