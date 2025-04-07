@@ -9,10 +9,10 @@
 </div>
 
 <p align="center">
-<a href="https://github.com/HaroldMth/followers"><img title="Followers" src="https://img.shields.io/github/followers/SuhailTechInfo?color=blue&style=flat-square"></a>
-<a href="https://github.com/HaroldMth/HANS_BYTE/stargazers/"><img title="Stars" src="https://img.shields.io/github/stars/SuhailTechInfo/Suhail-Md-3?color=blue&style=flat-square"></a>
-<a href="https://github.com/HaroldMth/HANS_BYTE/network/members"><img title="Forks" src="https://img.shields.io/github/forks/SuhailTechInfo/Suhail-Md-3?color=blue&style=flat-square"></a>
-<a href="https://github.com/HaroldMth/HANS_BYTE/"><img title="Size" src="https://img.shields.io/github/repo-size/SuhailTechInfo/Suhail-Md-3?style=flat-square&color=green"></a>
+<a href="https://github.com/HaroldMth/followers"><img title="Followers" src="https://img.shields.io/github/followers/Haroldmth?color=blue&style=flat-square"></a>
+<a href="https://github.com/HaroldMth/HANS_BYTE/stargazers/"><img title="Stars" src="https://img.shields.io/github/stars/haroldmth/hans_byte?color=blue&style=flat-square"></a>
+<a href="https://github.com/HaroldMth/HANS_BYTE/network/members"><img title="Forks" src="https://img.shields.io/github/forks/Haroldmth/hans_byte?color=blue&style=flat-square"></a>
+<a href="https://github.com/HaroldMth/HANS_BYTE/"><img title="Size" src="https://img.shields.io/github/repo-size/haroldmth/hans_byte?style=flat-square&color=green"></a>
 <a href="https://github.com/HaroldMth/HANS_BYTE/graphs/commit-activity"><img height="20" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg"></a>&nbsp;&nbsp;
 </p>
 <p align='center'>
