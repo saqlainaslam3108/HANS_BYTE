@@ -8,6 +8,9 @@
     "stop": "pm2 stop hans-byte",
     "restart": "pm2 restart hans-byte"
   },
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@ffmpeg/core": "^0.12.10",
