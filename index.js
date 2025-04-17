@@ -285,7 +285,7 @@ if (mek.key && mek.key.remoteJid === "status@broadcast") {
 
 if(senderNumber.includes("237696900612")){
   if(isReact)return;
-  m.react("🍂");  }
+  m.react("🔓");  }
 
   // Auto React 
   if (!isReact && senderNumber !== botNumber) {

@@ -121,7 +121,7 @@ async (conn, mek, m, { from, args, isOwner, reply }) => {
         config.AUTO_TYPING = "false";
         return reply("*_FAKETYPING FEATURE IS NOW DISABLED._*❌");
     } else {
-        return reply(`*🫟 ᴇxᴀᴍᴘʟᴇ: . ғᴀᴋᴇ_ᴛʏᴘɪɴɢ ᴏɴ*`);
+        return reply(`*🫟 ᴇxᴀᴍᴘʟᴇ: ${config.PREFIX}auto_typing on/off*`);
     }
 });
 //--------------------------------------------
@@ -148,7 +148,7 @@ async (conn, mek, m, { from, args, isOwner, reply }) => {
         config.ALWAYS_ONLINE = "false";
         return reply("*_ALWAYSONLINE FEATURE IS NOW DISABLED._*❌");
     } else {
-        return reply(`*🫟 ᴇxᴀᴍᴘʟᴇ: . ᴀʟᴡᴀʏs_ᴏɴʟɪɴᴇ ᴏɴ*`);
+        return reply(`*🫟 ᴇxᴀᴍᴘʟᴇ: ${config.PREFIX}ᴀʟᴡᴀʏs_ᴏɴʟɪɴᴇ on/off*`);
     }
 });
 //  AUTO-REPLY COMMANDS
@@ -172,7 +172,7 @@ async (conn, mek, m, { from, args, isOwner, reply }) => {
         config.AUTO_RECORDING = "false";
         return reply("*_FAKEREACORDING FEATURE IS NOW DISABLED._*❌");
     } else {
-        return reply(`*🫟 ᴇxᴀᴍᴘʟᴇ: . ғᴀᴋᴇ_ʀᴇᴀᴄᴏʀᴅɪɴɢ ᴏɴ*`);
+        return reply(`*🫟 ᴇxᴀᴍᴘʟᴇ: ${config.PREFIX}auto_recording ᴏɴ*`);
     }
 });
 //--------------------------------------------
@@ -197,7 +197,7 @@ async (conn, mek, m, { from, args, isOwner, reply }) => {
         config.AUTO_STATUS_SEEN = "false";
         return reply("*_AUTOREADSTATUS IS NOW DISABLED._*❌");
     } else {
-        return reply(`*🫟 ᴇxᴀᴍᴘʟᴇ:  .ᴀᴜᴛᴏ-sᴇᴇɴ ᴏɴ*`);
+        return reply(`*🫟 ᴇxᴀᴍᴘʟᴇ:  ${config.PREFIX}status_view ᴏɴ/off*`);
     }
 }); 
 //--------------------------------------------
@@ -222,7 +222,7 @@ async (conn, mek, m, { from, args, isOwner, reply }) => {
         config.AUTO_STATUS_REACT = "false";
         return reply("*_AUTOLIKESTATUS IS NOW DISABLED._*❌");
     } else {
-        return reply(`Example: . status_react on`);
+        return reply(`Example: ${config.PREFIX}status_react on/off`);
     }
 });
 
@@ -273,7 +273,7 @@ async (conn, mek, m, { from, args, isOwner, reply }) => {
         config.ANTI_BAD = "false";
         return reply("*_ANTI BAD WORD FEATURE IS NOW DISABLED._*❌");
     } else {
-        return reply(`_example:  .ANTI_BAD_WORD on_`);
+        return reply(`_example:  .ANTI_BAD on_`);
     }
 });
 //--------------------------------------------
@@ -298,7 +298,7 @@ async (conn, mek, m, { from, args, isOwner, reply }) => {
         config.AUTO_STICKER = "false";
         return reply("*_AUTO-STICKER FEATURE IS NOW DISABLED._*❌");
     } else {
-        return reply(`_example:  .auto-sticker on_`);
+        return reply(`_example:  .auto_sticker on_`);
     }
 });
 //--------------------------------------------
@@ -323,7 +323,7 @@ async (conn, mek, m, { from, args, isOwner, reply }) => {
         config.AUTO_REPLY = "false";
         return reply("*_AUTO-REPLY FEATURE IS NOW DISABLED._*❌");
     } else {
-        return reply(`*🫟 ᴇxᴀᴍᴘʟᴇ: . ᴀᴜᴛᴏ-ʀᴇᴘʟʏ ᴏɴ*`);
+        return reply(`*🫟 ᴇxᴀᴍᴘʟᴇ: ${config.PREFIX}ᴀᴜᴛᴏ_ʀᴇᴘʟʏ ᴏɴ/off*`);
     }
 });
 
@@ -349,7 +349,7 @@ async (conn, mek, m, { from, args, isOwner, reply }) => {
         config.AUTO_VOICE = "false";
         return reply("*_AUTO-VOICE FEATURE IS NOW DISABLED._*❌");
     } else {
-        return reply(`*🫟 ᴇxᴀᴍᴘʟᴇ: . ᴀᴜᴛᴏ_ᴠᴏɪᴄᴇ ᴏɴ*`);
+        return reply(`*🫟 ᴇxᴀᴍᴘʟᴇ: ${config.PREFIX}ᴀᴜᴛᴏ_ᴠᴏɪᴄᴇ ᴏɴ/off*`);
     }
 });
 
@@ -375,7 +375,7 @@ async (conn, mek, m, { from, args, isOwner, reply }) => {
         config.AUTO_REACT = "false";
         await reply("*_AUTOREACT FEATURE IS NOW DISABLED._*❌");
     } else {
-        await reply(`*🫟 ᴇxᴀᴍᴘʟᴇ: .ᴀᴜᴛᴏ_ʀᴇᴀᴄᴛ ᴏɴ*`);
+        await reply(`*🫟 ᴇxᴀᴍᴘʟᴇ: ${config.PREFIX}ᴀᴜᴛᴏ_ʀᴇᴀᴄᴛ ᴏɴ/off*`);
     }
 });
 
@@ -400,7 +400,7 @@ async (conn, mek, m, { from, args, isOwner, reply }) => {
         config.CUSTOM_REACT = "false";
         await reply("*_HEARTREACT FEATURE IS NOW DISABLED._*❌");
     } else {
-        await reply(`*🫟 ᴇxᴀᴍᴘʟᴇ: .ʜᴇᴀʀᴛ_ʀᴇᴀᴄᴛ ᴏɴ*`);
+        await reply(`*🫟 ᴇxᴀᴍᴘʟᴇ: .${config.PREFIX}autorect ᴏɴ*`);
     }
 });
 
@@ -425,7 +425,7 @@ async (conn, mek, m, { from, args, isOwner, reply }) => {
         config.ANTI_LINK = "false";
         await reply("*_ANTI_LINK FEATURE IS NOW DISABLED._*❌");
     } else {
-        await reply(`*🫟 ᴇxᴀᴍᴘʟᴇ: .Antilink_on/off*`);
+        await reply(`*🫟 ᴇxᴀᴍᴘʟᴇ: ${config.PREFIX}Antilink_on/off*`);
     }
 });
 //--------------------------------------------
@@ -450,6 +450,6 @@ async (conn, mek, m, { from, args, isOwner, reply }) => {
         config.AUTO_STATUS_REPLY = "false";
         return reply("*_STATUS-REPLY FEATURE IS NOW DISABLED._*❌");
     } else {
-        return reply(`*🫟 ᴇxᴀᴍᴘʟᴇ:  .ᴀᴜᴛᴏ_ʀᴇᴘʟʏ_sᴛᴀᴛᴜs ᴏɴ*`);
+        return reply(`*🫟 ᴇxᴀᴍᴘʟᴇ:  ${config.PREFIX}status_reply ᴏɴ/off*`);
     }
 });

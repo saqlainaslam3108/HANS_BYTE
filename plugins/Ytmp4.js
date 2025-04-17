@@ -23,126 +23,10 @@ const newsletterContext = {
     }
 };
 
-//====== Song Command (YTMP3 via conversion) ======
-cmd({
-    pattern: "song",
-    alias: ['play', 'ytmp3'],
-    react: "🎵",
-    desc: "Download audio from YouTube",
-    category: "download",
-    filename: __filename
-},
-async (conn, mek, m, { from, q, reply, sender }) => {
-    const retryLimit = 3; // Maximum number of retries
-    let attempt = 0;
 
-    const fetchAudio = async () => {
-        try {
-            if (!q) return reply("*❌ Please provide a song title or YouTube URL*");
-            
-            // Search YouTube
-            const search = await yts(q);
-            const video = search.videos[0];
-            if (!video) return reply("*❌ No results found*");
-
-            // Prepare newsletter context
-            const messageContext = {
-                ...newsletterContext,
-                mentionedJid: [sender]
-            };
-
-            // Send video info with newsletter context
-            const infoMsg = `
-╭════════════⊷❍
-│
-│ *🎵 MUSIC DOWNLOADER*
-│──────────────────────
-│ 📌 Title: ${video.title}
-│ 👤 Artist: ${video.author.name}
-│ ⏱️ Duration: ${video.timestamp}
-│ 📊 Views: ${video.views}
-╰──────────●●►
-*🔊 Downloaded via HANS BYTE MD*`.trim();
-
-            await conn.sendMessage(from, {
-                image: { url: video.thumbnail },
-                caption: infoMsg,
-                contextInfo: messageContext
-            }, { quoted: mek });
-
-            // Get video download URL
-            const apiResponse = await fetch(`https://apis.davidcyriltech.my.id/download/ytmp4?url=${encodeURIComponent(video.url)}`);
-            const videoData = await apiResponse.json();
-            
-            if (!videoData.success || !videoData.result?.download_url) {
-                return reply("*❌ Failed to get video download link*");
-            }
-
-            // Create temp files
-            const tempVideo = path.join(tempDir, `${Date.now()}_video.mp4`);
-            const tempAudio = path.join(tempDir, `${Date.now()}_audio.mp3`);
-
-            // Download video
-            const videoRes = await fetch(videoData.result.download_url);
-            await pipeline(videoRes.body, fs.createWriteStream(tempVideo));
-
-            // Convert to MP3
-            await new Promise((resolve, reject) => {
-                ffmpeg(tempVideo)
-                    .audioCodec('libmp3lame')
-                    .audioBitrate(128)
-                    .output(tempAudio)
-                    .on('end', resolve)
-                    .on('error', reject)
-                    .run();
-            });
-
-            // Read converted audio
-            const audioBuffer = fs.readFileSync(tempAudio);
-
-            // Send audio with newsletter context
-            await conn.sendMessage(from, {
-                audio: audioBuffer,
-                mimetype: 'audio/mpeg',
-                caption: "*🎵 HANS BYTE MD*",
-                contextInfo: messageContext
-            }, { quoted: mek });
-
-            // Send as document with newsletter context
-            await conn.sendMessage(from, {
-                document: audioBuffer,
-                mimetype: 'audio/mpeg',
-                fileName: `${video.title}.mp3`,
-                caption: "*📁 HANS BYTE MD*",
-                contextInfo: messageContext
-            }, { quoted: mek });
-
-            // Cleanup
-            [tempVideo, tempAudio].forEach(file => {
-                if (fs.existsSync(file)) fs.unlinkSync(file);
-            });
-
-        } catch (error) {
-            console.error('Song Error:', error);
-            attempt++;
-
-            if (attempt < retryLimit) {
-                console.log(`Retrying... Attempt ${attempt + 1}`);
-                await fetchAudio(); // Retry on failure
-            } else {
-                reply(`*❌ Error:* ${error.message}`);
-            }
-        }
-    };
-
-    // Call the fetchAudio function for the first time
-    await fetchAudio();
-});
-
-//====== Video Command (YTMP4) ======
 cmd({
     pattern: "video",
-    alias: ['ytmp4', 'youtube'],
+    alias: ['ytdl', 'youtube'],
     react: "🎥",
     desc: "Download video from YouTube",
     category: "download",
@@ -225,3 +109,73 @@ async (conn, mek, m, { from, q, reply, sender }) => {
     // Call the fetchVideo function for the first time
     await fetchVideo();
 });
+
+cmd({
+    pattern: "ytmp4",
+    alias: ['youtube', 'ytvid'],
+    react: "🎧",
+    desc: "Download audio from a YouTube URL",
+    category: "download",
+    filename: __filename
+},
+async (conn, mek, m, { from, q, reply, sender }) => {
+    if (!q || !q.includes("youtube.com/watch?v=")) {
+        return reply("*❌ Please provide a valid YouTube video URL*");
+    }
+
+    try {
+        const api = `https://apis.davidcyriltech.my.id/download/ytmp3?url=${encodeURIComponent(q)}`;
+        const res = await fetch(api);
+        const json = await res.json();
+
+        if (!json.success || !json.result?.download_url) {
+            return reply("*❌ Failed to retrieve MP3 link*");
+        }
+
+        const messageContext = {
+            ...newsletterContext,
+            mentionedJid: [sender]
+        };
+
+        const infoMsg = `
+╭════════════⊷❍
+│
+│ *🎶 YT Audio Downloader*
+│──────────────────────
+│ 📌 Title: ${json.result.title}
+│ 🎧 Quality: ${json.result.quality}
+│ 📁 Type: ${json.result.type}
+╰──────────●●►
+*📥 Powered by HANS BYTE MD*`.trim();
+
+        await conn.sendMessage(from, {
+            image: { url: json.result.thumbnail },
+            caption: infoMsg,
+            contextInfo: messageContext
+        }, { quoted: mek });
+
+        // Send as audio
+        await conn.sendMessage(from, {
+            audio: { url: json.result.download_url },
+            mimetype: 'audio/mp4',
+            fileName: `${json.result.title}.mp3`,
+            ptt: false,
+            contextInfo: messageContext
+        }, { quoted: mek });
+
+        // Optional: send as document
+        await conn.sendMessage(from, {
+            document: { url: json.result.download_url },
+            mimetype: 'audio/mp4',
+            fileName: `${json.result.title}.mp3`,
+            caption: "*📁 HANS BYTE MD*",
+            contextInfo: messageContext
+        }, { quoted: mek });
+
+    } catch (err) {
+        console.error("YTMP3 Error:", err);
+        return reply(`*❌ Error:* ${err.message}`);
+    }
+});
+
+

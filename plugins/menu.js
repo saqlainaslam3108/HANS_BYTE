@@ -1,5 +1,6 @@
 const { cmd, commands } = require("../command");
 const config = require('../config');
+const { runtime } = require("../lib/functions");
 
 cmd(
   {
@@ -56,11 +57,27 @@ cmd(
           ] += `${config.PREFIX}${commands[i].pattern}\n`;
         }
       }
+  let platform = process.platform; 
+  let madeMenu = `👋 *Hello  ${pushname}*
 
-   let madeMenu = `👋 *Hello  ${pushname}*
+╭━━〔 🚀 𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃 〕━━┈⊷
+┃◈╭─────────────────·๏
+┃◈┃• 👑 Owner : *${config.OWNER_NAME}*
+┃◈┃• ⚙️ Prefix : *[${config.PREFIX}]*
+┃◈┃• 📱 Number : *${config.OWNER_NUM}*
+┃◈┃• ★ Created by : *𝐇𝐀𝐍𝐒 TECH*
+┃◈┃• 📅 Date : *${new Date().toLocaleDateString()}*
+┃◈┃• ⏰ Time : *${new Date().toLocaleTimeString()}*
+┃◈┃• 🌐 Platform : *${platform}*
+┃◈┃• 📦 Version : *2.0.0*
+┃◈┃• ⏱️ Runtime : *${runtime(process.uptime())}*
+┃◈╰─────────────────┈⊷
+╰━━━━━━━━━━━━━━━━━━━┈⊷
 ✧⋄⋆⋅⋆⋄✧⋄⋆⋅⋆⋄✧⋄⋆⋅⋆⋄✧
   *HANS BYTE MD*
 ✧⋄⋆⋅⋆⋄✧⋄⋆⋅⋆⋄✧⋄⋆⋅⋆⋄✧
+
+
 
 ╭─⊳⋅🤖 𝕮𝖔𝖗𝖊 𝖀𝖙𝖎𝖑𝖘 ⋅⊲─╮
 ⌬ ${config.PREFIX}alive
@@ -121,7 +138,7 @@ cmd(
 ⭒ ${config.PREFIX}gifsearch
 ⭒ ${config.PREFIX}vv
 ⭒ ${config.PREFIX}say
-⭒ ${config.PREFIX}aivoice
+⭒ ${config.PREFIX}aivoice <text>
 ⭒ ${config.PREFIX}calculate
 ⭒ ${config.PREFIX}font
 ⭒ ${config.PREFIX}couplepp
@@ -143,6 +160,7 @@ cmd(
   ⇝ ${config.PREFIX}ttmp3
   ⇝ ${config.PREFIX}spotify
   ⇝ ${config.PREFIX}ringtone
+  ⇝ ${config.PREFIX}ytmp3 <url>
 
 ⋗ �𝙧𝙚𝙢𝙞𝙪𝙢:
   ⇝ ${config.PREFIX}modapk
@@ -153,12 +171,13 @@ cmd(
   ⇝ ${config.PREFIX}ttmp4
   ⇝ ${config.PREFIX}insta
   ⇝ ${config.PREFIX}movie
+  ⇝ ${config.PREFIX}ytmp4 <url>
 
 ⋗ 𝙁𝙞𝙡𝙚𝙨:
   ⇝ ${config.PREFIX}dl
   ⇝ ${config.PREFIX}mediafire
   ⇝ ${config.PREFIX}rtik
-  ⇝ ${config.PREFIX}tiktok
+  ⇝ ${config.PREFIX}tiktok <urlW
   ⇝ ${config.PREFIX}gdrive 
   ⇝ ${config.PREFIX}capcut
   ⇝ ${config.PREFIX}telestick
@@ -170,6 +189,7 @@ cmd(
 ⨳ ${config.PREFIX}img
 ⨳ ${config.PREFIX}weather
 ⨳ ${config.PREFIX}movie
+⨳ ${config.PREFIX}ytsearch
 ⨳ ${config.PREFIX}wikipedia
 ⨳ ${config.PREFIX}tiksearch
 ╰─⊲⋅══════════⋅⊳─╯
@@ -186,9 +206,15 @@ cmd(
 ⤷ ${config.PREFIX}nikal
 ╰─⊲⋅════════════⋅⊳─╯
 
+╭─⊳⋅ ⚜ 𝕷𝖔𝖌𝖔 ⋅⊲─╮
+⚜ ${config.PREFIX}ephoto <name>
+╰─⊲⋅═══════⋅⊳─╯
+
+
 ╭─⊳⋅✞ 𝓡𝓔𝓵𝓲𝓰𝓲𝓸𝓷⋅⊲─╮
 ⤞ ${config.PREFIX}bible 
 ⤞ ${config.PREFIX}quran
+⤞ ${config.PREFIX}surahlist
 ⤞ ${config.PREFIX}praytime
 ╰─⊲⋅══════════⋅⊳─╯
 
@@ -201,6 +227,7 @@ cmd(
 ⚙ ${config.PREFIX}restart
 ⚙ ${config.PREFIX}leave
 ⚙ ${config.PREFIX}block
+⚙ ${config.PREFIX}unblock
 ╰─⊲⋅══════════⋅⊳─╯
 
 ╭─⊳⋅⚙️ 𝕾𝖊𝖙𝖙𝖎𝖓𝖌𝖘 ⋅⊲─╮
@@ -222,7 +249,8 @@ cmd(
 ⚙ ${config.PREFIX}status_reply
 ╰─⊲⋅═════════⋅⊳─╯
 
-╭─⊳⋅👥 𝕲𝖗𝖔𝖚𝖕 ⋅⊲─╮
+
+╭─⊳⋅👥 Group ⋅⊲─╮
 ✫ ${config.PREFIX}mute
 ✫ ${config.PREFIX}unmute
 ✫ ${config.PREFIX}promote
@@ -240,7 +268,20 @@ cmd(
 ✫ ${config.PREFIX}groupinfo
 ✫ ${config.PREFIX}opentime
 ✫ ${config.PREFIX}closetime
+✫ ${config.PREFIX}updategdesc
+✫ ${config.PREFIX}updategname
+✫ ${config.PREFIX}ginfo
+✫ ${config.PREFIX}join
+✫ ${config.PREFIX}lockgc
+✫ ${config.PREFIX}unlockgc
+✫ ${config.PREFIX}newgc
+✫ ${config.PREFIX}out
+✫ ${config.PREFIX}poll
+✫ ${config.PREFIX}revoke
+✫ ${config.PREFIX}hidetag
+✫ ${config.PREFIX}unlockgc
 ╰─⊲⋅══════════⋅⊳─╯
+
 
 ╭─⊳⋅🌐 𝕾𝖕𝖊𝖈𝖎𝖆𝖑 ⋅⊲─╮
 ⎇ ${config.PREFIX}sinhala
@@ -289,6 +330,8 @@ cmd(
 ✘ ${config.PREFIX}jokes
 ✘ ${config.PREFIX}pickupline
 ✘ ${config.PREFIX}emojimix
+✘ ${config.PREFIX}truth
+✘ ${config.PREFIX}dare
 ╰─⊲⋅════════⋅⊳─╯
 
 ╭─⊳⋅📱 𝕾𝖙𝖆𝖑𝖐𝖘 ⋅⊲─╮

@@ -10,15 +10,14 @@ cmd({
     use: ".tagall [message]"
 }, async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, isBotAdmins, isAdmins, groupMetadata, participants, reply }) => {
     try {
-        // Newsletter context info
         const _0x273817 = {
             'mentionedJid': participants.map(p => p.id),
-            'forwardingScore': 0x3e7,
+            'forwardingScore': 999,
             'isForwarded': true,
             'forwardedNewsletterMessageInfo': {
                 'newsletterJid': '120363292876277898@newsletter',
                 'newsletterName': "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
-                'serverMessageId': 0x8f
+                'serverMessageId': 143
             }
         };
 
@@ -26,13 +25,13 @@ cmd({
         if (!isBotAdmins) return reply("📛 *BOT MUST BE AN ADMIN TO USE THIS COMMAND*");
         if (!isAdmins) return reply("📛 *YOU MUST BE AN ADMIN TO USE THIS COMMAND*");
 
-        // Prepare the message
-        let message = `乂 *Attention Everyone* 乂\n\n`;
-        message += `*Message:* ${q || 'No message provided'}\n\n`;
-        message += `*Requested by:* @${sender.split('@')[0]}\n\n`;
-        message += participants.map(p => `❒ @${p.id.split('@')[0]}`).join('\n');
+        let message = `╭━━━⊱ *『 𓆩⚡ ᴀᴛᴛᴇɴᴛɪᴏɴ ⚡𓆪 』* ⊰━━━╮\n\n`;
+        message += `🔮 *Ｍｅｓｓａｇｅ:* 〘 ${q || '𝙽𝚘 𝚖𝚎𝚜𝚜𝚊𝚐𝚎 𝚙𝚛𝚘𝚟𝚒𝚍𝚎𝚍'} 〙\n`;
+        message += `🧩 *Ｒｅｑｕｅｓｔｅｄ 𝐁𝐲:* @${sender.split('@')[0]}\n\n`;
+        message += `👥 *Ｍｅｍｂｅｒｓ:* \n`;
+        message += participants.map(p => `✪ @${p.id.split('@')[0]}`).join('\n');
+        message += `\n\n╰━━━━━━━━━━━━━━━⊱𓃠`;
 
-        // Send the message with mentions and newsletter context
         await conn.sendMessage(
             from,
             {
