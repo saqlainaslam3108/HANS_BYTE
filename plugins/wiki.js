@@ -8,7 +8,7 @@ const newsletterContext = {
   forwardingScore: 1000,
   isForwarded: true,
   forwardedNewsletterMessageInfo: {
-    newsletterJid: "120363292876277898@newsletter", // Example newsletter JID
+    newsletterJid: "120363292876277898@newsletter",
     newsletterName: "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
     serverMessageId: 143,
   },
@@ -21,7 +21,7 @@ cmd({
   desc: "Fetch Wikipedia information and translate to English.",
   category: "information",
   filename: __filename
-}, async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, reply }) => {
+}, async (conn, mek, m, { from, q, reply }) => {
   try {
     if (!q) {
       return await conn.sendMessage(
@@ -37,9 +37,12 @@ cmd({
       { quoted: mek }
     );
 
-    const response = await fetchJson(`https://api.siputzx.my.id/api/s/wikipedia?query=${encodeURIComponent(q)}`);
+    // Step 1: Search Wikipedia for the page title
+    const searchUrl = `https://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srsearch=${encodeURIComponent(q)}`;
+    const searchResult = await fetchJson(searchUrl);
 
-    if (!response.status || !response.data) {
+    const page = searchResult?.query?.search?.[0];
+    if (!page) {
       return await conn.sendMessage(
         from,
         { text: "❌ No results found for your query.", contextInfo: newsletterContext },
@@ -47,34 +50,38 @@ cmd({
       );
     }
 
-    const { wiki, thumb } = response.data;
+    const pageTitle = page.title;
 
-    // Translate the Wikipedia text to English
-    const translated = await translate(wiki, { to: "en" });
+    // Step 2: Get the page summary
+    const summaryUrl = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(pageTitle)}`;
+    const summary = await fetchJson(summaryUrl);
+
+    const extract = summary.extract || "No summary available.";
+    const thumb = summary.thumbnail?.source || "https://upload.wikimedia.org/wikipedia/en/archive/6/63/20100815113656%21Wikipedia-logo.png";
+
+    const translated = await translate(extract, { to: "en" });
 
     let message = `📖 *Wikipedia Result*
 
 📝 *Query:* ${q}
+🔤 *Title:* ${pageTitle}
 
-${translated.text}\n\nBY HANS BYTE MD`;
+${translated.text}
 
-    if (thumb) {
-      await conn.sendMessage(
-        from,
-        {
-          image: { url: thumb },
-          caption: message,
-          contextInfo: newsletterContext,
-        },
-        { quoted: mek }
-      );
-    } else {
-      await conn.sendMessage(
-        from,
-        { text: message, contextInfo: newsletterContext },
-        { quoted: mek }
-      );
-    }
+🌐 *Link:* https://en.wikipedia.org/wiki/${encodeURIComponent(pageTitle)}
+
+BY HANS BYTE MD`;
+
+    await conn.sendMessage(
+      from,
+      {
+        image: { url: thumb },
+        caption: message,
+        contextInfo: newsletterContext,
+      },
+      { quoted: mek }
+    );
+
   } catch (error) {
     console.error(error);
     await conn.sendMessage(

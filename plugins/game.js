@@ -85,7 +85,7 @@ async (conn, mek, m, { reply }) => {
         });
         
         // Send the local time as reply
-        reply(`🕒 Current Local Time in Douala: ${localTime}`);
+        reply(`🕒 Current Local Time in GMT+1: ${localTime}`);
     } catch (e) {
         console.error("Error in .timenow command:", e);
         reply("❌ An error occurred. Please try again later.");
@@ -174,6 +174,7 @@ async (conn, mek, m, { from, isGroup, reply }) => {
 
 cmd({
     pattern: "count",
+    
     desc: "Start a countdown from 1 to the specified number.",
     category: "owner",
     filename: __filename

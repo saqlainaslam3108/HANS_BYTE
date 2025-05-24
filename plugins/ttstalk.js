@@ -88,7 +88,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
         }
 
         // Build the API URL using the provided username
-        const apiUrl = `https://api.davidcyriltech.my.id/githubStalk?user=${encodeURIComponent(username)}`;
+        const apiUrl = `https://apis.davidcyriltech.my.id/githubStalk?user=${encodeURIComponent(username)}`;
         const response = await axios.get(apiUrl);
         const data = response.data;
 

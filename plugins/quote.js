@@ -50,7 +50,7 @@ cmd({
     filename: __filename
 }, async (conn, mek, m, { from, reply, sender }) => {
     try {
-        const response = await axios.get('https://api.davidcyriltech.my.id/random/quotes');
+        const response = await axios.get('https://apis.davidcyriltech.my.id/random/quotes');
         const data = response.data;
         let imageUrl = "https://i.ibb.co/6Rxhg321/Chat-GPT-Image-Mar-30-2025-03-39-42-AM.png";
 

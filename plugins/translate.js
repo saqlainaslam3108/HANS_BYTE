@@ -87,7 +87,7 @@ If you enter an unsupported language code, you'll get an error message. Please m
         }
 
         // Send request to the translation API
-        let res = await fetchJson(`https://api.davidcyriltech.my.id/tools/translate?text=${encodeURIComponent(textToTranslate)}&to=${langCode}`);
+        let res = await fetchJson(`https://apis.davidcyriltech.my.id/tools/translate?text=${encodeURIComponent(textToTranslate)}&to=${langCode}`);
 
         // Newsletter context
         const newsletterContext = {

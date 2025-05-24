@@ -13,7 +13,7 @@ async (conn, mek, m, { from, quoted, q, reply, sender }) => {
     try {
         if (!q) return reply("❌ *𝙋𝙡𝙚𝙖𝙨𝙚 𝙥𝙧𝙤𝙫𝙞𝙙𝙚 𝙩𝙝𝙚 𝙖𝙥𝙥 𝙣𝙖𝙢𝙚!* ❌");
 
-        const res = await fetch(`https://api.davidcyriltech.my.id/download/apk?text=${encodeURIComponent(q)}`);
+        const res = await fetch(`https://apis.davidcyriltech.my.id/download/apk?text=${encodeURIComponent(q)}`);
         const data = await res.json();
         
         if (!data.success) return reply("❌ *𝙁𝙖𝙞𝙡𝙚𝙙 𝙩𝙤 𝙛𝙚𝙩𝙘𝙝 𝘼𝙋𝙆.* ❌");

@@ -42,7 +42,7 @@ async (conn, mek, m, {
         }
 
         // Call the URL shortening API
-        let res = await fetchJson(`https://api.davidcyriltech.my.id/bitly?link=${encodeURIComponent(url)}`);
+        let res = await fetchJson(`https://apis.davidcyriltech.my.id/tinyurl?url=${encodeURIComponent(url)}`);
         
         // Check if the API response is successful
         if (res && res.success) {

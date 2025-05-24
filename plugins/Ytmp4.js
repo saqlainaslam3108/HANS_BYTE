@@ -1,17 +1,9 @@
 const { cmd } = require('../command');
 const yts = require('yt-search');
 const fetch = require('node-fetch');
-const fs = require('fs');
-const ffmpeg = require('fluent-ffmpeg');
-const { promisify } = require('util');
 const path = require('path');
-const pipeline = promisify(require('stream').pipeline);
 
-// Configure paths
-ffmpeg.setFfmpegPath(process.env.FFMPEG_PATH || 'ffmpeg');
-const tempDir = path.join(__dirname, '../temp');
-
-// Newsletter context configuration
+// Configure newsletter context
 const newsletterContext = {
     mentionedJid: [], // Can add specific JIDs if needed
     forwardingScore: 1000,
@@ -23,62 +15,73 @@ const newsletterContext = {
     }
 };
 
+// Utility: Send error reply helper
+function sendError(reply, message) {
+    return reply(`*❌ ${message}*`);
+}
 
+// VIDEO COMMAND - accepts a prompt (title or URL)
 cmd({
     pattern: "video",
     alias: ['ytdl', 'youtube'],
     react: "🎥",
-    desc: "Download video from YouTube",
+    desc: "Download video from YouTube by prompt or URL",
     category: "download",
     filename: __filename
-},
-async (conn, mek, m, { from, q, reply, sender }) => {
-    const retryLimit = 3; // Maximum number of retries
+}, async (conn, mek, m, { from, q, reply, sender }) => {
+    const retryLimit = 3;
     let attempt = 0;
 
-    // Retry function
     const fetchVideo = async () => {
         try {
-            if (!q) return reply("*❌ Please provide a video title or YouTube URL*");
+            if (!q) return sendError(reply, "Please provide a video title or YouTube URL");
 
-            const search = await yts(q);
-            const video = search.videos[0];
-            if (!video) return reply("*❌ No results found*");
+            let videoUrl = q;
+
+            // If input is not a direct YouTube URL, search for video
+            if (!q.includes('youtu')) {
+                const search = await yts(q);
+                const video = search.videos[0];
+                if (!video) return sendError(reply, "No results found");
+                videoUrl = video.url;
+            }
 
             const messageContext = {
                 ...newsletterContext,
                 mentionedJid: [sender]
             };
 
+            // Fetch video info from new API
+            const apiUrl = `https://api.giftedtech.my.id/api/download/ytdl?apikey=gifted&url=${encodeURIComponent(videoUrl)}`;
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+
+            if (!data.success || !data.result) {
+                return sendError(reply, "Failed to get video download info");
+            }
+
+            const { title, thumbnail, video_url, audi_quality, video_quality } = data.result;
+
             const infoMsg = `
 ╭════════════⊷❍
 │
 │ *🎥 Video Downloader*
 │──────────────────────
-│ 📌 Title: ${video.title}
-│ 👤 Channel: ${video.author.name}
-│ ⏱️ Duration: ${video.timestamp}
-│ 📊 Views: ${video.views}
+│ 📌 Title: ${title}
+│ 🎞️ Quality: ${video_quality}
+│ 🎧 Audio Quality: ${audi_quality}
 ╰──────────●●►
 *📥 Downloaded via HANS BYTE MD*`.trim();
 
             await conn.sendMessage(from, {
-                image: { url: video.thumbnail },
+                image: { url: thumbnail },
                 caption: infoMsg,
                 contextInfo: messageContext
             }, { quoted: mek });
 
-            // Get video URL
-            const apiResponse = await fetch(`https://apis.davidcyriltech.my.id/download/ytmp4?url=${encodeURIComponent(video.url)}`);
-            const videoData = await apiResponse.json();
-
-            if (!videoData.success || !videoData.result?.download_url) {
-                return reply("*❌ Failed to get video download link*");
-            }
-
-            // Send video with newsletter context
+            // Send video
             await conn.sendMessage(from, {
-                video: { url: videoData.result.download_url },
+                video: { url: video_url },
                 mimetype: 'video/mp4',
                 caption: "*🎥 HANS BYTE MD*",
                 contextInfo: messageContext
@@ -86,9 +89,9 @@ async (conn, mek, m, { from, q, reply, sender }) => {
 
             // Send as document
             await conn.sendMessage(from, {
-                document: { url: videoData.result.download_url },
+                document: { url: video_url },
                 mimetype: 'video/mp4',
-                fileName: `${video.title}.mp4`,
+                fileName: `${title}.mp4`,
                 caption: "*📁 HANS BYTE MD*",
                 contextInfo: messageContext
             }, { quoted: mek });
@@ -96,41 +99,42 @@ async (conn, mek, m, { from, q, reply, sender }) => {
         } catch (error) {
             console.error('Video Error:', error);
             attempt++;
-
             if (attempt < retryLimit) {
                 console.log(`Retrying... Attempt ${attempt + 1}`);
-                await fetchVideo(); // Retry on failure
+                await fetchVideo();
             } else {
-                reply(`*❌ Error:* ${error.message}`);
+                return sendError(reply, error.message);
             }
         }
     };
 
-    // Call the fetchVideo function for the first time
     await fetchVideo();
 });
 
+
+// YTMP4 COMMAND - only accepts direct YouTube URL, downloads video (same API, but must be URL)
 cmd({
     pattern: "ytmp4",
     alias: ['youtube', 'ytvid'],
     react: "🎧",
-    desc: "Download audio from a YouTube URL",
+    desc: "Download video from YouTube URL",
     category: "download",
     filename: __filename
-},
-async (conn, mek, m, { from, q, reply, sender }) => {
-    if (!q || !q.includes("youtube.com/watch?v=")) {
-        return reply("*❌ Please provide a valid YouTube video URL*");
+}, async (conn, mek, m, { from, q, reply, sender }) => {
+    if (!q || !q.includes("youtube.com/watch") && !q.includes("youtu.be")) {
+        return sendError(reply, "Please provide a valid YouTube video URL");
     }
 
     try {
-        const api = `https://apis.davidcyriltech.my.id/download/ytmp3?url=${encodeURIComponent(q)}`;
-        const res = await fetch(api);
-        const json = await res.json();
+        const apiUrl = `https://api.giftedtech.my.id/api/download/ytdl?apikey=gifted&url=${encodeURIComponent(q)}`;
+        const response = await fetch(apiUrl);
+        const json = await response.json();
 
-        if (!json.success || !json.result?.download_url) {
-            return reply("*❌ Failed to retrieve MP3 link*");
+        if (!json.success || !json.result) {
+            return sendError(reply, "Failed to retrieve video info");
         }
+
+        const { title, thumbnail, video_url, audi_quality, video_quality } = json.result;
 
         const messageContext = {
             ...newsletterContext,
@@ -140,42 +144,39 @@ async (conn, mek, m, { from, q, reply, sender }) => {
         const infoMsg = `
 ╭════════════⊷❍
 │
-│ *🎶 YT Audio Downloader*
+│ *🎥 YT Video Downloader*
 │──────────────────────
-│ 📌 Title: ${json.result.title}
-│ 🎧 Quality: ${json.result.quality}
-│ 📁 Type: ${json.result.type}
+│ 📌 Title: ${title}
+│ 🎞️ Quality: ${video_quality}
+│ 🎧 Audio Quality: ${audi_quality}
 ╰──────────●●►
 *📥 Powered by HANS BYTE MD*`.trim();
 
         await conn.sendMessage(from, {
-            image: { url: json.result.thumbnail },
+            image: { url: thumbnail },
             caption: infoMsg,
             contextInfo: messageContext
         }, { quoted: mek });
 
-        // Send as audio
+        // Send video
         await conn.sendMessage(from, {
-            audio: { url: json.result.download_url },
-            mimetype: 'audio/mp4',
-            fileName: `${json.result.title}.mp3`,
-            ptt: false,
+            video: { url: video_url },
+            mimetype: 'video/mp4',
+            caption: "*🎥 HANS BYTE MD*",
             contextInfo: messageContext
         }, { quoted: mek });
 
-        // Optional: send as document
+        // Send as document
         await conn.sendMessage(from, {
-            document: { url: json.result.download_url },
-            mimetype: 'audio/mp4',
-            fileName: `${json.result.title}.mp3`,
+            document: { url: video_url },
+            mimetype: 'video/mp4',
+            fileName: `${title}.mp4`,
             caption: "*📁 HANS BYTE MD*",
             contextInfo: messageContext
         }, { quoted: mek });
 
     } catch (err) {
-        console.error("YTMP3 Error:", err);
-        return reply(`*❌ Error:* ${err.message}`);
+        console.error("YTMP4 Error:", err);
+        return sendError(reply, err.message);
     }
 });
-
-

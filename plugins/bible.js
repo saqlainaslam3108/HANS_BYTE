@@ -41,7 +41,7 @@ async (conn, mek, m, {
             return reply("🙏 Dear child of God, please provide a Bible reference (e.g., *John 3:16*) so we may meditate upon His Word.");
         }
         
-        let url = `https://api.davidcyriltech.my.id/bible?reference=${encodeURIComponent(reference)}`;
+        let url = `https://apis.davidcyriltech.my.id/bible?reference=${encodeURIComponent(reference)}`;
         
         let res = await fetchJson(url);
         

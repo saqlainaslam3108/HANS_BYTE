@@ -16,7 +16,7 @@ const newsletterContext = {
 
 cmd({
     pattern: "play",
-    alias: ['ytmp3', 'song'],
+    alias: ['ytsong', 'song'],
     react: "🎵",
     desc: "Download audio from YouTube",
     category: "download",
@@ -36,16 +36,14 @@ async (conn, mek, m, { from, q, reply, sender }) => {
         };
 
         const infoMsg = `
-╭════════════⊷❍
-│
-│ *🎵 Audio Downloader*
-│──────────────────────
-│ 📌 Title: ${video.title}
-│ 👤 Channel: ${video.author.name}
-│ ⏱️ Duration: ${video.timestamp}
-│ 📊 Views: ${video.views}
-╰──────────●●►
-*📥 Downloaded via HANS BYTE MD*`.trim();
+╔═══〘 🎧 𝙈𝙋𝟛 𝘿𝙇 〙═══╗
+
+⫸ 🎵 *Title:* ${video.title}
+⫸ 👤 *Channel:* ${video.author.name}
+⫸ ⏱️ *Duration:* ${video.timestamp}
+⫸ 👁️ *Views:* ${video.views.toLocaleString()} views
+
+╚══ ⸨ 𝙃𝘼𝙉𝙎 𝘽𝙔𝙏𝙀 𝙈𝘿 ⸩ ═══╝`.trim();
 
         await conn.sendMessage(from, {
             image: { url: video.thumbnail },
@@ -53,29 +51,31 @@ async (conn, mek, m, { from, q, reply, sender }) => {
             contextInfo: messageContext
         }, { quoted: mek });
 
-        // Update API URL
-        const api = `https://apis.davidcyriltech.my.id/play?query=${encodeURIComponent(q)}`;
+        // New API Call
+        const api = `https://itzpire.com/download/youtube/v2?url=${encodeURIComponent(video.url)}`;
         const res = await fetch(api);
         const json = await res.json();
 
-        if (!json.status || json.status !== true || !json.result?.download_url) {
+        if (!json.status || json.status !== 'success' || !json.data?.downloadUrl) {
             return reply("*❌ Failed to get audio download link*");
         }
 
+        const title = video.title;
+
         // Send MP3 as audio message
         await conn.sendMessage(from, {
-            audio: { url: json.result.download_url },
+            audio: { url: json.data.downloadUrl },
             mimetype: 'audio/mp4',
-            fileName: `${json.result.title}.mp3`,
+            fileName: `${title}.mp3`,
             ptt: false,
             contextInfo: messageContext
         }, { quoted: mek });
 
         // Send as document too
         await conn.sendMessage(from, {
-            document: { url: json.result.download_url },
+            document: { url: json.data.downloadUrl },
             mimetype: 'audio/mp4',
-            fileName: `${json.result.title}.mp3`,
+            fileName: `${title}.mp3`,
             caption: "*📁 HANS BYTE MD*",
             contextInfo: messageContext
         }, { quoted: mek });
@@ -85,6 +85,7 @@ async (conn, mek, m, { from, q, reply, sender }) => {
         return reply(`*❌ Error:* ${err.message}`);
     }
 });
+
 // Command to download audio from YouTube URL
 
 cmd({
@@ -101,11 +102,11 @@ async (conn, mek, m, { from, q, reply, sender }) => {
     }
 
     try {
-        const api = `https://apis.davidcyriltech.my.id/download/ytmp3?url=${encodeURIComponent(q)}`;
+        const api = `https://itzpire.com/download/youtube/v2?url=${encodeURIComponent(q)}`;
         const res = await fetch(api);
-        const json = await res.json();
+        const data = await res.json();
 
-        if (!json.success || !json.result?.download_url) {
+        if (!data.status || !data.data?.downloadUrl) {
             return reply("*❌ Failed to retrieve MP3 link*");
         }
 
@@ -115,36 +116,35 @@ async (conn, mek, m, { from, q, reply, sender }) => {
         };
 
         const infoMsg = `
-╭════════════⊷❍
-│
-│ *🎶 YT Audio Downloader*
-│──────────────────────
-│ 📌 Title: ${json.result.title}
-│ 🎧 Quality: ${json.result.quality}
-│ 📁 Type: ${json.result.type}
-╰──────────●●►
-*📥 Powered by HANS BYTE MD*`.trim();
+╔═━「 🎧 𝙔𝙏𝙈𝙋𝟛 𝘿𝙊𝙒𝙉𝙇𝙊𝘼𝘿 」━═╗
+
+⫸ 📌 *Title:* ${data.data.title}
+⫸ 📁 *Format:* MP3
+⫸ 🛰️ *Source:* YouTube
+
+╚═━「 𝙃𝘼𝙉𝙎 𝘽𝙔𝙏𝙀 𝙈𝘿 」━═╝
+`.trim();
 
         await conn.sendMessage(from, {
-            image: { url: json.result.thumbnail },
+            image: { url: data.data.image },
             caption: infoMsg,
             contextInfo: messageContext
         }, { quoted: mek });
 
         // Send as audio
         await conn.sendMessage(from, {
-            audio: { url: json.result.download_url },
+            audio: { url: data.data.downloadUrl },
             mimetype: 'audio/mp4',
-            fileName: `${json.result.title}.mp3`,
+            fileName: `${data.data.title}.mp3`,
             ptt: false,
             contextInfo: messageContext
         }, { quoted: mek });
 
-        // Optional: send as document
+        // ✅ Also send as document
         await conn.sendMessage(from, {
-            document: { url: json.result.download_url },
+            document: { url: data.data.downloadUrl },
             mimetype: 'audio/mp4',
-            fileName: `${json.result.title}.mp3`,
+            fileName: `${data.data.title}.mp3`,
             caption: "*📁 HANS BYTE MD*",
             contextInfo: messageContext
         }, { quoted: mek });
@@ -154,6 +154,7 @@ async (conn, mek, m, { from, q, reply, sender }) => {
         return reply(`*❌ Error:* ${err.message}`);
     }
 });
+
 
 
 
@@ -181,17 +182,15 @@ async (conn, mek, m, { from, q, reply, sender }) => {
         };
 
         const infoMsg = `
-╭════════════⊷❍
-│
-│ *🎶 YouTube Search Result*
-│──────────────────────
-│ 📌 Title: ${video.title}
-│ 👤 Channel: ${video.author.name}
-│ ⏱️ Duration: ${video.timestamp}
-│ 📊 Views: ${video.views}
-│ 🔗 Link: ${video.url}
-╰──────────●●►
-*🔍 Search powered by HANS BYTE MD*`.trim();
+╔═━「 🔍 𝙔𝙏 𝙎𝙀𝘼𝙍𝘾𝙃 」━═╗
+
+⫸ 📌 *Title:* ${video.title}
+⫸ 👤 *Channel:* ${video.author.name}
+⫸ ⏱️ *Duration:* ${video.timestamp}
+⫸ 👁️ *Views:* ${video.views.toLocaleString()}
+⫸ 🔗 *Link:* ${video.url}
+
+╚═━「 💡 𝙃𝘼𝙉𝙎 𝘽𝙔𝙏𝙀 𝙈𝘿 」━═╝`.trim();
 
         // Send the search result details back to the user
         await conn.sendMessage(from, {
