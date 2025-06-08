@@ -1,5 +1,5 @@
 const { cmd } = require("../command");
-const { downloadMediaMessage } = require("baileys");
+const { downloadMediaMessage } = require("@whiskeysockets/baileys");
 
 cmd({
     pattern: "take",

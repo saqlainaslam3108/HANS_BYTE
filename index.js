@@ -6,7 +6,7 @@ const {
   getContentType,
   fetchLatestBaileysVersion,
   Browsers,
-} = require("baileys");
+} = require("@whiskeysockets/baileys");
 
 const l = console.log;
 const {

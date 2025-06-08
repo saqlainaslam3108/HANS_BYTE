@@ -1,5 +1,5 @@
 const { cmd } = require("../command");
-const { downloadMediaMessage } = require("baileys");
+const { downloadMediaMessage } = require("@whiskeysockets/baileys");
 const Jimp = require('jimp');
 
 cmd({
