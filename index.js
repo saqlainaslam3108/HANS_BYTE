@@ -62,58 +62,62 @@ async function connectToWA() {
   //mongo connect
   
   
-  //===========================
+//===========================
 
-  console.log("Connecting HANS BYTE");
-  const { state, saveCreds } = await useMultiFileAuthState(
-    __dirname + "/sessions/"
-  );
-  var { version } = await fetchLatestBaileysVersion();
+console.log("Connecting HANS BYTE");
 
-  const robin = makeWASocket({
-    logger: P({ level: "silent" }),
-    printQRInTerminal: false,
-    browser: Browsers.macOS("Firefox"),
-    syncFullHistory: true,
-    auth: state,
-    version,
-  });
+const { state, saveCreds } = await useMultiFileAuthState(__dirname + "/sessions/");
+const { version } = await fetchLatestBaileysVersion();
 
-  robin.ev.on("connection.update", (update) => {
-    const { connection, lastDisconnect } = update;
-    if (connection === "close") {
-      if (
-        lastDisconnect.error.output.statusCode !== DisconnectReason.loggedOut
-      ) {
-        connectToWA();
+const robin = makeWASocket({
+  logger: P({ level: "silent" }),
+  printQRInTerminal: false,
+  browser: Browsers.macOS("Firefox"),
+  syncFullHistory: true,
+  auth: state,
+  version,
+});
+
+robin.ev.on("connection.update", async (update) => {
+  const { connection, lastDisconnect } = update;
+
+  if (connection === "close") {
+    if (
+      lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut
+    ) {
+      console.log("Connection closed unexpectedly, reconnecting...");
+      await connectToWA(); // reconnect only if not logged out
+    } else {
+      console.log("Logged out from WhatsApp, won't reconnect automatically.");
+    }
+  } else if (connection === "open") {
+    console.log(" Installing... ");
+    const path = require("path");
+    fs.readdirSync("./plugins/").forEach((plugin) => {
+      if (path.extname(plugin).toLowerCase() === ".js") {
+        require("./plugins/" + plugin);
       }
-    } else if (connection === "open") {
-      console.log(" Installing... ");
-      const path = require("path");
-      fs.readdirSync("./plugins/").forEach((plugin) => {
-        if (path.extname(plugin).toLowerCase() == ".js") {
-          require("./plugins/" + plugin);
-        }
-      });
-      console.log("ALL PLUGINS SUCCESFULLY INSTALLED   ✅");
-      console.log("HANS BYTE HAS SUCCESFULLY BEEN CONNECTED TO YOUR WHATSAPP ✅");
+    });
+    console.log("ALL PLUGINS SUCCESFULLY INSTALLED   ✅");
+    console.log("HANS BYTE HAS SUCCESFULLY BEEN CONNECTED TO YOUR WHATSAPP ✅");
 
-      let up = `
-  ╔═════════════════╗
-  ║      𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 X 𝐁𝐎𝐓           
-  ║  SUCCESSFULLY CONNECTED ✅ 😍        
-  ╠═════════════════╣
-  ║      • PREFIX: .            
-  ╟─────────────────╢
-  ║ ♻ 𝐖𝐇𝐀𝐓𝐒𝐀𝐏𝐏 𝐂𝐇𝐀𝐍𝐍𝐄𝐋 𝐋𝐈𝐍𝐊         
-  ║ https://whatsapp.com/channel/0029VaZDIdxDTkKB4JSWUk1O              
-  ╟─────────────────╢
-  ║ ♻ 𝐖𝐇𝐀𝐓𝐒𝐀𝐏𝐏 𝐆𝐑𝐎𝐔𝐏 𝐋𝐈𝐍𝐊          
-  ║ https://chat.whatsapp.com/K0GPSSfr16j8VsIAU8uHYM                 
-  ╠═════════════════╣
-  ║   𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃               
-  ║ > © ᴘᴏᴡᴇʀᴇᴅ ʙʏ Hans Tech Team        
-  ╚═════════════════╝`;
+    let up = `
+╔═════════════════╗
+║      𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 X 𝐁𝐎𝐓           
+║  SUCCESSFULLY CONNECTED ✅ 😍        
+╠═════════════════╣
+║      • PREFIX: .            
+╟─────────────────╢
+║ ♻ 𝐖𝐇𝐀𝐓𝐒𝐀𝐏𝐏 𝐂𝐇𝐀𝐍𝐍𝐄𝐋 𝐋𝐈𝐍𝐊         
+║ https://whatsapp.com/channel/0029VaZDIdxDTkKB4JSWUk1O              
+╟─────────────────╢
+║ ♻ 𝐖𝐇𝐀𝐓𝐒𝐀𝐏𝐏 𝐆𝐑𝐎𝐔𝐏 𝐋𝐈𝐍𝐊          
+║ https://chat.whatsapp.com/K0GPSSfr16j8VsIAU8uHYM                 
+╠═════════════════╣
+║   𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃               
+║ > © ᴘᴏᴡᴇʀᴇᴅ ʙʏ Hans Tech Team        
+╚═════════════════╝`;
+
       let up1 = `Hello Mr Hans i succesfully deployed HANS BYTE`;
 
       robin.sendMessage(ownerNumber + "@s.whatsapp.net", {
