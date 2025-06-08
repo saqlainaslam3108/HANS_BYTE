@@ -1,32 +1,49 @@
-const { cmd, commands } = require('../command');
-const config = require('../config');
-const path = require('path');
+const { cmd } = require('../command');
 
 cmd(
   {
-    pattern: "alive",
-    react: "🤌",
-    desc: "Check if the bot is online.",
-    category: "main",
+    pattern: "calendar",
+    alias: "cal",
+    desc: "Show calendar of current or given month & year (GMT).",
+    react: "🗓️",
+    category: "utilities",
     filename: __filename,
   },
   async (
     robin,
     mek,
     m,
-    { from, quoted, body, isCmd, command, args, q, isGroup, sender, reply }
+    { from, q, sender, reply }
   ) => {
     try {
-      // Fix path issue using path module
-      const audioPath = path.join(__dirname, '../media/Sunflower.mp3');
+      // Parse args from .calendar 6 2025
+      let [month, year] = q.trim().split(" ").map(Number);
+      const now = new Date();
 
-      // Debugging: Check if the file exists
-      const fs = require('fs');
-      if (!fs.existsSync(audioPath)) {
-        return reply(`❌ Error: Audio file not found at ${audioPath}`);
+      // Defaults to GMT date
+      if (!month || isNaN(month) || month < 1 || month > 12)
+        month = now.getUTCMonth() + 1;
+      if (!year || isNaN(year) || year < 1000)
+        year = now.getUTCFullYear();
+
+      const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
+      const firstDay = new Date(Date.UTC(year, month - 1, 1)).getUTCDay();
+      const days = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+
+      let output = `🗓️ *Calendar for ${month}/${year} (GMT)*\n\`\`\`\n`;
+      output += days.join(" ") + "\n";
+
+      let week = "   ".repeat(firstDay);
+      for (let day = 1; day <= daysInMonth; day++) {
+        week += day.toString().padStart(2, ' ') + " ";
+        if ((firstDay + day) % 7 === 0 || day === daysInMonth) {
+          output += week + "\n";
+          week = "";
+        }
       }
+      output += "```";
 
-      // Newsletter context info
+      // Newsletter context
       const newsletterContext = {
         mentionedJid: [sender],
         forwardingScore: 1000,
@@ -34,39 +51,19 @@ cmd(
         forwardedNewsletterMessageInfo: {
           newsletterJid: '120363292876277898@newsletter',
           newsletterName: "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
-          serverMessageId: 143,
+          serverMessageId: 147,
         },
       };
 
-      // Update presence to indicate bot is active
-      await robin.sendPresenceUpdate('recording', from);
-
-      // Send the audio message with correct path
-      await robin.sendMessage(
-        from,
-        {
-          audio: { url: audioPath },
-          mimetype: 'audio/mpeg',
-          ptt: true,
-          contextInfo: newsletterContext,
-        },
-        { quoted: mek }
-      );
-
-      // Send an "alive" image with newsletter context
-      await robin.sendMessage(
-        from,
-        {
-          image: { url: config.ALIVE_IMG },
-          caption: config.ALIVE_MSG,
-          contextInfo: newsletterContext,
-        },
-        { quoted: mek }
-      );
+      // Send calendar
+      await robin.sendMessage(from, {
+        text: output,
+        contextInfo: newsletterContext,
+      }, { quoted: mek });
 
     } catch (e) {
-      console.error(e);
-      reply(`❌ Error: ${e.message}`);
+      console.error("Calendar command error:", e);
+      reply("❌ Error generating calendar. " + e.message);
     }
   }
 );

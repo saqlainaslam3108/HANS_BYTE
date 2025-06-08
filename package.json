@@ -1,6 +1,6 @@
 {
   "name": "hans-byte",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "A WhatsApp bot created using Node.js",
   "main": "index.js",
   "scripts": {
@@ -23,7 +23,7 @@
     "archiver": "^7.0.1",
     "axios": "^1.8.4",
     "axios-retry": "^4.5.0",
-    "baileys": "^6.7.1",
+    "baileys": "^6.7.18",
     "canvas": "^3.0.1",
     "cheerio": "^1.0.0",
     "darksadasyt-anime": "^1.0.0",

@@ -60,8 +60,8 @@ cmd(
   let platform = process.platform; 
   let madeMenu = `👋 *Hello  ${pushname}*
 
-╭━━〔 🚀 𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃 〕━━┈⊷
-┃◈╭─────────────────·๏
+╭━〔 🚀 𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃 〕━┈⊷
+┃◈╭──────────────·๏
 ┃◈┃• 👑 Owner : *${config.OWNER_NAME}*
 ┃◈┃• ⚙️ Prefix : *[${config.PREFIX}]*
 ┃◈┃• 📱 Number : *${config.OWNER_NUM}*
@@ -71,8 +71,8 @@ cmd(
 ┃◈┃• 🌐 Platform : *${platform}*
 ┃◈┃• 📦 Version : *2.2.0*
 ┃◈┃• ⏱️ Runtime : *${runtime(process.uptime())}*
-┃◈╰─────────────────┈⊷
-╰━━━━━━━━━━━━━━━━━━━┈⊷
+┃◈╰──────────────┈⊷
+╰━━━━━━━━━━━━━━━━┈⊷
 ✧⋄⋆⋅⋆⋄✧⋄⋆⋅⋆⋄✧⋄⋆⋅⋆⋄✧
   *HANS BYTE MD*
 ✧⋄⋆⋅⋆⋄✧⋄⋆⋅⋆⋄✧⋄⋆⋅⋆⋄✧
@@ -87,6 +87,7 @@ cmd(
 ⌬ ${config.PREFIX}ping
 ⌬ ${config.PREFIX}owner
 ⌬ ${config.PREFIX}dev
+⌬ ${config.PREFIX}report
 ╰─⊲⋅═══════════⋅⊳─╯
 
 ╭─⊳⋅⛩️ 𝕬𝖓𝖎𝖒𝖊 ⋅⊲─╮
@@ -117,6 +118,7 @@ cmd(
 ➜ ${config.PREFIX}time  
 ➺ ${config.PREFIX}date  
 ➺ ${config.PREFIX}userinfo
+➺ ${config.PREFIX}countryé
 ╰─⊲⋅═════════⋅⊳─╯
 
 ╭─⊳⋅👑 𝕺𝖜𝖓𝖊𝖗 ⋅⊲─╮  

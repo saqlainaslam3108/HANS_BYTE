@@ -1,5 +1,6 @@
 const axios = require('axios'); // Make sure you install axios if it's not already installed
 const { cmd } = require('../command');
+const config = require ('../config')
 
 cmd(
   {
@@ -18,7 +19,14 @@ cmd(
         const sessionId = response.data.session_id;
         const expiresAt = response.data.expires_at;
 
-        reply(`🎉 Here is your temporary email address: ${email}\nIt will expire at: ${expiresAt}\nSession ID: ${sessionId}`);
+        reply(`╭─⊳⋅🤖 TEMPMAIL⋅⊲─╮
+⌬ ADDRESS: ${email}
+⌬ EXPIRY: ${expiresAt}
+⌬ SESSION ID: ${sessionId}
+⌬ To check inbox, run:
+⌬ ${config.PREFIX}checkmail <SID>
+╰─⊲⋅═══════════⋅⊳─╯
+          `);
       } else {
         reply('❌ Failed to generate temporary email address.');
       }

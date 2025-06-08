@@ -21,7 +21,7 @@
     "env": {
       "SESSION_ID": {
         "description": "Session ID for the bot",
-        "value": "vZcEjZQa#QIZ5gyh8SdXsuvzOTT8jO0CU97ZLLtCStG6k_SHnqzI"
+        "value": ""
       },
       "SUDO": {
         "description": "Admin/Sudo number",

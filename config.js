@@ -10,7 +10,7 @@ if (fs.existsSync("config.env")) {
 // Application Configuration Object
 module.exports = {
   // Session and Owner Information
-  SESSION_ID: process.env.SESSION_ID || "HANS-BYTE~ln9nBIjD#i2SL_wp8VW-lOdw302Jlf3tEz_xxXNwaATxbI3K7srE", // Add your session ID here
+  SESSION_ID: process.env.SESSION_ID || "HANS-BYTE~oucxDIZK#AW6vunIFmJeR_-dW83CLueqQarLb1_tjTSndhgAM27k", // Add your session ID here
   SUDO: process.env.SUDO || "237696900612", // Add your admin/sudo number here
   OWNER_NUM: process.env.OWNER_NUM || "237680260772", // Add the owner's number here
   OWNER_NAME: process.env.OWNER_NAME || "HANS TECH", // Add the owner's name here
@@ -24,10 +24,10 @@ module.exports = {
   MOVIE_API_KEY: process.env.MOVIE_API_KEY || "sky|d154108e41377cceb22ef92434509bc9081ae46b", // Add your Movie API key here
 
   // Bot Settings
-  BOT_NAME: process.env.BOT_NAME || "𝙃𝘼𝙉𝙎-𝙗𝙮𝙩𝙚", // Add your bot's name here
+  BOT_NAME: process.env.BOT_NAME || "𝙷𝙰𝙽𝚂 𝙱𝚈𝚃𝙴", // Add your bot's name here
   PREFIX: process.env.PREFIX || ".", // Add your command prefix here (e.g., ".", "!", "/")
   MODE: process.env.MODE || "public", // Set your bot mode (e.g., "public" or "private")
-  VERSION: process.env.VERSION || "𝙑3.2.1", // Bot version (do not change unless updating)
+  VERSION: process.env.VERSION || "𝙑2.2.1", // Bot version (do not change unless updating)
   STATUS_MESSAGE: process.env.STATUS_MESSAGE || "🚀 𝙋𝙤𝙬𝙚𝙧𝙚𝙙 𝙗𝙮 𝙃𝘼𝙉𝙎-𝙗𝙮𝙩𝙚", // Customize the bot's status message
 
   // Auto Features (toggle features on/off)
