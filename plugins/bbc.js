@@ -3,6 +3,7 @@ const { cmd } = require('../command');
 
 cmd({
   pattern: 'bbcnews',
+  alias: ['bbc'],
   desc: 'Get the latest BBC news.',
   react: '📰',
   use: '.bbcnews',

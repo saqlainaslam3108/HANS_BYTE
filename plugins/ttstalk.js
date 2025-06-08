@@ -1,6 +1,5 @@
 const axios = require("axios");
 const { cmd } = require("../command");
- 
 
 cmd({
   pattern: "tiktokstalk",
@@ -15,10 +14,10 @@ cmd({
       return reply("❎ Please provide a TikTok username.\n\n*Example:* .tiktokstalk mrbeast");
     }
 
-    const apiUrl = `https://api.siputzx.my.id/api/stalk/tiktok?username=${encodeURIComponent(q)}`;
+    const apiUrl = `https://www.tikwm.com/api/user/info?unique_id=${encodeURIComponent(q)}`;
     const { data } = await axios.get(apiUrl);
 
-    if (!data.status) {
+    if (data.code !== 0 || !data.data?.user) {
       return reply("❌ User not found. Please check the username and try again.");
     }
 
@@ -30,9 +29,8 @@ cmd({
 👤 *Username:* @${user.uniqueId}
 📛 *Nickname:* ${user.nickname}
 ✅ *Verified:* ${user.verified ? "Yes ✅" : "No ❌"}
-📍 *Region:* ${user.region}
 📝 *Bio:* ${user.signature || "No bio available."}
-🔗 *Bio Link:* ${user.bioLink?.link || "No link available."}
+📺 *YouTube:* ${user.youtube_channel_title || "N/A"}
 
 📊 *Statistics:*
 👥 *Followers:* ${stats.followerCount.toLocaleString()}
@@ -40,35 +38,36 @@ cmd({
 ❤️ *Likes:* ${stats.heartCount.toLocaleString()}
 🎥 *Videos:* ${stats.videoCount.toLocaleString()}
 
-📅 *Account Created:* ${new Date(user.createTime * 1000).toLocaleDateString()}
 🔒 *Private Account:* ${user.privateAccount ? "Yes 🔒" : "No 🌍"}
 
 🔗 *Profile URL:* https://www.tiktok.com/@${user.uniqueId}
 > BY *HANS BYTE MD*
 `;
 
-// Newsletter context info
-const newsletterContext = {
-  mentionedJid: [m.sender],
-  forwardingScore: 1000,
-  isForwarded: true,
-  forwardedNewsletterMessageInfo: {
-    newsletterJid: '120363292876277898@newsletter',
-    newsletterName: "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
-    serverMessageId: 143,
-  },
-};
+    // Newsletter context info
+    const newsletterContext = {
+      mentionedJid: [m.sender],
+      forwardingScore: 1000,
+      isForwarded: true,
+      forwardedNewsletterMessageInfo: {
+        newsletterJid: '120363292876277898@newsletter',
+        newsletterName: "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
+        serverMessageId: 143,
+      },
+    };
 
-    const profileImage = { image: { url: user.avatarLarger }, caption: profileInfo };
+    const profileImage = {
+      image: { url: user.avatarLarger },
+      caption: profileInfo,
+    };
 
-   
     await conn.sendMessage(from, { ...profileImage, contextInfo: newsletterContext }, { quoted: m });
+
   } catch (error) {
     console.error("❌ Error in TikTok stalk command:", error);
     reply("⚠️ An error occurred while fetching TikTok profile data.");
   }
 });
-
 
 
 cmd({

@@ -52,7 +52,7 @@ cmd({
             };
 
             // Fetch video info from new API
-            const apiUrl = `https://api.giftedtech.my.id/api/download/ytdl?apikey=gifted&url=${encodeURIComponent(videoUrl)}`;
+            const apiUrl = `https://api.giftedtech.web.id/api/download/ytdl?apikey=gifted&url=${encodeURIComponent(videoUrl)}`;
             const response = await fetch(apiUrl);
             const data = await response.json();
 
@@ -126,7 +126,7 @@ cmd({
     }
 
     try {
-        const apiUrl = `https://api.giftedtech.my.id/api/download/ytdl?apikey=gifted&url=${encodeURIComponent(q)}`;
+        const apiUrl = `https://api.giftedtech.web.id/api/download/ytdl?apikey=gifted&url=${encodeURIComponent(q)}`;
         const response = await fetch(apiUrl);
         const json = await response.json();
 
