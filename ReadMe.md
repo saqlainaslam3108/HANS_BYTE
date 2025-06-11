@@ -67,6 +67,7 @@ Baileys - Library Provider
 
 Beta Testers - Community Members
 
+[@JawadYT36](https://github.com/JawadYT36)
 ### ⚠️ **Disclaimer**
 Not affiliated with WhatsApp Inc.
 

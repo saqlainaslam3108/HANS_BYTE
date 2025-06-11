@@ -7,6 +7,7 @@ const audioPath = path.join(__dirname, '../media/goku_owner.mp3');
 
 cmd({
     pattern: "owner",
+    alias: ["dev", "hans", "byte", "bot"],
     react: "✅",
     desc: "Get owner number",
     category: "main",
@@ -38,9 +39,9 @@ async (conn, mek, m, { from }) => {
             caption: `╭━━〔 *HANS BYTE* 〕━━┈⊷
 ┃◈╭─────────────·๏
 ┃◈┃• *Here is the owner details*
-┃◈┃• *Name* - ${ownerName}
-┃◈┃• *Number* ${ownerNumber}
-┃◈┃• *Version*: 3.0.0 Beta
+┃◈┃• *Name* - HANS TECH
+┃◈┃• *Number* 237696900612
+┃◈┃• *Version*: 2.2.0 
 ┃◈└───────────┈⊷
 ╰──────────────┈⊷
 > © *HANS BYTE MD*`,

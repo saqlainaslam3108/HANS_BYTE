@@ -40,8 +40,28 @@ const linkPatterns = [
   /https?:\/\/\S+/gi // Yeh kisi bhi "http" ya "https" se start hone wale link ko pakdega
 ];
 
+
+// Store anti-link status per group
+global.antiLinkEnabled = global.antiLinkEnabled || {};
+
 cmd({
-  'on': "body"
+  on: "anti_link"
+}, async (conn, m, store, {
+  from,
+  isGroup,
+  isAdmins,
+  reply
+}) => {
+  if (!isGroup || !isAdmins) return reply("❌ Only group admins can toggle Anti-Link.");
+
+  global.antiLinkEnabled[from] = !global.antiLinkEnabled[from];
+  const status = global.antiLinkEnabled[from] ? "✅ ENABLED" : "❌ DISABLED";
+  reply(`🛡️ *Anti-Link Protection is now:* ${status}`);
+});
+
+// Message listener for anti-link enforcement
+cmd({
+  on: "body"
 }, async (conn, m, store, {
   from,
   body,
@@ -52,50 +72,64 @@ cmd({
   reply
 }) => {
   try {
-    // Ensure global warnings object exists
     if (!global.warnings) global.warnings = {};
 
-    // Check if it's a group and bot has admin rights
-    if (!isGroup || isAdmins || !isBotAdmins) return;
+    const isAntiLinkOn = global.antiLinkEnabled?.[from];
+    if (!isGroup || !isBotAdmins || isAdmins || !isAntiLinkOn) return;
 
-    // Link detection
-    const linkPatterns = [/https?:\/\/\S+/]; // Ensure this is properly defined
+    const linkPatterns = [
+      /https?:\/\/(?:chat\.whatsapp\.com|wa\.me)\/\S+/gi,
+      /https?:\/\/(?:api\.whatsapp\.com|wa\.me)\/\S+/gi,
+      /wa\.me\/\S+/gi,
+      /https?:\/\/(?:t\.me|telegram\.me)\/\S+/gi,
+      /https?:\/\/(?:www\.)?\.com\/\S+/gi,
+      /https?:\/\/(?:www\.)?twitter\.com\/\S+/gi,
+      /https?:\/\/(?:www\.)?linkedin\.com\/\S+/gi,
+      /https?:\/\/(?:whatsapp\.com|channel\.me)\/\S+/gi,
+      /https?:\/\/(?:www\.)?reddit\.com\/\S+/gi,
+      /https?:\/\/(?:www\.)?discord\.com\/\S+/gi,
+      /https?:\/\/(?:www\.)?twitch\.tv\/\S+/gi,
+      /https?:\/\/(?:www\.)?vimeo\.com\/\S+/gi,
+      /https?:\/\/(?:www\.)?dailymotion\.com\/\S+/gi,
+      /https?:\/\/(?:www\.)?medium\.com\/\S+/gi
+    ];
+
     const containsLink = linkPatterns.some(pattern => pattern.test(body));
+    if (!containsLink) return;
 
-    if (containsLink && config.ANTI_LINK === 'true') {
-      console.log(`Link detected from ${sender}: ${body}`);
+    console.log(`Link detected from ${sender}: ${body}`);
 
-      // Immediately try to delete the message
-      try {
-        await conn.sendMessage(from, { delete: m.key });
-        console.log(`Message deleted: ${m.key.id}`);
-      } catch (deleteError) {
-        console.error("Failed to delete message:", deleteError);
-      }
-
-      // Increment warning count
-      global.warnings[sender] = (global.warnings[sender] || 0) + 1;
-      const warningCount = global.warnings[sender];
-
-      if (warningCount < 4) {
-        await conn.sendMessage(from, {
-          text: `⚠️ Warning ${warningCount}/4 @${sender.split('@')[0]}! Links are not allowed in this group.\nAfter 4 warnings, you will be removed. 🚫`,
-          mentions: [sender]
-        });
-      } else {
-        await conn.sendMessage(from, {
-          text: `🚫 @${sender.split('@')[0]} has been removed for sending links repeatedly after 4 warnings.`,
-          mentions: [sender]
-        });
-
-        await conn.groupParticipantsUpdate(from, [sender], "remove");
-
-        // Reset warnings after removal
-        delete global.warnings[sender];
-      }
+    try {
+      await conn.sendMessage(from, { delete: m.key });
+      console.log(`Message deleted: ${m.key.id}`);
+    } catch (err) {
+      console.error("Failed to delete message:", err);
     }
-  } catch (error) {
-    console.error("Anti-link error:", error);
-    reply("❌ An error occurred while processing the message.");
+
+    global.warnings[sender] = (global.warnings[sender] || 0) + 1;
+    const warningCount = global.warnings[sender];
+
+    if (warningCount < 4) {
+      await conn.sendMessage(from, {
+        text: `‎*⚠️LINKS ARE NOT ALLOWED⚠️*\n` +
+              `*╭────⬡ WARNING ⬡────*\n` +
+              `*├▢ USER :* @${sender.split('@')[0]}\n` +
+              `*├▢ COUNT : ${warningCount}*\n` +
+              `*├▢ REASON : LINK SENDING*\n` +
+              `*├▢ WARN LIMIT : 3*\n` +
+              `*╰────────────────*`,
+        mentions: [sender]
+      });
+    } else {
+      await conn.sendMessage(from, {
+        text: `@${sender.split('@')[0]} *HAS BEEN REMOVED - WARN LIMIT EXCEEDED!*`,
+        mentions: [sender]
+      });
+      await conn.groupParticipantsUpdate(from, [sender], "remove");
+      delete global.warnings[sender];
+    }
+  } catch (err) {
+    console.error("Anti-link error:", err);
+    reply("❌ An error occurred while processing anti-link.");
   }
 });

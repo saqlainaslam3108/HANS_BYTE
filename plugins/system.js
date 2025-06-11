@@ -58,24 +58,25 @@ cmd({
 
         // Create a fancy status string using cool fonts and extra special characters
         let status = `╭━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╮
-┃  ⏰ *𝓑𝓸𝓽 𝓤𝓹𝓽𝓲𝓶𝓮:* ${botUptime}
-┃  🖥️ *𝓢𝔂𝓼𝓽𝓮𝓶 𝓤𝓹𝓽𝓲𝓶𝓮:* ${sysUptime}
-┃  📟 *𝓡𝓐𝓜 𝓤𝓼𝓪𝓰𝓮:* ${usedMem}MB / ${totalMem}MB
-┃  🆓 *𝓕𝓻𝓮𝓮 𝓡𝓐𝓜:* ${freeMem}MB
-┃  ⚡ *𝓒𝓟𝓤 𝓜𝓸𝓭𝓮𝓵:* ${cpu.model}
-┃  🚀 *𝓒𝓟𝓤 𝓢𝓹𝓮𝓮𝓭:* ${cpuSpeed} MHz
-┃  📊 *𝓒𝓟𝓤 𝓤𝓼𝓪𝓰𝓮:* ${cpuUsage}%
-┃  🏷️ *𝓞𝓢 𝓣𝔂𝓹𝓮:* ${osType} (${osArch})
-┃  🔄 *𝓞𝓢 𝓥𝓮𝓻𝓼𝓲𝓸𝓷:* ${osRelease}
-┃  💾 *𝓓𝓲𝓼𝓴 𝓤𝓼𝓪𝓰𝓮:* ${diskUsage}
-┃  🌐 *𝓝𝓮𝓽𝔀𝓸𝓻𝓴:* ${networkInfo}
-┃  🏷️ *𝓐𝓬𝓽𝓲𝓿𝓮 𝓟𝓻𝓸𝓬𝓮𝓼𝓼𝓮𝓼:* ${processCount}
-┃  🔢 *𝓑𝓸𝓽 𝓟𝓘𝓓:* ${processId}
-┃  ⚙️ *𝓝𝓸𝓭𝓮.𝓳𝓼 𝓥𝓮𝓻𝓼𝓲𝓸𝓷:* ${nodeVersion}
-┃  👨‍💻 *𝓓𝓮𝓿𝓮𝓵𝓸𝓹𝓮𝓻:* Hans Tech
-┃  🧬 *𝓑𝓸𝓽 𝓥𝓮𝓻𝓼𝓲𝓸𝓷:* 1.0.0
-┃  ✞ *𝓞𝔀𝓷𝓮𝓻:* ${config.OWNER_NAME || "Unknown"}
+┃  ⏰ 𝗕𝗢𝗧 𝗨𝗣𝗧𝗜𝗠𝗘: ${botUptime}
+┃  🖥️ 𝗦𝗬𝗦𝗧𝗘𝗠 𝗨𝗣𝗧𝗜𝗠𝗘: ${sysUptime}
+┃  📟 𝗥𝗔𝗠 𝗨𝗦𝗔𝗚𝗘: ${usedMem}MB / ${totalMem}MB
+┃  🆓 𝗙𝗥𝗘𝗘 𝗥𝗔𝗠: ${freeMem}MB
+┃  ⚡ 𝗖𝗣𝗨 𝗠𝗢𝗗𝗘𝗟: ${cpu.model}
+┃  🚀 𝗖𝗣𝗨 𝗦𝗣𝗘𝗘𝗗: ${cpuSpeed} MHz
+┃  📊 𝗖𝗣𝗨 𝗨𝗦𝗔𝗚𝗘: ${cpuUsage}%
+┃  🏷️ 𝗢𝗦 𝗧𝗬𝗣𝗘: ${osType} (${osArch})
+┃  🔄 𝗢𝗦 𝗩𝗘𝗥𝗦𝗜𝗢𝗡: ${osRelease}
+┃  💾 𝗗𝗜𝗦𝗞 𝗨𝗦𝗔𝗚𝗘: ${diskUsage}
+┃  🌐 𝗡𝗘𝗧𝗪𝗢𝗥𝗞: ${networkInfo}
+┃  🏷️ 𝗔𝗖𝗧𝗜𝗩𝗘 𝗣𝗥𝗢𝗖𝗘𝗦𝗦𝗘𝗦: ${processCount}
+┃  🔢 𝗕𝗢𝗧 𝗣𝗜𝗗: ${processId}
+┃  ⚙️ 𝗡𝗢𝗗𝗘.𝗝𝗦 𝗩𝗘𝗥𝗦𝗜𝗢𝗡: ${nodeVersion}
+┃  👨‍💻 𝗗𝗘𝗩𝗘𝗟𝗢𝗣𝗘𝗥: Hans Tech
+┃  🧬 𝗕𝗢𝗧 𝗩𝗘𝗥𝗦𝗜𝗢𝗡: 2.2.0
+┃  ✞ 𝗢𝗪𝗡𝗘𝗥: ${config.OWNER_NAME || "Unknown"}
 ╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯
+
 
        𓆩 𝒑𝒐𝒘𝒆𝒓𝒆𝒅 𝒃𝒚 𝒉𝒂𝒏𝒔 𝒃𝒚𝒕𝒆 𓆪`;
 

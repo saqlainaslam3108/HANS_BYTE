@@ -18,7 +18,7 @@
     "@shineiichijo/marika": "^3.0.1",
     "@vitalets/google-translate-api": "^9.2.1",
     "@vreden/youtube_scraper": "^1.2.5",
-    "@whiskeysockets/baileys": "latest",
+    "@whiskeysockets/baileys": "npm:baileys-pro@0.0.5",
     "api-dylux": "^1.8.5",
     "api-qasim": "^3.2.5",
     "archiver": "^7.0.1",

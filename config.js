@@ -25,13 +25,14 @@ module.exports = {
 
   // Bot Settings
   BOT_NAME: process.env.BOT_NAME || "𝙷𝙰𝙽𝚂 𝙱𝚈𝚃𝙴", // Add your bot's name here
-  PREFIX: process.env.PREFIX || ".", // Add your command prefix here (e.g., ".", "!", "/")
-  MODE: process.env.MODE || "public", // Set your bot mode (e.g., "public" or "private")
-  VERSION: process.env.VERSION || "𝙑2.2.1", // Bot version (do not change unless updating)
+  PREFIX: process.env.PREFIX || "/", // Add your command prefix here (e.g., ".", "!", "/")
+  MODE: process.env.MODE || "private", // Set your bot mode (e.g., "public" or "private")
+  VERSION: process.env.VERSION || "𝙑2.2.0", // Bot version (do not change unless updating)
   STATUS_MESSAGE: process.env.STATUS_MESSAGE || "🚀 𝙋𝙤𝙬𝙚𝙧𝙚𝙙 𝙗𝙮 𝙃𝘼𝙉𝙎-𝙗𝙮𝙩𝙚", // Customize the bot's status message
 
   // Auto Features (toggle features on/off)
   AUTO_REACT: process.env.AUTO_REACT || "false", // Enable/disable auto reaction (true/false)
+  PUBLIC_MODE: process.env.PUBLIC_MODE || "true",
   AUTO_VOICE: process.env.AUTO_VOICE || "true", // Enable/disable auto voice messages (true/false)
   AUTO_STICKER: process.env.AUTO_STICKER || "true", // Enable/disable auto sticker rea (true/false)
   AUTO_REPLY: process.env.AUTO_REPLY || "true", // Enable/disable auto reply feature (true/false)
