@@ -1,122 +1,220 @@
 {
-    "name": "hans-byte-md",
-    "description": "A bot app with features for media processing, auto-reactions, and more",
-    "repository": "https://github.com/HaroldMth/HANS_BYTE",
-    "logo": "https://i.ibb.co/6Rxhg321/Chat-GPT-Image-Mar-30-2025-03-39-42-AM.png",
-    "documentation-link": "https://hans-pair-byte.onrender.com/",
-    "owner-verification": "mibeharold2@gmail.com",
-    "keywords": [
-      "nodejs",
-      "bot",
-      "media-processing",
-      "auto-reaction",
-      "whatsapp-bot",
-      "telegram-bot",
-      "automation",
-      "chatbot",
-      "sticker-generator",
-      "movie-api",
-      "OMDB"
-    ],
-    "env": {
-      "SESSION_ID": {
-        "description": "Session ID for the bot",
-        "value": ""
-      },
-      "SUDO": {
-        "description": "Admin/Sudo number",
-        "value": "237696900612"
-      },
-      "OWNER_NUM": {
-        "description": "Owner's phone number",
-        "value": "237680260772"
-      },
-      "OWNER_NAME": {
-        "description": "Owner's name",
-        "value": "HANS TECH"
-      },
-      "OWNER_EMAIL": {
-        "description": "Owner's email",
-        "value": "your@email.com"
-      },
-      "OWNER_LOCATION": {
-        "description": "Owner's location",
-        "value": "Africa/Douala"
-      },
-      "OWNER_GITHUB": {
-        "description": "Owner's GitHub profile URL",
-        "value": "https://github.com/HansTech1"
-      },
-      "OMDB_API_KEY": {
-        "description": "OMDB API key",
-        "value": "5e339fb7"
-      },
-      "GEMINI_API_KEY": {
-        "description": "Gemini API key",
-        "value": "AIzaSyDrhALyWLk7RN40C1sX5a03XVk8tO48P_8"
-      },
-      "MOVIE_API_KEY": {
-        "description": "Movie API key",
-        "value": "sky|d154108e41377cceb22ef92434509bc9081ae46b"
-      },
-      "BOT_NAME": {
-        "description": "Bot's name",
-        "value": "𝙃𝘼𝙉𝙎-𝙗𝙮𝙩𝙚"
-      },
-      "PREFIX": {
-        "description": "Command prefix for the bot",
-        "value": "."
-      },
-      "MODE": {
-        "description": "Bot mode (public/private)",
-        "value": "public"
-      },
-      "VERSION": {
-        "description": "Bot version",
-        "value": "𝙑3.2.1"
-      },
-      "STATUS_MESSAGE": {
-        "description": "Bot's status message",
-        "value": "🚀 𝙋𝙤𝙬𝙚𝙧𝙚𝙙 𝙗𝙮 𝙃𝘼𝙉𝙎-𝙗𝙮𝙩𝙚"
-      },
-      "ALIVE_IMG": {
-        "description": "Image URL for the bot's alive message",
-        "value": "https://i.ibb.co/6Rxhg321/Chat-GPT-Image-Mar-30-2025-03-39-42-AM.png"
-      },
-      "ALIVE_MSG": {
-        "description": "Message when bot is alive",
-        "value": "Hello , I am alive now!!"
-      },
-      "STICKER_PACKNAME": {
-        "description": "Sticker pack name",
-        "value": "HANS BYTE MD"
-      },
-      "STICKER_AUTHOR": {
-        "description": "Sticker author name",
-        "value": "HANS TECH"
-      },
-      "GROUP_PP_SIZE": {
-        "description": "Group profile picture size",
-        "value": 512
-      },
-      "USER_PP_SIZE": {
-        "description": "User profile picture size",
-        "value": 640
-      },
-      "GITHUB": {
-        "description": "GitHub username",
-        "value": "HaroldMth"
-      },
-      "TIMEZONE": {
-        "description": "Timezone",
-        "value": "𝙒𝘼𝙏+1"
-      }
+  "bot-name": "𝙷𝙰𝙽𝚂 𝙱𝚈𝚃𝙴",
+  "description": "🚀 𝙋𝙤𝙬𝙚𝙧𝙚𝙙 𝙗𝙮 𝙃𝘼𝙉𝙎-𝙗𝚢𝙩𝙚",
+  "logo": "https://i.ibb.co/6Rxhg321/Chat-GPT-Image-Mar-30-2025-03-39-42-AM.png",
+  "keywords": ["bot"],
+  "documentation-link": "https://hans-byte-pair.onrender.com",
+  "owner-verification": "your@email.com",
+  "env": {
+    "SESSION_ID": {
+      "description": "Your session ID (starts with HANS-BYTE~ )",
+      "value": "",
+      "required": true
     },
-    "scripts": {
-      "postdeploy": "npm run migrate"
+    "SUDO": {
+      "description": "Admin/SUDO number",
+      "value": "237696900612",
+      "required": true
     },
-    "addons": [
-      "heroku-postgresql"
-    ]
+    "OWNER_NUM": {
+      "description": "Owner’s phone number",
+      "value": "237680260772",
+      "required": true
+    },
+    "OWNER_NAME": {
+      "description": "Owner’s name",
+      "value": "HANS TECH",
+      "required": true
+    },
+    "OWNER_EMAIL": {
+      "description": "Owner’s email address",
+      "value": "your@email.com",
+      "required": true
+    },
+    "OWNER_LOCATION": {
+      "description": "Owner’s location",
+      "value": "Africa/Douala",
+      "required": true
+    },
+    "OWNER_GITHUB": {
+      "description": "Owner’s GitHub profile URL",
+      "value": "https://github.com/HansTech1",
+      "required": false
+    },
+    "OMDB_API_KEY": {
+      "description": "OMDB API key",
+      "value": "5e339fb7",
+      "required": false
+    },
+    "GEMINI_API_KEY": {
+      "description": "Gemini API key",
+      "value": "AIzaSyDrhALyWLk7RN40C1sX5a03XVk8tO48P_8",
+      "required": false
+    },
+    "MOVIE_API_KEY": {
+      "description": "Movie API key",
+      "value": "sky|d154108e41377cceb22ef92434509bc9081ae46b",
+      "required": false
+    },
+    "BOT_NAME": {
+      "description": "Your bot’s name",
+      "value": "𝙷𝙰𝙽𝚂 𝙱𝚈𝚃𝙴",
+      "required": true
+    },
+    "PREFIX": {
+      "description": "Command prefix (e.g., \".\" or \"!\")",
+      "value": ".",
+      "required": true
+    },
+    "MODE": {
+      "description": "Bot mode (public or private)",
+      "value": "private",
+      "required": true
+    },
+    "VERSION": {
+      "description": "Bot version",
+      "value": "𝙑2.2.0",
+      "required": false
+    },
+    "STATUS_MESSAGE": {
+      "description": "Bot’s status message",
+      "value": "🚀 𝙋𝙤𝙬𝙚𝙧𝙚𝙙 𝙗𝙮 𝙃𝘼𝙉𝙎-𝙗𝚢𝙩𝙚",
+      "required": false
+    },
+    "AUTO_REACT": {
+      "description": "Enable/disable auto reactions",
+      "value": "false",
+      "required": false
+    },
+    "PUBLIC_MODE": {
+      "description": "Enable/disable public mode",
+      "value": "true",
+      "required": false
+    },
+    "AUTO_VOICE": {
+      "description": "Enable/disable auto voice messages",
+      "value": "true",
+      "required": false
+    },
+    "AUTO_STICKER": {
+      "description": "Enable/disable auto stickers",
+      "value": "true",
+      "required": false
+    },
+    "AUTO_REPLY": {
+      "description": "Enable/disable auto replies",
+      "value": "true",
+      "required": false
+    },
+    "AUTO_READ_STATUS": {
+      "description": "Enable/disable auto-read of status",
+      "value": "true",
+      "required": false
+    },
+    "CUSTOM_REACT": {
+      "description": "Enable/disable custom reactions",
+      "value": "false",
+      "required": false
+    },
+    "CUSTOM_REACT_EMOJIS": {
+      "description": "List of custom reaction emojis",
+      "value": "💝,💖,💗,❤️‍🩹,❤️,🧡,💛,💚,💙,💜,🤎,🖤,🤍",
+      "required": false
+    },
+    "ANTI_LINK": {
+      "description": "Enable/disable anti-link",
+      "value": "true",
+      "required": false
+    },
+    "ANTI_DELETE": {
+      "description": "Enable/disable anti-delete",
+      "value": "false",
+      "required": false
+    },
+    "AUTO_TYPING": {
+      "description": "Enable/disable auto-typing indicator",
+      "value": "true",
+      "required": false
+    },
+    "ALWAYSONLINE": {
+      "description": "Keep bot always online",
+      "value": "true",
+      "required": false
+    },
+    "AUTO_RECORDING": {
+      "description": "Enable/disable auto-recording indicator",
+      "value": "true",
+      "required": false
+    },
+    "AUTO_STATUS_SEEN": {
+      "description": "Enable/disable auto status seen",
+      "value": "true",
+      "required": false
+    },
+    "AUTO_STATUS_REACT": {
+      "description": "Enable/disable auto status react",
+      "value": "true",
+      "required": false
+    },
+    "READ_MESSAGE": {
+      "description": "Enable/disable message read",
+      "value": "true",
+      "required": false
+    },
+    "ANTI_BAD": {
+      "description": "Enable/disable anti-bad words",
+      "value": "true",
+      "required": false
+    },
+    "AUTO_STATUS_REPLY": {
+      "description": "Enable/disable auto status replies",
+      "value": "true",
+      "required": false
+    },
+    "WELCOME": {
+      "description": "Enable/disable welcome messages",
+      "value": "true",
+      "required": false
+    },
+    "ALIVE_IMG": {
+      "description": "URL of the alive image",
+      "value": "https://i.ibb.co/6Rxhg321/Chat-GPT-Image-Mar-30-2025-03-39-42-AM.png",
+      "required": false
+    },
+    "ALIVE_MSG": {
+      "description": "Alive message text",
+      "value": "Hello , I am alive now!!",
+      "required": false
+    },
+    "STICKER_PACKNAME": {
+      "description": "Sticker pack name",
+      "value": "HANS BYTE MD",
+      "required": false
+    },
+    "STICKER_AUTHOR": {
+      "description": "Sticker author name",
+      "value": "HANS TECH",
+      "required": false
+    },
+    "GROUP_PP_SIZE": {
+      "description": "Group profile picture size",
+      "value": "512",
+      "required": false
+    },
+    "USER_PP_SIZE": {
+      "description": "User profile picture size",
+      "value": "640",
+      "required": false
+    },
+    "GITHUB": {
+      "description": "GitHub username",
+      "value": "HaroldMth",
+      "required": false
+    },
+    "TIMEZONE": {
+      "description": "Timezone setting",
+      "value": "𝙒𝘼𝙏+1",
+      "required": false
+    }
   }
-  
+}
