@@ -25,7 +25,7 @@ module.exports = {
 
   // Bot Settings
   BOT_NAME: process.env.BOT_NAME || "𝙷𝙰𝙽𝚂 𝙱𝚈𝚃𝙴", // Add your bot's name here
-  PREFIX: process.env.PREFIX || "/", // Add your command prefix here (e.g., ".", "!", "/")
+  PREFIX: process.env.PREFIX || ".", // Add your command prefix here (e.g., ".", "!", "/")
   MODE: process.env.MODE || "private", // Set your bot mode (e.g., "public" or "private")
   VERSION: process.env.VERSION || "𝙑2.2.0", // Bot version (do not change unless updating)
   STATUS_MESSAGE: process.env.STATUS_MESSAGE || "🚀 𝙋𝙤𝙬𝙚𝙧𝙚𝙙 𝙗𝙮 𝙃𝘼𝙉𝙎-𝙗𝙮𝙩𝙚", // Customize the bot's status message
