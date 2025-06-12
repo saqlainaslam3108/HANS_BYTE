@@ -73,7 +73,7 @@ cmd({
 ┃  🔢 𝗕𝗢𝗧 𝗣𝗜𝗗: ${processId}
 ┃  ⚙️ 𝗡𝗢𝗗𝗘.𝗝𝗦 𝗩𝗘𝗥𝗦𝗜𝗢𝗡: ${nodeVersion}
 ┃  👨‍💻 𝗗𝗘𝗩𝗘𝗟𝗢𝗣𝗘𝗥: Hans Tech
-┃  🧬 𝗕𝗢𝗧 𝗩𝗘𝗥𝗦𝗜𝗢𝗡: 2.2.0
+┃  🧬 𝗕𝗢𝗧 𝗩𝗘𝗥𝗦𝗜𝗢𝗡: ${config.VERSION}
 ┃  ✞ 𝗢𝗪𝗡𝗘𝗥: ${config.OWNER_NAME || "Unknown"}
 ╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯
 

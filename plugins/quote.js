@@ -123,25 +123,26 @@ cmd({
     }
 });
 
+
 cmd({
-    pattern: "facts",
-    desc: "Get a random fact.",
+    pattern: "advice",
+    desc: "Get a random advice.",
     category: "other",
     react: "💡",
     filename: __filename
 }, async (conn, mek, m, { from, reply, sender }) => {
     try {
-        const response = await axios.get('https://apis.davidcyriltech.my.id/fact');
+        const response = await axios.get('https://api.giftedtech.web.id/api/fun/advice?apikey=gifted');
         const data = response.data;
+
         let imageUrl = "https://i.ibb.co/6Rxhg321/Chat-GPT-Image-Mar-30-2025-03-39-42-AM.png";
 
         if (!data.success) {
-            return reply("❌ Failed to fetch a pick-up line. Please try again.");
+            return reply("❌ Failed to fetch advice. Please try again.");
         }
 
-        // Use correct property name
-        const quoteMessage = `💬 *Fact of the Day* 💬\n\n_\"${data.fact}\"_\n\n`;
-        
+        const quoteMessage = `💬 *Advice of the Day* 💬\n\n_\"${data.result}\"_\n\n`;
+
         const newsletterContext = {
             mentionedJid: [sender],
             forwardingScore: 1000,
@@ -158,8 +159,137 @@ cmd({
             caption: quoteMessage,
             contextInfo: newsletterContext,
         }, { quoted: mek });
+
     } catch (error) {
-        console.error("Error fetching fact line:", error);
+        console.error("Error fetching advice:", error);
         reply(`❌ Error: ${error.message}`);
     }
 });
+
+cmd({
+    pattern: "goodnight",
+    desc: "Send a random good night message.",
+    category: "other",
+    react: "🌙",
+    filename: __filename
+}, async (conn, mek, m, { from, reply, sender }) => {
+    try {
+        const response = await axios.get('https://api.giftedtech.web.id/api/fun/goodnight?apikey=gifted');
+        const data = response.data;
+
+        let imageUrl = "https://i.ibb.co/6Rxhg321/Chat-GPT-Image-Mar-30-2025-03-39-42-AM.png";
+
+        if (!data.success) {
+            return reply("❌ Failed to fetch good night wishes. Please try again.");
+        }
+
+        const quoteMessage = `🌌 *Good Night Wishes* 🌌\n\n_\"${data.result}\"_\n\n`;
+
+        const newsletterContext = {
+            mentionedJid: [sender],
+            forwardingScore: 1000,
+            isForwarded: true,
+            forwardedNewsletterMessageInfo: {
+                newsletterJid: '120363292876277898@newsletter',
+                newsletterName: "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
+                serverMessageId: 143,
+            },
+        };
+
+        await conn.sendMessage(from, {
+            image: { url: imageUrl },
+            caption: quoteMessage,
+            contextInfo: newsletterContext,
+        }, { quoted: mek });
+
+    } catch (error) {
+        console.error("Error fetching good night message:", error);
+        reply(`❌ Error: ${error.message}`);
+    }
+});
+
+cmd({
+    pattern: "motivation",
+    desc: "Get a motivational quote.",
+    category: "other",
+    react: "🔥",
+    filename: __filename
+}, async (conn, mek, m, { from, reply, sender }) => {
+    try {
+        const response = await axios.get('https://api.giftedtech.web.id/api/fun/motivation?apikey=gifted');
+        const data = response.data;
+
+        let imageUrl = "https://i.ibb.co/6Rxhg321/Chat-GPT-Image-Mar-30-2025-03-39-42-AM.png";
+
+        if (!data.success) {
+            return reply("❌ Failed to fetch motivation quote. Please try again.");
+        }
+
+        const quoteMessage = `💪 *Motivational Quote* 💪\n\n_\"${data.result}\"_\n\n`;
+
+        const newsletterContext = {
+            mentionedJid: [sender],
+            forwardingScore: 1000,
+            isForwarded: true,
+            forwardedNewsletterMessageInfo: {
+                newsletterJid: '120363292876277898@newsletter',
+                newsletterName: "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
+                serverMessageId: 143,
+            },
+        };
+
+        await conn.sendMessage(from, {
+            image: { url: imageUrl },
+            caption: quoteMessage,
+            contextInfo: newsletterContext,
+        }, { quoted: mek });
+
+    } catch (error) {
+        console.error("Error fetching motivational quote:", error);
+        reply(`❌ Error: ${error.message}`);
+    }
+});
+
+cmd({
+    pattern: "heartbreak",
+    desc: "Get a heartbreaking quote.",
+    category: "other",
+    react: "💔",
+    filename: __filename
+}, async (conn, mek, m, { from, reply, sender }) => {
+    try {
+        const response = await axios.get('https://api.giftedtech.web.id/api/fun/heartbreak?apikey=gifted');
+        const data = response.data;
+
+        let imageUrl = "https://i.ibb.co/6Rxhg321/Chat-GPT-Image-Mar-30-2025-03-39-42-AM.png";
+
+        if (!data.success) {
+            return reply("❌ Failed to fetch heartbreak quote. Please try again.");
+        }
+
+        const quoteMessage = `💔 *Heartbreak Quote* 💔\n\n_\"${data.result}\"_\n\n`;
+
+        const newsletterContext = {
+            mentionedJid: [sender],
+            forwardingScore: 1000,
+            isForwarded: true,
+            forwardedNewsletterMessageInfo: {
+                newsletterJid: '120363292876277898@newsletter',
+                newsletterName: "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
+                serverMessageId: 143,
+            },
+        };
+
+        await conn.sendMessage(from, {
+            image: { url: imageUrl },
+            caption: quoteMessage,
+            contextInfo: newsletterContext,
+        }, { quoted: mek });
+
+    } catch (error) {
+        console.error("Error fetching heartbreak quote:", error);
+        reply(`❌ Error: ${error.message}`);
+    }
+});
+
+

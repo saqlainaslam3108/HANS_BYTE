@@ -19,7 +19,18 @@ async (conn, mek, m, { from }) => {
         const ownerName = config.OWNER_NAME;
 
         // Use CRLF line breaks for vCard formatting
-        const vcard = `BEGIN:VCARD\r\nVERSION:3.0\r\nFN:${ownerName}\r\nTEL;type=CELL;type=VOICE;waid=${ownerNumber.replace('+', '')}:${ownerNumber}\r\nEND:VCARD`;
+        const vcard = `BEGIN:VCARD
+VERSION:3.0
+FN:237696900612
+N:HANS;TECH;;;
+ORG:Hans Tech
+TITLE:Founder & Developer
+TEL;TYPE=CELL,VOICE;waid=${ownerNumber.replace('+', '')}:${ownerNumber}
+EMAIL:${ownerEmail}
+URL:https://hans-byte-pair.onrender.com
+NOTE:This is the official contact card of HANS TECH
+END:VCARD
+`;
         console.log("[DEBUG] Generated vCard:", vcard);
 
         // Send the vCard as a contact message
@@ -41,7 +52,7 @@ async (conn, mek, m, { from }) => {
 ┃◈┃• *Here is the owner details*
 ┃◈┃• *Name* - HANS TECH
 ┃◈┃• *Number* 237696900612
-┃◈┃• *Version*: 2.2.0 
+┃◈┃• *Version*: ${config.VERSION}
 ┃◈└───────────┈⊷
 ╰──────────────┈⊷
 > © *HANS BYTE MD*`,
