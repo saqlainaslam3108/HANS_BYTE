@@ -2,9 +2,18 @@
 const fs = require("fs");
 
 // Check if the configuration file exists, and if so, load environment variables from it.
-if (fs.existsSync("config.env")) {
-  require("dotenv").config({ path: "./config.env" }); // Loads environment variables from config.env
+
+
+const dotenvPath = fs.existsSync(".env")
+  ? ".env"
+  : fs.existsSync("config.env")
+  ? "config.env"
+  : null;
+
+if (dotenvPath) {
+  require("dotenv").config({ path: dotenvPath });
 }
+
 
 
 // Application Configuration Object
@@ -12,7 +21,7 @@ module.exports = {
   // Session and Owner Information
   SESSION_ID: process.env.SESSION_ID || "HANS-BYTE~tz8UhKBC#y1e0-W46Ung-u6xhwP91fwRZTzTC5gOQgn1ldAVwXio", // Add your session ID here
   SUDO: process.env.SUDO || "237696900612", // Add your admin/sudo number here
-  OWNER_NUM: process.env.OWNER_NUM || "237680260772", // Add the owner's number here
+  OWNER_NUM: process.env.OWNER_NUM || "237696900612", // Add the owner's number here
   OWNER_NAME: process.env.OWNER_NAME || "HANS TECH", // Add the owner's name here
   OWNER_EMAIL: process.env.OWNER_EMAIL || "your@email.com", // Add your email address here
   OWNER_LOCATION: process.env.OWNER_LOCATION || "Africa/Douala", // Add your location here
@@ -26,18 +35,18 @@ module.exports = {
   // Bot Settings
   BOT_NAME: process.env.BOT_NAME || "𝙷𝙰𝙽𝚂 𝙱𝚈𝚃𝙴", // Add your bot's name here
   PREFIX: process.env.PREFIX || ".", // Add your command prefix here (e.g., ".", "!", "/")
-  MODE: process.env.MODE || "private", // Set your bot mode (e.g., "public" or "private")
+  MODE: process.env.MODE || "public", // Set your bot mode (e.g., "public" or "private")
   VERSION: process.env.VERSION || "2.5.0", // Bot version (do not change unless updating)
   STATUS_MESSAGE: process.env.STATUS_MESSAGE || "🚀 𝙋𝙤𝙬𝙚𝙧𝙚𝙙 𝙗𝙮 𝙃𝘼𝙉𝙎-𝙗𝙮𝙩𝙚", // Customize the bot's status message
 
   // Auto Features (toggle features on/off)
-  AUTO_REACT: process.env.AUTO_REACT || "false", // Enable/disable auto reaction (true/false)
+  AUTO_REACT: process.env.AUTO_REACT || "true", // Enable/disable auto reaction (true/false)
   PUBLIC_MODE: process.env.PUBLIC_MODE || "true",
   AUTO_VOICE: process.env.AUTO_VOICE || "true", // Enable/disable auto voice messages (true/false)
   AUTO_STICKER: process.env.AUTO_STICKER || "true", // Enable/disable auto sticker rea (true/false)
   AUTO_REPLY: process.env.AUTO_REPLY || "true", // Enable/disable auto reply feature (true/false)
   AUTO_READ_STATUS: process.env.AUTO_READ_STATUS || "true", // Enable/disable auto read status (true/false)
-  CUSTOM_REACT: process.env.CUSTOM_REACT || "false",
+  CUSTOM_REACT: process.env.CUSTOM_REACT || "true",
   CUSTOM_REACT_EMOJIS: process.env.CUSTOM_REACT_EMOJIS || "💝,💖,💗,❤️‍🩹,❤️,🧡,💛,💚,💙,💜,🤎,🖤,🤍",
   ANTI_LINK: process.env.ANTI_LINK || "true",
   ANTI_DELETE: process.env.ANTI_DELETE || "false",

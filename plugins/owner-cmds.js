@@ -144,22 +144,4 @@ cmd({
 });
 
 //--------------------- STATUS REACT ---------------------
-cmd({
-    pattern: "status_react",
-    alias: ["statusreact"],
-    desc: "Enable or disable auto-reacting to statuses.",
-    category: "settings",
-    filename: __filename
-}, async (conn, mek, m, { args, sender, reply }) => {
-    if (!isRealOwner(sender)) return reply("*📛 Only the owner can use this command!*");
-    const status = args[0]?.toLowerCase();
-    if (status === "on") {
-        config.AUTO_STATUS_REACT = "true";
-        reply("*_AUTOLIKESTATUS IS NOW ENABLED._* ☑️");
-    } else if (status === "off") {
-        config.AUTO_STATUS_REACT = "false";
-        reply("*_AUTOLIKESTATUS IS NOW DISABLED._* ❌");
-    } else {
-        reply(`🫟 Example: ${prefix}status_react on/off`);
-    }
-});
+
