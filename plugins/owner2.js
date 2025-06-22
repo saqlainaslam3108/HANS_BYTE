@@ -26,8 +26,8 @@ N:HANS;TECH;;;
 ORG:Hans Tech
 TITLE:Founder & Developer
 TEL;TYPE=CELL,VOICE;waid=${ownerNumber.replace('+', '')}:${ownerNumber}
-EMAIL:${ownerEmail}
-URL:https://hans-byte-pair.onrender.com
+EMAIL:Hans@gmail.com
+URL:https://hans-pair-site.onrender.com/pair
 NOTE:This is the official contact card of HANS TECH
 END:VCARD
 `;

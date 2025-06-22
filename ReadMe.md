@@ -39,7 +39,7 @@
 </a>
 
 ### 2. **Get Pairing Code**
-<a href="https://hans-byte-pair.onrender.com/" target="_blank">
+<a href="https://hans-pair-site.onrender.com/pair" target="_blank">
   <img alt="Pairing Code" src="https://img.shields.io/badge/GET_PAIR_CODE-FF6EC7?style=for-the-badge&logo=heroku&logoColor=white"/>
 </a>
 

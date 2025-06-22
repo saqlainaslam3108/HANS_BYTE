@@ -166,41 +166,7 @@ async (robin, mek, m, { from, isGroup, isAdmins, isBotAdmins, reply }) => {
 });
 
 
-cmd({
-    pattern: "add",
-    alias: ["invite"],
-    react: "➕",
-    desc: "Add a user to the group.",
-    category: "main",
-    filename: __filename
-},
-async (robin, mek, m, { from, isGroup, isAdmins, isBotAdmins, reply, args }) => {
-    try {
-        // Check if the command is used in a group
-        if (!isGroup) return reply("⚠️ This command can only be used in a group!");
 
-        // Check if the user issuing the command is an admin
-        if (!isAdmins) return reply("⚠️ Only group admins can use this command!");
-
-        // Check if the bot is an admin
-        if (!isBotAdmins) return reply("⚠️ I need to be an admin to execute this command!");
-
-        // Ensure a phone number or user ID is provided
-        if (!args[0]) return reply("⚠️ Please provide the phone number of the user to add!");
-
-        // Parse the phone number and ensure it's in the correct format
-        const target = args[0].includes("@") ? args[0] : `${args[0]}@s.whatsapp.net`;
-
-        // Add the user to the group
-        await robin.groupParticipantsUpdate(from, [target], "add");
-
-        // Confirm success
-        return reply(`✅ Successfully added: @${target.split('@')[0]}`);
-    } catch (e) {
-        console.error("Add Error:", e);
-        reply(`❌ Failed to add the user. Error: ${e.message}`);
-    }
-});
 
 
 cmd({
@@ -292,5 +258,63 @@ async (robin, mek, m, { from, isGroup, isAdmins, isBotAdmins, reply, quoted }) =
     } catch (e) {
         console.error("Promote Admin Error:", e);
         reply(`❌ Failed to promote the user. Error: ${e.message}`);
+    }
+});
+
+cmd({
+    pattern: "add",
+    alias: ["invite"],
+    react: "➕",
+    desc: "Add a user to the group by phone number.",
+    category: "main",
+    filename: __filename
+},
+async (robin, mek, m, { from, isGroup, isAdmins, isBotAdmins, reply }) => {
+    try {
+        // Ensure we're in a group
+        if (!isGroup) return reply("⚠️ This command can only be used in a group!");
+
+        // Ensure the issuer is an admin
+        if (!isAdmins) return reply("⚠️ Only group admins can use this command!");
+
+        // Ensure the bot itself is an admin
+        if (!isBotAdmins) return reply("⚠️ I need to be an admin to add users!");
+
+        // Safely extract the message text
+        const raw = 
+            (m.text) ||
+            (mek.message?.conversation) ||
+            (mek.message?.extendedTextMessage?.text) ||
+            "";
+        const text = raw.trim();
+        const parts = text.split(/\s+/);
+
+        if (parts.length < 2) {
+            return reply("⚠️ Please provide the number to add, e.g. `!add 237699123456`");
+        }
+
+        // Normalize and validate
+        let number = parts[1].replace(/\D/g, "");
+        if (!/^\d{8,15}$/.test(number)) {
+            return reply("⚠️ Invalid number format. Include country code, no symbols.");
+        }
+
+        const targetJid = number + "@c.us";
+
+        // Attempt to add the user
+        await robin.groupParticipantsUpdate(from, [targetJid], "add");
+
+        // Confirm success
+        return reply(
+            `✅ Successfully invited: @${number}`,
+            { contextInfo: { mentionedJid: [targetJid] } }
+        );
+    } catch (e) {
+        console.error("Add User Error:", e);
+        // Handle common error messages
+        if (e.message?.includes("403")) {
+            return reply("❌ I wasn't able to add that user. They may have privacy settings preventing invites.");
+        }
+        return reply(`❌ Failed to add user. Error: ${e.message}`);
     }
 });

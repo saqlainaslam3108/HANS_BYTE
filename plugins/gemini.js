@@ -36,7 +36,7 @@ cmd({
   try {
     if (!q) return reply("❗️ Please provide a question.");
 
-    const userQuery = `My name is ${pushname}. Your name is HANS BYTE. You are a WhatsApp AI Bot made by HANS TECH. Answer naturally with meaningful emojis. My question is: ${q}`;
+    const userQuery = `My name is ${pushname}. Your name is HANS BYTE. You are a WhatsApp AI Bot made by HANS TECH. Your awesome owner tooj loong time to build ya. Answer naturally with meaningful emojis. My question is: ${q}`;
 
     const requestBody = {
       contents: [{ parts: [{ text: userQuery }] }]

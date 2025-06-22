@@ -80,38 +80,39 @@ cmd(
 
 
 ╭─⊳⋅🤖 𝕮𝖔𝖗𝖊 𝖀𝖙𝖎𝖑𝖘 ⋅⊲─╮
-⌬ ${config.PREFIX}alive
-⌬ ${config.PREFIX}menu
-⌬ ${config.PREFIX}system
-⌬ ${config.PREFIX}owner
-⌬ ${config.PREFIX}ping
-⌬ ${config.PREFIX}owner
-⌬ ${config.PREFIX}dev
-⌬ ${config.PREFIX}report
-╰─⊲⋅═══════════⋅⊳─╯
+┃⌬ ${config.PREFIX}alive
+┃⌬ ${config.PREFIX}menu
+┃⌬ ${config.PREFIX}system
+┃⌬ ${config.PREFIX}owner
+┃⌬ ${config.PREFIX}ping
+┃⌬ ${config.PREFIX}owner
+┃⌬ ${config.PREFIX}dev
+┃⌬ ${config.PREFIX}report
+╰─⊲⋅════════━━━━━┈⊷
 
 ╭─⊳⋅⛩️ 𝕬𝖓𝖎𝖒𝖊 ⋅⊲─╮
 ⌬ ${config.PREFIX}anime
 ⌬ ${config.PREFIX}andl
 ⌬ ${config.PREFIX}download
 ⌬ ${config.PREFIX}animedetails
-╰─═══════════⋅⊳─╯
+╰─═════════━━━━━┈⊷
 
 ╭─⊳⋅📡 𝕬𝕴 ⋅⊲─╮
 ⟠ ${config.PREFIX}ai 
+⟠ ${config.PREFIX}hansai
 ⟠ ${config.PREFIX}gpt 
 ⟠ ${config.PREFIX}gemini 
 ⟠ ${config.PREFIX}deepseek
 ⟠ ${config.PREFIX}claude
 ⟠ ${config.PREFIX}metaai
 ⟠ ${config.PREFIX}dalle
-╰─⊲⋅═════════⋅⊳─╯
+╰─⊲⋅═════━━━━━┈⊷
 
 ╭─⊳⋅🎲 𝕲𝖆𝖒𝖊𝖘 & 𝕱𝖚𝖓 ⋅⊲─╮  
 ★ ${config.PREFIX}roll  
 ☆ ${config.PREFIX}coinflip  
 ✦ ${config.PREFIX}shapar 
-╰─⊲⋅═════════════⋅⊳─╯ 
+╰─⊲⋅══════━━━━━┈⊷ 
 
 ╭─⊳⋅🔧 𝖀𝖙𝖎𝖑𝖎𝖙𝖎𝖊𝖘 ⋅⊲─╮  
 ➤ ${config.PREFIX}rcolor  
@@ -119,14 +120,14 @@ cmd(
 ➺ ${config.PREFIX}date  
 ➺ ${config.PREFIX}userinfo
 ➺ ${config.PREFIX}countryé
-╰─⊲⋅═════════⋅⊳─╯
+╰─⊲⋅═════━━━━━┈⊷
 
 ╭─⊳⋅👑 𝕺𝖜𝖓𝖊𝖗 ⋅⊲─╮  
 ✪ ${config.PREFIX}count  
 ⌬ ${config.PREFIX}shutdown
 ⌬ ${config.PREFIX}broadcast
 ⌬ ${config.PREFIX}gjid
-╰─⊲⋅═════════⋅⊳─╯
+╰─⊲⋅═══════━━━━━┈⊷
 
 ╭─⊳⋅🎵 𝕸𝖊𝖉𝖎𝖆 𝕿𝖔𝖔𝖑𝖘 ⋅⊲─╮
 ⭒ ${config.PREFIX}sticker
@@ -154,7 +155,7 @@ cmd(
 ⭒ ${config.PREFIX}technews
 ⭒ ${config.PREFIX}vcf
 ⭒ ${config.PREFIX}font <text>
-╰─⊲⋅═════════════⋅⊳─╯
+╰─⊲⋅═══════━━━━━┈⊷
 
 ╭─⊳⋅⬇️ 𝕯𝖔𝖜𝖓𝖑𝖔𝖆𝖉𝖊𝖗𝖘 ⋅⊲─╮
 ⋗ 𝘼𝙪𝙙𝙞𝙤:
@@ -184,7 +185,7 @@ cmd(
   ⇝ ${config.PREFIX}capcut
   ⇝ ${config.PREFIX}telestick
   ⇝ ${config.PREFIX}apk
-╰─⊲⋅═══════════⋅⊳─╯
+╰─⊲⋅══════━━━━━┈⊷
 
 ╭─⊳⋅🔍 𝕾𝖊𝖆𝖗𝖈𝖍 ⋅⊲─╮
 ⨳ ${config.PREFIX}anime
@@ -194,7 +195,7 @@ cmd(
 ⨳ ${config.PREFIX}ytsearch
 ⨳ ${config.PREFIX}wikipedia
 ⨳ ${config.PREFIX}tiksearch
-╰─⊲⋅══════════⋅⊳─╯
+╰─⊲⋅══════━━━━━┈⊷
 
 ╭─⊳⋅😃 𝓔𝓜𝓞𝓣𝓘𝓞𝓝𝓢 ⋅⊲─╮
 ⤷ ${config.PREFIX}happy
@@ -206,11 +207,22 @@ cmd(
 ⤷ ${config.PREFIX}confused
 ⤷ ${config.PREFIX}hot
 ⤷ ${config.PREFIX}nikal
-╰─⊲⋅════════════⋅⊳─╯
+╰─⊲⋅════════━━━━━┈⊷
 
 ╭─⊳⋅ ⚜ 𝕷𝖔𝖌𝖔 ⋅⊲─╮
-⚜ ${config.PREFIX}ephoto <name>
-╰─⊲⋅═══════⋅⊳─╯
+⚜ ${config.PREFIX}logomaker <text>
+⚜ ${config.PREFIX}advancedglow <text>
+⚜ ${config.PREFIX}writetext <text>
+⚜ ${config.PREFIX}glitchtext <text>
+⚜ ${config.PREFIX}pixelglitch <text>
+⚜ ${config.PREFIX}neonglitch <text>
+⚜ ${config.PREFIX}flagtext <text>
+⚜ ${config.PREFIX}flag3dtext <text>
+⚜ ${config.PREFIX}deletingtext <text>
+⚜ ${config.PREFIX}sandsummer <text>
+⚜ ${config.PREFIX}makingneon <text>
+⚜ ${config.PREFIX}royaltext <text>
+╰─⊲⋅════━━━━━┈⊷
 
 
 ╭─⊳⋅✞ 𝓡𝓔𝓵𝓲𝓰𝓲𝓸𝓷⋅⊲─╮
@@ -218,19 +230,19 @@ cmd(
 ⤞ ${config.PREFIX}quran
 ⤞ ${config.PREFIX}surahlist
 ⤞ ${config.PREFIX}praytime
-╰─⊲⋅══════════⋅⊳─╯
+╰─⊲⋅═════━━━━━┈⊷
 
 ╭─⊳⋅🗞️ 𝕹𝖊𝖜𝖘 ⋅⊲─╮
 ⨠ ${config.PREFIX}hirunews
 ⨠ ${config.PREFIX}itnnews
-╰─⊲⋅════════⋅⊳─╯
+╰─⊲⋅═════━━━━━┈⊷
 
 ╭─⊳⋅🛠️ 𝕾𝖞𝖘𝖙𝖊𝖒 ⋅⊲─╮
 ⚙ ${config.PREFIX}restart
 ⚙ ${config.PREFIX}leave
 ⚙ ${config.PREFIX}block
 ⚙ ${config.PREFIX}unblock
-╰─⊲⋅══════════⋅⊳─╯
+╰─⊲⋅═════━━━━━┈⊷
 
 ╭─⊳⋅⚙️ 𝕾𝖊𝖙𝖙𝖎𝖓𝖌𝖘 ⋅⊲─╮
 ⚙ ${config.PREFIX}setprefix
@@ -249,7 +261,7 @@ cmd(
 ⚙ ${config.PREFIX}custom_reacts
 ⚙ ${config.PREFIX}anti_link
 ⚙ ${config.PREFIX}status_reply
-╰─⊲⋅═════════⋅⊳─╯
+╰─⊲⋅══════━━━━━┈⊷
 
 
 ╭─⊳⋅👥 Group ⋅⊲─╮
@@ -282,12 +294,11 @@ cmd(
 ✫ ${config.PREFIX}revoke
 ✫ ${config.PREFIX}hidetag
 ✫ ${config.PREFIX}unlockgc
-╰─⊲⋅══════════⋅⊳─╯
-
+╰─⊲⋅══════━━━━━┈⊷
 
 ╭─⊳⋅🌐 𝕾𝖕𝖊𝖈𝖎𝖆𝖑 ⋅⊲─╮
 ⎇ ${config.PREFIX}sinhala
-╰─⊲⋅═════════⋅⊳─╯
+╰─⊲⋅═════━━━━━┈⊷
 
 ╭─⊳⋅🎨 𝕬𝖓𝖎𝖒𝖊 𝕴𝖒𝖆𝖌𝖊𝖘 ⋅⊲─╮
 ⤷ ${config.PREFIX}garl
@@ -309,7 +320,7 @@ cmd(
 ⤷ ${config.PREFIX}anime4
 ⤷ ${config.PREFIX}anime5
 ⤷ ${config.PREFIX}dog
-╰─⊲⋅════════════⋅⊳─╯
+╰─⊲⋅═══════━━━━━┈⊷
 
 ╭─⊳⋅🔞 𝕹𝕾𝕱𝕎 ⋅⊲─╮
 ⤷ ${config.PREFIX}xnxx-dl
@@ -317,7 +328,7 @@ cmd(
 ⤷ ${config.PREFIX}epdownload
 ⤷ ${config.PREFIX}hentai
 ⤷ ${config.PREFIX}waifu
-╰─⊲⋅══════════⋅⊳─╯
+╰─⊲⋅══════━━━━━┈⊷
 
 ╭─⊳⋅👨💻 𝕯𝕰𝕽𝕾 ⋅⊲─╮
 ✏ ${config.PREFIX}gitclone
@@ -325,7 +336,7 @@ cmd(
 ✏ ${config.PREFIX}qr
 ✏ ${config.PREFIX}topdf
 ✏ ${config.PREFIX}fetch
-╰─⊲⋅════════════⋅⊳─╯
+╰─⊲⋅══════━━━━━┈⊷
 
 ╭─⊳⋅😜 𝕱𝕌𝕹 ⋅⊲─╮
 ✘ ${config.PREFIX}quote
@@ -339,7 +350,7 @@ cmd(
 ╭─⊳⋅📱 𝕾𝖙𝖆𝖑𝖐𝖘 ⋅⊲─╮
 ⟹ ${config.PREFIX}ttstalk
 ⟹ ${config.PREFIX}ghstalk
-╰─⊲⋅═════════⋅⊳─╯
+╰─⊲⋅═════━━━━━┈⊷e
 
 ✧⋄⋆⋅⋆⋄✧⋄⋆⋅⋆⋄✧⋄⋆⋅⋆⋄✧
  *HANS BYTE MD*
