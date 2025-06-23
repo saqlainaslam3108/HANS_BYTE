@@ -5,8 +5,9 @@ const config = require("../config");
 const GEMINI_API_KEY = config.GEMINI_API_KEY;
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
-const newsletterContext = {
-  mentionedJid: [],
+// Function to dynamically create newsletter context per message
+const createNewsletterContext = (sender) => ({
+  mentionedJid: [sender],
   forwardingScore: 1000,
   isForwarded: true,
   forwardedNewsletterMessageInfo: {
@@ -14,29 +15,32 @@ const newsletterContext = {
     newsletterName: "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
     serverMessageId: 143,
   },
-};
+});
+
+// ============================
+// HANS BYTE AI (with branding)
+// ============================
 
 cmd({
   pattern: "hansai",
   alias: ["ai"],
   react: "🤖",
-  desc: "Ask anything to Google Gemini AI.",
+  desc: "Ask anything to Hans Byte AI (Gemini powered).",
   category: "ai",
-  use: ".gemini <Your Question>",
+  use: ".hansai <Your Question>",
   filename: __filename
-}, async (
-  _context, _message, _args, {
-    from,
-    quoted,
-    q,
-    pushname,
-    sender,
-    reply
-  }) => {
+}, async (_context, _message, _args, {
+  from,
+  quoted,
+  q,
+  pushname,
+  sender,
+  reply
+}) => {
   try {
     if (!q) return reply("❗️ Please provide a question.");
 
-    const userQuery = `My name is ${pushname}. Your name is HANS BYTE. You are a WhatsApp AI Bot made by HANS TECH. Your awesome owner tooj loong time to build ya. Answer naturally with meaningful emojis. My question is: ${q}`;
+    const userQuery = `My name is ${pushname}. Your name is HANS BYTE 🤖. You are a helpful WhatsApp AI assistant built by HANS TECH. Your awesome owner spent a long time building you. Always answer with natural tone and meaningful emojis. My question is: ${q}`;
 
     const requestBody = {
       contents: [{ parts: [{ text: userQuery }] }]
@@ -46,35 +50,37 @@ cmd({
       headers: { "Content-Type": "application/json" }
     });
 
-    if (!response.data?.candidates?.[0]?.content?.parts) {
-      return reply("❌ Error: No response from AI.");
-    }
+    const aiResponse = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!aiResponse) return reply("❌ Error: No response from AI.");
 
-    newsletterContext.mentionedJid = [sender];
-    const aiResponse = response.data.candidates[0].content.parts[0].text;
-    await reply(aiResponse, { contextInfo: newsletterContext });
+    const contextInfo = createNewsletterContext(sender);
+    await reply(aiResponse, { contextInfo });
+
   } catch (error) {
     console.error("Error:", error.response?.data || error.message);
     reply("❌ Error processing your question 😢");
   }
 });
 
+// ============================
+// Pure Gemini Command
+// ============================
+
 cmd({
   pattern: "gemini",
-  alias: ["ai"],
-  react: "🤖",
+  alias: [],
+  react: "💡",
   desc: "Ask anything to Google Gemini AI.",
   category: "ai",
   use: ".gemini <Your Question>",
   filename: __filename
-}, async (
-  _context, _message, _args, {
-    from,
-    quoted,
-    q,
-    sender,
-    reply
-  }) => {
+}, async (_context, _message, _args, {
+  from,
+  quoted,
+  q,
+  sender,
+  reply
+}) => {
   try {
     if (!q) return reply("❗️ Please provide a question.");
 
@@ -86,13 +92,12 @@ cmd({
       headers: { "Content-Type": "application/json" }
     });
 
-    if (!response.data?.candidates?.[0]?.content?.parts) {
-      return reply("❌ Error: No response from AI.");
-    }
+    const aiResponse = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!aiResponse) return reply("❌ Error: No response from AI.");
 
-    newsletterContext.mentionedJid = [sender];
-    const aiResponse = response.data.candidates[0].content.parts[0].text;
-    await reply(aiResponse, { contextInfo: newsletterContext });
+    const contextInfo = createNewsletterContext(sender);
+    await reply(aiResponse, { contextInfo });
+
   } catch (error) {
     console.error("Error:", error.response?.data || error.message);
     reply("❌ Error processing your question 😢");

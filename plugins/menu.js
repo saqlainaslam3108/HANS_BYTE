@@ -69,7 +69,7 @@ cmd(
 ┃◈┃• 📅 Date : *${new Date().toLocaleDateString()}*
 ┃◈┃• ⏰ Time : *${new Date().toLocaleTimeString()}*
 ┃◈┃• 🌐 Platform : *${platform}*
-┃◈┃• 📦 Version : *2.2.0*
+┃◈┃• 📦 Version : *2.5.0*
 ┃◈┃• ⏱️ Runtime : *${runtime(process.uptime())}*
 ┃◈╰──────────────┈⊷
 ╰━━━━━━━━━━━━━━━━┈⊷
@@ -108,11 +108,18 @@ cmd(
 ⟠ ${config.PREFIX}dalle
 ╰─⊲⋅═════━━━━━┈⊷
 
-╭─⊳⋅🎲 𝕲𝖆𝖒𝖊𝖘 & 𝕱𝖚𝖓 ⋅⊲─╮  
-★ ${config.PREFIX}roll  
-☆ ${config.PREFIX}coinflip  
-✦ ${config.PREFIX}shapar 
-╰─⊲⋅══════━━━━━┈⊷ 
+╭─⊳⋅🎲 𝕲𝖆𝖒𝖊𝖘 & 𝕱𝖚𝖓 ⋅⊲─╮
+★ ${config.PREFIX}quiz
+☆ ${config.PREFIX}riddle
+✦ ${config.PREFIX}typegame
+✧ ${config.PREFIX}lovecheck <@user>
+★ ${config.PREFIX}matchme
+☆ ${config.PREFIX}reverse <text>
+✦ ${config.PREFIX}roll
+✧ ${config.PREFIX}coinflip
+★ ${config.PREFIX}shapar
+☆ ${config.PREFIX}roleplay
+╰─⊲⋅══════━━━━━┈⊷
 
 ╭─⊳⋅🔧 𝖀𝖙𝖎𝖑𝖎𝖙𝖎𝖊𝖘 ⋅⊲─╮  
 ➤ ${config.PREFIX}rcolor  
@@ -144,17 +151,18 @@ cmd(
 ⭒ ${config.PREFIX}aivoice <text>
 ⭒ ${config.PREFIX}calculate
 ⭒ ${config.PREFIX}font
-⭒ ${config.PREFIX}couplepp
-⭒ ${config.PREFIX}wallpaper
-⭒ ${config.PREFIX}calc
-⭒ ${config.PREFIX}lyrics
-⭒ ${config.PREFIX}define
-⭒ ${config.PREFIX}pokedex
+⭒ ${config.PREFIX}couplepp 
+⭒ ${config.PREFIX}wallpaper <query>
+⭒ ${config.PREFIX}calc <expression>
+⭒ ${config.PREFIX}lyrics <song>
+⭒ ${config.PREFIX}define <query>
+⭒ ${config.PREFIX}pokedex <query>
 ⭒ ${config.PREFIX}tempmail
-⭒ ${config.PREFIX}checkmail
-⭒ ${config.PREFIX}technews
-⭒ ${config.PREFIX}vcf
+⭒ ${config.PREFIX}checkmail 
+⭒ ${config.PREFIX}technews 
+⭒ ${config.PREFIX}vcf 
 ⭒ ${config.PREFIX}font <text>
+⭒ ${config.PREFIX}summarize <text>
 ╰─⊲⋅═══════━━━━━┈⊷
 
 ╭─⊳⋅⬇️ 𝕯𝖔𝖜𝖓𝖑𝖔𝖆𝖉𝖊𝖗𝖘 ⋅⊲─╮
@@ -210,18 +218,7 @@ cmd(
 ╰─⊲⋅════════━━━━━┈⊷
 
 ╭─⊳⋅ ⚜ 𝕷𝖔𝖌𝖔 ⋅⊲─╮
-⚜ ${config.PREFIX}logomaker <text>
-⚜ ${config.PREFIX}advancedglow <text>
-⚜ ${config.PREFIX}writetext <text>
-⚜ ${config.PREFIX}glitchtext <text>
-⚜ ${config.PREFIX}pixelglitch <text>
-⚜ ${config.PREFIX}neonglitch <text>
-⚜ ${config.PREFIX}flagtext <text>
-⚜ ${config.PREFIX}flag3dtext <text>
-⚜ ${config.PREFIX}deletingtext <text>
-⚜ ${config.PREFIX}sandsummer <text>
-⚜ ${config.PREFIX}makingneon <text>
-⚜ ${config.PREFIX}royaltext <text>
+⚜ ${config.PREFIX}ephoto360
 ╰─⊲⋅════━━━━━┈⊷
 
 
