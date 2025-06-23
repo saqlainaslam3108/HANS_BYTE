@@ -82,10 +82,11 @@ const robin = makeWASocket({
     const { connection, lastDisconnect } = update;
     if (connection === "close") {
       if (
-        lastDisconnect.error.output.statusCode !== DisconnectReason.loggedOut
-      ) {
-        connectToWA();
-      }
+  lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut
+) {
+  connectToWA();
+}
+      
     } else if (connection === "open") {
       console.log(" Installing... ");
       const path = require("path");
