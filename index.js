@@ -168,13 +168,22 @@ if (mek.key && mek.key.remoteJid === "status@broadcast") {
   }
 
   // Auto react to status
-  if (config.AUTO_STATUS_REACT === "true") {
-    const emojis = ['❤️','🔥','💯','🌟','🎉','💎','🍂','🌸','🚀','😍'];
-    const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+  if (config.AUTO_STATUS_REACT === "true" && mek?.key?.remoteJid) {
+  const emojis = ['❤️','🔥','💯','🌟','🎉','💎','🍂','🌸','🚀','😍'];
+  const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+
+  const participant = mek.key.participant || mek.participant || mek.pushName || null;
+  const botNumber2Safe = botNumber2 || config.BOT_NUMBER || null;
+
+  if (participant && botNumber2Safe) {
     await robin.sendMessage(mek.key.remoteJid, {
       react: { text: randomEmoji, key: mek.key }
-    }, { statusJidList: [mek.key.participant, botNumber2] });
+    }, { statusJidList: [participant, botNumber2Safe] });
+  } else {
+    console.warn("Skipping status reaction due to missing participant or botNumber2");
   }
+}
+
 
   // Auto reply to status
   if (config.AUTO_STATUS_REPLY === "true") {
