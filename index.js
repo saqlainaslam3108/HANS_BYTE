@@ -186,14 +186,23 @@ if (mek.key && mek.key.remoteJid === "status@broadcast") {
 
 
   // Auto reply to status
-  if (config.AUTO_STATUS_REPLY === "true") {
-    const user = mek.key.participant;
-    await robin.sendMessage(user, { 
-      text: config.AUTO_STATUS_MSG || "🔥 Nice status!",
-      react: { text: '💜', key: mek.key } 
-    }, { quoted: mek });
+  const { isJidUser } = require("@whiskeysockets/baileys");
+
+// Auto reply to status
+if (config.AUTO_STATUS_REPLY === "true") {
+  const user = mek?.key?.participant;
+
+  if (!user || !isJidUser(user)) {
+    console.warn("Invalid JID for status reply:", user);
+    return;
   }
+
+  await robin.sendMessage(user, { 
+    text: config.AUTO_STATUS_MSG || "🔥 Nice status!",
+    react: { text: '💜', key: mek.key } 
+  }, { quoted: mek });
 }
+
 
 
 
