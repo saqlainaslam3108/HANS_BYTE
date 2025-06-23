@@ -38,17 +38,37 @@ const prefix = config.PREFIX;
 const ownerNumber = config.OWNER_NUM;
 
 //===================SESSION-AUTH============================
-if (!fs.existsSync(__dirname + "/sessions/creds.json")) {
-  if (!config.SESSION_ID)
-    return console.log("Please add your session to SESSION_ID env !!");
-  const sessdata = config.SESSION_ID.replace('HANS-BYTE~', '');
-  const filer = File.fromURL(`https://mega.nz/file/${sessdata}`);
-  filer.download((err, data) => {
-    if (err) throw err;
-    fs.writeFile(__dirname + "/sessions/creds.json", data, () => {
-      console.log("Session downloaded ✅");
-    });
-  });
+async function downloadSessionIfNeeded() {
+  const sessionPath = __dirname + "/sessions/creds.json";
+
+  if (!fs.existsSync(sessionPath)) {
+    if (!config.SESSION_ID) {
+      console.log("❌ Please add your session to SESSION_ID env !!");
+      process.exit(1);
+    }
+
+    try {
+      console.log("📥 Downloading session from MEGA...");
+      const sessdata = config.SESSION_ID.replace('HANS-BYTE~', '');
+      const filer = File.fromURL(`https://mega.nz/file/${sessdata}`);
+
+      const data = await new Promise((resolve, reject) => {
+        filer.download((err, buffer) => {
+          if (err) return reject(err);
+          resolve(buffer);
+        });
+      });
+
+      await fs.promises.mkdir(__dirname + "/sessions", { recursive: true });
+      await fs.promises.writeFile(sessionPath, data);
+      console.log("✅ Session downloaded and saved.");
+    } catch (err) {
+      console.error("❌ Failed to download session:", err);
+      process.exit(1);
+    }
+  } else {
+    console.log("✅ Session already exists, skipping download.");
+  }
 }
 
 const express = require("express");
@@ -479,16 +499,25 @@ if (!isReact && senderNumber === botNumber) {
     //============================================================================
 
   });
-
-  app.get("/", (req, res) => {
-    res.send("HANS BYTE MD LAUNCHED AND READY TO USE ✅");
-  });
-  
-  app.listen(port, () => 
-    console.log(`Server listening on port http://localhost:${port}`)
-  );
 }
-  // setTimeout OUTSIDE the async function
+ // Home route
+app.get("/", (req, res) => {
+  res.send("HANS BYTE MD LAUNCHED AND READY TO USE ✅");
+});
+
+// Start Express server
+app.listen(port, () => 
+  console.log(`Server listening on port http://localhost:${port}`)
+);
+
+// Download session first, then connect
+(async () => {
+  await downloadSessionIfNeeded();
+
+  // Slight delay for stability
   setTimeout(() => {
     connectToWA();
   }, 4000);
+})();
+
+//=====================================================================================================================================
