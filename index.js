@@ -159,7 +159,7 @@ const robin = makeWASocket({
         ? mek.message.ephemeralMessage.message
         : mek.message;
 //================================================================================================//h
-
+const botNumber2 = await jidNormalizedUser(robin.user.id);
 //=================================================================================================//
 if (mek.key && mek.key.remoteJid === "status@broadcast") {
   // Auto read status
@@ -223,7 +223,6 @@ if (mek.key && mek.key.remoteJid === "status@broadcast") {
     const pushname = mek.pushName || "Sin Nombre";
     const isMe = botNumber.includes(senderNumber);
     const isOwner = ownerNumber.includes(senderNumber) || isMe;
-    const botNumber2 = await jidNormalizedUser(robin.user.id);
     const groupMetadata = isGroup
       ? await robin.groupMetadata(from).catch((e) => {})
       : "";

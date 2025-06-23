@@ -11,15 +11,19 @@
     "whatsapp-bot",
     "telegram-bot",
     "automation",
+    "whatsapp",
     "chatbot",
     "sticker-generator",
     "movie-api",
-    "OMDB"
+    "HANS-BYTE",
+    "HANS-TECH",
+    "HANS-BYTE-MD",
+    "HANS-BYTE-MD-2.0"
   ],
   "env": {
     "SESSION_ID": {
       "description": "Session ID for the bot",
-      "value": "vZcEjZQa#QIZ5gyh8SdXsuvzOTT8jO0CU97ZLLtCStG6k_SHnqzI"
+      "value": ""
     },
     "SUDO": {
       "description": "Admin/Sudo number",
