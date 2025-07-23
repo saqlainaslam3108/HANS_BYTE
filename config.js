@@ -19,9 +19,9 @@ if (dotenvPath) {
 // Application Configuration Object
 module.exports = {
   // Session and Owner Information
-  SESSION_ID: process.env.SESSION_ID || "HANS-BYTE~8mlGjQ6b#idZ0maJjhXkYqbpZxZPSVS0fQSMXvT97pOmlGixhMko", // Add your session ID here
-  SUDO: process.env.SUDO || "237696900612", // Add your admin/sudo number here
-  OWNER_NUM: process.env.OWNER_NUM || "237696900612", // Add the owner's number here
+  SESSION_ID: process.env.SESSION_ID || "HANS-BYTE~AvEUSJpA#eNHX06nkXjxfr_SGK-2q86UwFbsrnG2hEiOy0hVZXbc", // Add your session ID here
+  SUDO: process.env.SUDO || "+923087598338", // Add your admin/sudo number here
+  OWNER_NUM: process.env.OWNER_NUM || "+923087598338", // Add the owner's number here
   OWNER_NAME: process.env.OWNER_NAME || "HANS TECH", // Add the owner's name here
   OWNER_EMAIL: process.env.OWNER_EMAIL || "your@email.com", // Add your email address here
   OWNER_LOCATION: process.env.OWNER_LOCATION || "Africa/Douala", // Add your location here
@@ -40,7 +40,7 @@ module.exports = {
   STATUS_MESSAGE: process.env.STATUS_MESSAGE || "🚀 𝙋𝙤𝙬𝙚𝙧𝙚𝙙 𝙗𝙮 𝙃𝘼𝙉𝙎-𝙗𝙮𝙩𝙚", // Customize the bot's status message
 
   // Auto Features (toggle features on/off)
-  AUTO_REACT: process.env.AUTO_REACT || "true", // Enable/disable auto reaction (true/false)
+  AUTO_REACT: process.env.AUTO_REACT || "false", // Enable/disable auto reaction (true/false)
   PUBLIC_MODE: process.env.PUBLIC_MODE || "true",
   AUTO_VOICE: process.env.AUTO_VOICE || "true", // Enable/disable auto voice messages (true/false)
   AUTO_STICKER: process.env.AUTO_STICKER || "true", // Enable/disable auto sticker rea (true/false)
@@ -54,7 +54,7 @@ module.exports = {
   ALWAYSONLINE: process.env.ALWAYSONLINE || "true",
   AUTO_RECORDING: process.env.AUTO_RECORDING || "true",
   AUTO_STATUS_SEEN: process.env.AUTO_STATUS_SEEN || "true",
-  AUTO_STATUS_REACT: process.env.AUTO_STATUS_REACT || "true",
+  AUTO_STATUS_REACT: process.env.AUTO_STATUS_REACT || "false",
   READ_MESSAGE: process.env.READ_MESSAGE || "true",
   ANTI_BAD: process.env.ANTI_BAD || "true",
   AUTO_STATUS_REPLY: process.env.AUTO_STATUS_REPLY || "true",
